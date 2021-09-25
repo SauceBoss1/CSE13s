@@ -1,3 +1,3 @@
 # Assignment 0 - Hellow World!
 
-This program print out Hello World!
+This program prints out Hello World!
