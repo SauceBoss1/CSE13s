@@ -31,23 +31,23 @@ int score_checker(int cur_player) {
 }
 
 int points_updater(int cur_player) {
-    printf("%s rolls the pig... ", names[cur_player]);
+    printf("%s rolls the pig...", names[cur_player]);
     while (1) {
         int pigPos = (random() % 7);
         if (pig[pigPos] == 1) {
             scores[cur_player] += 10;
-            printf("pig lands on back ");
+            printf(" pig lands on back");
         } else if (pig[pigPos] == 2) {
             scores[cur_player] += 10;
-            printf("pig lands upright ");
+            printf(" pig lands upright");
         } else if (pig[pigPos] == 3) {
             scores[cur_player] += 15;
-            printf("pig lands on snout ");
+            printf(" pig lands on snout");
         } else if (pig[pigPos] == 4) {
             scores[cur_player] += 5;
-            printf("pig lands on ear ");
+            printf(" pig lands on ear");
         } else {
-            printf("pig lands on side\n");
+            printf(" pig lands on side\n");
             break;
         }
         if (score_checker(cur_player) != 0) {
