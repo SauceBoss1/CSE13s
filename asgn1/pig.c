@@ -6,12 +6,12 @@
 typedef enum { SIDE, RAZORBACK, TROTTER, SNOUTER, JOWLER} Position;
 const Position pig[7] = {
     SIDE, //0
-    SIDE, //1
-    RAZORBACK, //2
-    TROTTER, //3
-    SNOUTER, //4
-    JOWLER, //5
-    JOWLER, //6
+    SIDE, //0
+    RAZORBACK, //1
+    TROTTER, //2
+    SNOUTER, //3
+    JOWLER, //4
+    JOWLER, //4
 };
 
 
@@ -21,14 +21,6 @@ int score_checker(int cur_player);
 int score_checkAll(void);
 int points_updater(int cur_player);
 int game_master(int numPlayers);
-//int pig_roller(void);
-
-// for (int i = 0; i <= 10; i++){
-//         if (scores[i] >= 100){
-//             return i;
-//         }
-//     }
-//     return -1;
 
 int score_checker(int cur_player){
     if (scores[cur_player] >= 100) {
@@ -37,10 +29,6 @@ int score_checker(int cur_player){
     }
     return 0;
 }
-
-// int pig_roller(void){
-//     return ((random() % 7) + 1);
-// }
 
 int points_updater(int cur_player){
     printf("%s rolls the pig... ", names[cur_player]);
