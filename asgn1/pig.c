@@ -47,7 +47,7 @@ int points_updater(int cur_player){
             scores[cur_player] += 5;
             printf("pig lands on ear ");
         } else{
-            printf("pig lands on its side\n");
+            printf("pig lands on side\n");
             break;
         }
         if (score_checker(cur_player) != 0){
@@ -79,9 +79,9 @@ int game_master(int numPlayers){
 
     //prints out all the scores
     //remember to remove this later on
-    for (int i = 0; i <= 10; i++){
-        printf("%d ", scores[i]);
-    }
+    //for (int i = 0; i <= 10; i++){
+    //    printf("%d ", scores[i]);
+    //}
     return 0;
 }
 
