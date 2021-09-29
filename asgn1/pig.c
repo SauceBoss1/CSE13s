@@ -24,7 +24,7 @@ int game_master(int numPlayers);
 
 int score_checker(int cur_player) {
     if (scores[cur_player] >= 100) {
-        printf("\n%s has won with %d!\n", names[cur_player], scores[cur_player]);
+        printf("\n%s wins with %d points!\n", names[cur_player], scores[cur_player]);
         return scores[cur_player];
     }
     return 0;
