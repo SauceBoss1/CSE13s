@@ -32,7 +32,7 @@ int game_master(int numPlayers);
 
 int score_checker(int cur_player){
     if (scores[cur_player] >= 100) {
-        printf("%s has won with %d!\n", names[cur_player], scores[cur_player]);
+        printf("\n%s has won with %d!\n", names[cur_player], scores[cur_player]);
         return scores[cur_player];
     }
     return 0;
@@ -42,44 +42,22 @@ int score_checker(int cur_player){
 //     return ((random() % 7) + 1);
 // }
 
-
-// int pigPos = pig_roller();
-//     while (pigPos != 1){
-//         pigPos = pig_roller();
-//         if (pig[pigPos] == 2){
-//             scores[cur_player] += 10;
-//             printf("pig lands on its back ");
-//         } else if (pig[pigPos] == 3){
-//             scores[cur_player] += 10;
-//             printf("pig lands on its feet ");
-//         } else if (pig[pigPos] == 4){
-//             scores[cur_player] += 15;
-//             printf("pig lands on its snout ");
-//         } else if((pig[pigPos] == 5) || (pig[pigPos] == 6)){
-//             scores[cur_player] += 5;
-//             printf("pig lands on its cheek ");
-//         } else{
-//             printf("pig lands on its side\n");
-//             pigPos = 1;
-//         }
-//     }
-
 int points_updater(int cur_player){
     printf("%s rolls the pig... ", names[cur_player]);
     while (1){
-        int pigPos = (rand() % 7);
+        int pigPos = (random() % 7);
         if (pig[pigPos] == 1){
             scores[cur_player] += 10;
-            printf("pig lands on its back ");
+            printf("pig lands on back ");
         } else if (pig[pigPos] == 2){
 	    scores[cur_player] += 10;
-            printf("pig lands on its feet ");
+            printf("pig lands upright ");
         } else if (pig[pigPos] == 3){
             scores[cur_player] += 15;
-            printf("pig lands on its snout ");
+            printf("pig lands on snout ");
         } else if(pig[pigPos] == 4){
             scores[cur_player] += 5;
-            printf("pig lands on its cheek ");
+            printf("pig lands on ear ");
         } else{
             printf("pig lands on its side\n");
             break;
@@ -135,7 +113,7 @@ int main (void){ // main function
     printf("Random seed: ");
     scanf("%d", &seed);
 
-    srand(seed);
+    srandom(seed);
 
     game_master(players);
 
