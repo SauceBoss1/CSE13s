@@ -19,4 +19,4 @@ Once you have built the program, type in "./pig" in the terminal and then the pr
 
 ## Issues
 
-So far, there is no known issues with the game. It has passed all test cases from the auto-grader.  
+So far, the only issue is when a string in inputted as a seed, C will try and convert the string into an integer instead of returning an error.
