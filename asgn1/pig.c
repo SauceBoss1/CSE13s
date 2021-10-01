@@ -117,7 +117,7 @@ int game_master(int num_players) {
 int main(void) { // main function
 
     int players;
-    int seed;
+    unsigned int seed; //Must be unsigned since srandom() accepts only unsigned ints.
 
     printf("How many players? ");
     scanf("%d", &players);
