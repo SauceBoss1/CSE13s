@@ -1,10 +1,10 @@
 #include "names.h"
 
+#include <ctype.h>
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 
 typedef enum { SIDE, RAZORBACK, TROTTER, SNOUTER, JOWLER } Position;
 const Position pig[7] = {
@@ -132,7 +132,8 @@ int main(void) { // main function
     printf("Random seed: ");
     scanf("%u", &seed);
 
-    if (((unsigned) seed > UINT_MAX) || (seed < 0) || (isalpha(seed) != 0)) { //checks to see if the seed inputted is valid
+    if (((unsigned) seed > UINT_MAX) || (seed < 0)
+        || (isalpha(seed) != 0)) { //checks to see if the seed inputted is valid
         fprintf(stderr, "Invalid random seed. Using 2021 instead.\n");
         seed = 2021;
     }
