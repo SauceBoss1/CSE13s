@@ -127,22 +127,11 @@ int main(void) { // main function
         players = 2;
     }
 
-    // if ((players < 2)
-    //     || (players > 10) || (is_valid(input_players))) { //checks to see if the number of players is appropriatley inputted
-    //     fprintf(stderr, "Invalid number of players. Using 2 instead. \n");
-    //     players = 2;
-    // }
-
     printf("Random seed: ");
     if ((scanf("%u", &seed) == 0) || ((unsigned) seed > UINT_MAX) || (seed < 0)) {
         fprintf(stderr, "Invalid random seed. Using 2021 instead.\n");
         seed = 2021;
     }
-
-    // if (((unsigned) seed > UINT_MAX) || (seed < 0)) { //checks to see if the seed inputted is valid
-    //     fprintf(stderr, "Invalid random seed. Using 2021 instead.\n");
-    //     seed = 2021;
-    // }
 
     srand(seed); //set the random seed
 
