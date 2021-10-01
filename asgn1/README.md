@@ -7,7 +7,7 @@ This program plays Pass the Pig for you. You enter the number of players playing
 
 The program then starts with player 0 and pseudorandomly rolls the "pig." If the pig lands on its side, then the player earns 0 points and their turn ends. If the pig lands on its back or upright, then player earns 10 points. If the pig lands on its snout then the player earns 15 points. Lastly, if the pig lands on its ears then the player earns 5 points. Once the player's pig lands on its side, then their turn ends and the pig is passed to the next player in the circle.
 
-The game continued until someone reaches 100 points.
+The game continues until someone reaches 100 points.
 
 ## Building the program
 
