@@ -132,8 +132,7 @@ int main(void) { // main function
     printf("Random seed: ");
     scanf("%u", &seed);
 
-    if (((unsigned) seed > UINT_MAX) || (seed < 0)
-        || (isalpha(seed) != 0)) { //checks to see if the seed inputted is valid
+    if (((unsigned) seed > UINT_MAX) || (seed < 0)) { //checks to see if the seed inputted is valid
         fprintf(stderr, "Invalid random seed. Using 2021 instead.\n");
         seed = 2021;
     }
