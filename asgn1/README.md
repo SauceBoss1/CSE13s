@@ -19,4 +19,4 @@ Once you have built the program, type in "./pig" in the terminal and then the pr
 
 ## Issues
 
-So far, the only issue is when a string in inputted as a seed, C will try and convert the string into an integer instead of returning an error.
+So far, the only issue is when a mix of strings and numbers are iputted together. An example of this is "122asdf." When entered, the program would only recognize the "122" as the seed but all the other characters are ignored. This concept also applies when the user is prompted to enter a player number.
