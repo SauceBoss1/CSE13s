@@ -1,6 +1,6 @@
 CC = clang
 CFLAGS = -Wall -Wpedantic -Werror -Wextra
-OBJS: bbp.o e.o euler.o madhava.o mathlib-test.o newton.o viete.o mathlib.o
+OBJS = bbp.o e.o euler.o madhava.o mathlib-test.o newton.o viete.o mathlib.o
 
 all: mathlib-test
 
@@ -11,25 +11,25 @@ mathlib-test.o: mathlib-test.c mathlib.h $(OBJS)
 	$(CC) $(CFLAGS) -c mathlib-test.c
 
 bpp.o: bpp.c
-	$(CC) -c bpp.c
+	$(CC) $(CFLAGS) -c bpp.c
 
 e.o: e.c
-	$(CC) -c e.c
+	$(CC) $(CFLAGS) -c e.c
 
 euler.o: euler.c
-	$(CC) -c euler.c
+	$(CC) $(CFLAGS) -c euler.c
 
 madhava.o: madhava.c
-	$(CC) -c madhava.c
+	$(CC) $(CFLAGS) -c madhava.c
 
 newton.o: newton.c
-	$(CC) -c newton.c
+	$(CC) $(CFLAGS) -c newton.c
 
 viete.o: viete.o
-	$(CC) viete.c
+	$(CC) $(CFLAGS) -c viete.c
 
 clean:
-	rm -f mathlib-test mathlib-test.o
+	rm -f mathlib-test $(OBJS)
 
 format:
 	clang-format -i -style=file *.[ch]
