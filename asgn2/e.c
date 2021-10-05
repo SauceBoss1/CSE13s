@@ -6,9 +6,6 @@
 
 static int terms;
 
-double e(void);
-int e_terms(void);
-
 double e(void) {
     double factorial = 1, k = 1, sum = 0;
     do {
