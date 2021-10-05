@@ -25,7 +25,7 @@ madhava.o: madhava.c
 newton.o: newton.c
 	$(CC) $(CFLAGS) -c newton.c
 
-viete.o: viete.o
+viete.o: viete.c
 	$(CC) $(CFLAGS) -c viete.c
 
 clean:
