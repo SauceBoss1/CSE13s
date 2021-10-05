@@ -20,6 +20,7 @@ int main(int argc, char **argv) {
         case 's': s = true; break;
         case 'r': r = true; break;
         case 'b': b = true; break;
+        case 'v': v = true; break;
         }
     }
 
@@ -63,6 +64,14 @@ int main(int argc, char **argv) {
             absolute(pi_bbp() - M_PI));
         if (s) {
             printf("pi_bbp() terms = %d\n", pi_bbp_terms());
+        }
+    }
+
+    if (v) {
+        printf("pi_viete() = %15.16lf, M_PI = %16.15lf, diff = %16.15lf\n", pi_viete(), M_PI,
+            absolute(pi_viete() - M_PI));
+        if (s) {
+            printf("pi_viete() terms = %d\n", pi_viete_factors());
         }
     }
     return 0;
