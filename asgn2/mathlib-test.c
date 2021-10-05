@@ -1,19 +1,44 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <stdbool.h>
+#include "mathlib.h"
+#include <math.h>
 
-#define OPTIONS "pi:"
+#define OPTIONS "aebmrvnsh"
 
 int main(int argc, char **argv){
+    bool a = false, e_num = false, b = false, m = false, r = false;
+    bool v = false, n = false, s = false, h = false;
     int opt = 0;
     while ((opt = getopt(argc, argv, OPTIONS)) != -1){
         switch(opt){
-            case 'p':
-                printf("-p option. \n");
+            case 'a':
+                a = e_num = b = m = r = v = n = s = h = true;
                 break;
-            case 'i':
-                printf("-i option: %s is parameter./n", optarg);
+            case 'e':
+                e_num = true;
                 break;
+            case 'n':
+                n = true;
+        }       break;
+    }
+
+    if (e_num){
+        double diff = absolute(e() - M_E);
+        printf("e() = %16.15lf, M_E = %16.15lf, diff = %16.15lf\n", e(), M_E, diff);
+        if (s){
+            printf("e() terms = %d",e_terms());
         }
+
+    if (n){
+        for (double i = 0.0; i <= 10.0; i += 0.1){
+            double dif = absolute(sqrt_newton(i) - sqrt(i));
+            printf("sqrt_newton(%16.15lf) = %16.15lf sqrt(%16.15lf) = %16.15lf diff = %16.15lf", i, sqrt_newton(i), i, sqrt(i), diff);
+            if (s){
+                printf("sqrt_newton() terms = %d", sqrt_newton_iters());
+            }
+        }
+    }
     }
     return 0;
 }
