@@ -19,6 +19,7 @@ int main(int argc, char **argv) {
         case 'm': m = true; break;
         case 's': s = true; break;
         case 'r': r = true; break;
+        case 'b': b = true; break;
         }
     }
 
@@ -54,6 +55,14 @@ int main(int argc, char **argv) {
             absolute(pi_euler() - M_PI));
         if (s) {
             printf("pi_euler() terms = %d\n", pi_euler_terms());
+        }
+    }
+
+    if (b) {
+        printf("pi_bbp() = %16.15lf, M_PI = %16.15lf, diff = %16.15lf\n", pi_bbp(), M_PI,
+            absolute(pi_bbp() - M_PI));
+        if (s) {
+            printf("pi_bbp() terms = %d\n", pi_bbp_terms());
         }
     }
     return 0;
