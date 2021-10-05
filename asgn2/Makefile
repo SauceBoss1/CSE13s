@@ -1,6 +1,6 @@
 CC = clang
 CFLAGS = -Wall -Wpedantic -Werror -Wextra
-OBJS = mathlib-test.o e.o newton.o madhava.o
+OBJS = mathlib-test.o e.o newton.o madhava.o euler.o
 LFLAGS = -lm
 
 all: mathlib-test
@@ -19,6 +19,9 @@ newton.o: newton.c
 
 madhava.o: madhava.c
 	$(CC) $(CFLAGS) -c madhava.c
+
+euler.o: euler.c
+	$(CC) $(CFLAGS) -c euler.c
 
 clean:
 	rm -f mathlib-test *.o
