@@ -1,12 +1,12 @@
 CC = clang
 CFLAGS = -Wall -Wpedantic -Werror -Wextra
-OBJS = mathlib-test.o e.o newton.o madhava.o euler.o bbp.o viete.o
+OBJS = e.o newton.o madhava.o euler.o bbp.o viete.o
 LFLAGS = -lm
 
 all: mathlib-test
 
-mathlib-test: $(OBJS)
-	$(CC) -o mathlib-test $(OBJS) $(LFLAGS)
+mathlib-test: mathlib-test.o $(OBJS)
+	$(CC) -o mathlib-test mathlib-test.o $(OBJS) $(LFLAGS)
 
 mathlib-test.o: mathlib-test.c mathlib.h $(OBJS)
 	$(CC) $(CFLAGS) -c mathlib-test.c
