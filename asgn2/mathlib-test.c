@@ -12,9 +12,6 @@ int main(int argc, char **argv) {
     bool v = false, n = false, s = false, h = false;
     int opt = 0;
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
-        if ((argc > 1) && (opt == (-1))) {
-            h = true;
-        }
         switch (opt) {
         case 'a': a = e_num = b = m = r = v = n = s = true; break;
         case 'e': e_num = true; break;
@@ -26,6 +23,9 @@ int main(int argc, char **argv) {
         case 'v': v = true; break;
         default: h = true; break;
         }
+    }
+    if (opt == -1) {
+        h = true;
     }
 
     if (e_num) {
