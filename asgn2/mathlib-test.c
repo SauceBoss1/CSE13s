@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
         puts("OPTIONS\n");
         puts("\t-a  Runs all tests.\n\t-e  Runs e test.\n\t-b  Runs BBP pi test.");
         puts("\t-m  Runs Madhava pi test.\n\t-r  Runs Ruler pi test.\n\t-v  Runs Viete pi test.");
-        puts("\t-n  Runs Newton square root tests.\n\t-s Print verbose statistics.\n\t-h Display "
+        puts("\t-n  Runs Newton square root tests.\n\t-s  Print verbose statistics.\n\t-h  Display "
              "program synopsis and usage.");
     }
     return 0;
