@@ -21,11 +21,9 @@ int main(int argc, char **argv) {
         case 'r': r = true; break;
         case 'b': b = true; break;
         case 'v': v = true; break;
-        default: h = true; break;
+	case 'h': h = true; break;
+	default: h = true; break;
         }
-    }
-    if (opt == -1) {
-        h = true;
     }
 
     if (e_num) {
