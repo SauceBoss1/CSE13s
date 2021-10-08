@@ -1,7 +1,7 @@
 #include "mathlib.h"
 
 #include <math.h> //NOTE: this library was not used in any calculations
-          //This is only here to help me graph the terms
+//This is only here to help me graph the terms
 
 #include <stdio.h>
 #include <stdlib.h>
