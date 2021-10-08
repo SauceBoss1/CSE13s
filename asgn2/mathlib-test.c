@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
     }
 
     if (e_num) {
-	//e();
+        //e();
         double diff = absolute(e() - M_E);
         printf("e() = %16.15lf, M_E = %16.15lf, diff = %16.15lf\n", e(), M_E, diff);
         if (s) {
@@ -47,16 +47,16 @@ int main(int argc, char **argv) {
     }
 
     if (m) {
-	//pi_madhava();
+        //pi_madhava();
         printf("pi_madhava() = %16.15lf, M_PI = %16.15lf, diff = %16.15lf\n", pi_madhava(), M_PI,
-           absolute(pi_madhava() - M_PI));
+            absolute(pi_madhava() - M_PI));
         if (s) {
             printf("pi_madhava() terms = %d\n", pi_madhava_terms());
         }
     }
 
     if (r) {
-	//pi_euler();
+        //pi_euler();
         printf("pi_euler() = %16.15lf, M_PI = %16.15lf, diff = %16.15lf\n", pi_euler(), M_PI,
             absolute(pi_euler() - M_PI));
         if (s) {
@@ -65,7 +65,7 @@ int main(int argc, char **argv) {
     }
 
     if (b) {
-	//pi_bbp();
+        //pi_bbp();
         printf("pi_bbp() = %16.15lf, M_PI = %16.15lf, diff = %16.15lf\n", pi_bbp(), M_PI,
             absolute(pi_bbp() - M_PI));
         if (s) {
@@ -74,7 +74,7 @@ int main(int argc, char **argv) {
     }
 
     if (v) {
-	//pi_viete();
+        //pi_viete();
         printf("pi_viete() = %15.16lf, M_PI = %16.15lf, diff = %16.15lf\n", pi_viete(), M_PI,
             absolute(pi_viete() - M_PI));
         if (s) {

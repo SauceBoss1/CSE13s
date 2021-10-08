@@ -1,6 +1,6 @@
 #include "mathlib.h"
-#include <math.h> //used only for graph plotting
 
+#include <math.h> //used only for graph plotting
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -17,8 +17,8 @@ double pi_viete(void) {
         result *= term;
         a = sqrt_newton(2 + a);
         counter++;
-	
-	//printf("pi_viete(%lf) = %16.15lf, M_PI(%lf) = %16.15lf\n", counter, result, counter, absolute(M_PI - result));
+
+        //printf("pi_viete(%lf) = %16.15lf, M_PI(%lf) = %16.15lf\n", counter, result, counter, absolute(M_PI - result));
     } while (absolute(previous_term - cur_term) > EPSILON);
 
     terms = counter;

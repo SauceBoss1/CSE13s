@@ -1,6 +1,6 @@
 #include "mathlib.h"
-#include <math.h> //used only for plotting
 
+#include <math.h> //used only for plotting
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -19,8 +19,8 @@ double pi_bbp(void) {
         sixteen /= 16.0;
         k++;
         counter++;
-	
-	//printf("pi_bbp(%lf) = %16.15lf, M_PI(%lf) = %16.15lf\n", k, term, k, absolute(M_PI - sum));
+
+        //printf("pi_bbp(%lf) = %16.15lf, M_PI(%lf) = %16.15lf\n", k, term, k, absolute(M_PI - sum));
     }
     terms = counter;
     return sum;

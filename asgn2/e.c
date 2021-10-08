@@ -1,6 +1,6 @@
 #include "mathlib.h"
-#include <math.h> //used only for plotting graph
 
+#include <math.h> //used only for plotting graph
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,8 +17,8 @@ double e(void) {
         k++;
         sum += factorial;
         term++;
-	
-	//printf("e(%lf) = %16.15lf, M_E(%lf) = %16.15lf\n", k, sum, k, absolute(M_E - sum)); 
+
+        //printf("e(%lf) = %16.15lf, M_E(%lf) = %16.15lf\n", k, sum, k, absolute(M_E - sum));
     } while (factorial > EPSILON);
 
     terms = term;
