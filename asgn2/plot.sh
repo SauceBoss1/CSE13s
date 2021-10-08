@@ -6,7 +6,7 @@ make clean && make
 # Then extract x, the computed value, and the library value from each line.
 # Output to `sine()` results to `/tmp/computed.dat`.
 # Output to `sin()` results to `/tmp/library.dat`.
-./mathlib-test -n | awk -F, '{
+./mathlib-test -e | awk -F, '{
     split($1, computed, " ");
     split(computed[1], x, "[()]")
     split($2, library, " ");
