@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#define OPTIONS "aebmrvnsh:"
+#define OPTIONS "aebmrvnsh"
 
 int main(int argc, char **argv) {
     bool a = false, e_num = false, b = false, m = false, r = false;
