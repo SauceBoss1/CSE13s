@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
     if (n) {
         for (double i = 0.0; i <= 10.0; i += 0.1) {
             double diff = absolute(sqrt_newton(i) - sqrt(i));
-            printf("sqrt_newton(%lf) = %16.15lf sqrt(%lf) = %16.15lf diff = %16.15lf\n", i,
+            printf("sqrt_newton(%lf) = %16.15lf, sqrt(%lf) = %16.15lf, diff = %16.15lf\n", i,
                 sqrt_newton(i), i, sqrt(i), diff);
             if (s) {
                 printf("sqrt_newton() terms = %d\n", sqrt_newton_iters());
