@@ -26,7 +26,7 @@ double pi_madhava(void) {
         sum += term;
 
         //printf("pi_madhava(%lf) = %16.15lf, M_PI(%lf) = %16.15lf\n"
-        //, k, term, k, absolute(M_PI - term));
+        //, k, (sqrt_newton(12)*sum), k, absolute(M_PI - (sqrt_newton(12)*sum)));
 
         k++;
     }

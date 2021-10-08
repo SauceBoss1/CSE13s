@@ -18,7 +18,7 @@ double pi_viete(void) {
         a = sqrt_newton(2 + a);
         counter++;
 
-        //printf("pi_viete(%lf) = %16.15lf, M_PI(%lf) = %16.15lf\n", counter, result, counter, absolute(M_PI - result));
+        //printf("pi_viete(%lf) = %16.15lf, M_PI(%lf) = %16.15lf\n", counter, 2/result, counter, absolute(M_PI - (2/result)));
     } while (absolute(previous_term - cur_term) > EPSILON);
 
     terms = counter;

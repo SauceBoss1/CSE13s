@@ -20,7 +20,7 @@ double pi_bbp(void) {
         k++;
         counter++;
 
-        //printf("pi_bbp(%lf) = %16.15lf, M_PI(%lf) = %16.15lf\n", k, term, k, absolute(M_PI - sum));
+        //printf("pi_bbp(%lf) = %16.15lf, M_PI(%lf) = %16.15lf\n", k, sum, k, absolute(M_PI - sum));
     }
     terms = counter;
     return sum;

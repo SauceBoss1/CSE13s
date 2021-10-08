@@ -15,7 +15,7 @@ double pi_euler(void) {
         counter++;
 
         //if( k < 100){
-        //    printf("pi_euler(%lf) = %16.15lf, M_PI(%lf) = %16.15lf\n", k, term, k, absolute(sum - M_PI));
+        //    printf("pi_euler(%lf) = %16.15lf, M_PI(%lf) = %16.15lf\n", k, sqrt_newton(6*sum), k, absolute(sqrt_newton(6*sum) - M_PI));
         //}
     }
 
