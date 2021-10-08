@@ -25,7 +25,8 @@ double pi_madhava(void) {
         term = (numerator / denominator);
         sum += term;
 
-        //printf("pi_madhava(%lf) = %16.15lf, M_PI(%lf) = %16.15lf\n", k, term, k, absolute(M_PI - term));
+        //printf("pi_madhava(%lf) = %16.15lf, M_PI(%lf) = %16.15lf\n"
+        //, k, term, k, absolute(M_PI - term));
 
         k++;
     }
