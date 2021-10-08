@@ -5,15 +5,18 @@
 #include <stdio.h>
 #include <unistd.h>
 
-#define OPTIONS "aebmrvnsh"
+#define OPTIONS "aebmrvnsh:"
 
 int main(int argc, char **argv) {
     bool a = false, e_num = false, b = false, m = false, r = false;
     bool v = false, n = false, s = false, h = false;
     int opt = 0;
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
+        if ((argc > 1) && (opt == (-1))) {
+            h = true;
+        }
         switch (opt) {
-        case 'a': a = e_num = b = m = r = v = n = s = h = true; break;
+        case 'a': a = e_num = b = m = r = v = n = s = true; break;
         case 'e': e_num = true; break;
         case 'n': n = true; break;
         case 'm': m = true; break;
@@ -21,6 +24,7 @@ int main(int argc, char **argv) {
         case 'r': r = true; break;
         case 'b': b = true; break;
         case 'v': v = true; break;
+        default: h = true; break;
         }
     }
 
@@ -73,6 +77,18 @@ int main(int argc, char **argv) {
         if (s) {
             printf("pi_viete() terms = %d\n", pi_viete_factors());
         }
+    }
+
+    if (h) {
+        puts("SYNOPSIS");
+        puts("\tA test harness for the small numerical library.\n");
+        puts("USAGE");
+        puts("\t./mathlib-test [-aebmrvnsh]\n");
+        puts("OPTIONS\n");
+        puts("\t-a  Runs all tests.\n\t-e  Runs e test.\n\t-b  Runs BBP pi test.");
+        puts("\t-m  Runs Madhava pi test.\n\t-r  Runs Ruler pi test.\n\t-v  Runs Viete pi test.");
+        puts("\t-n  Runs Newton square root tests.\n\t-s Print verbose statistics.\n\t-h Display "
+             "program synopsis and usage.");
     }
     return 0;
 }
