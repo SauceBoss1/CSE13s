@@ -1,4 +1,6 @@
 #include "mathlib.h"
+#include <math.h> //NOTE: this library was not used in any calculations
+		  //This is only here to help me graph the terms
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,6 +23,9 @@ double pi_madhava(void) {
         double denominator = (2 * k) + 1;
         term = (numerator / denominator);
         sum += term;
+
+	//printf("pi_madhava(%lf) = %16.15lf, M_PI(%lf) = %16.15lf\n", k, term, k, absolute(M_PI - term));
+
         k++;
     }
 

@@ -1,4 +1,5 @@
 #include "mathlib.h"
+#include <math.h> //not used in actual calculation
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,6 +13,10 @@ double pi_euler(void) {
         sum += term;
         k++;
         counter++;
+
+	//if( k < 100){
+	//    printf("pi_euler(%lf) = %16.15lf, M_PI(%lf) = %16.15lf\n", k, term, k, absolute(sum - M_PI));
+	//}
     }
 
     terms = counter;

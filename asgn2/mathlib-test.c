@@ -27,6 +27,7 @@ int main(int argc, char **argv) {
     }
 
     if (e_num) {
+	//e();
         double diff = absolute(e() - M_E);
         printf("e() = %16.15lf, M_E = %16.15lf, diff = %16.15lf\n", e(), M_E, diff);
         if (s) {
@@ -46,14 +47,16 @@ int main(int argc, char **argv) {
     }
 
     if (m) {
+	//pi_madhava();
         printf("pi_madhava() = %16.15lf, M_PI = %16.15lf, diff = %16.15lf\n", pi_madhava(), M_PI,
-            absolute(pi_madhava() - M_PI));
+           absolute(pi_madhava() - M_PI));
         if (s) {
             printf("pi_madhava() terms = %d\n", pi_madhava_terms());
         }
     }
 
     if (r) {
+	//pi_euler();
         printf("pi_euler() = %16.15lf, M_PI = %16.15lf, diff = %16.15lf\n", pi_euler(), M_PI,
             absolute(pi_euler() - M_PI));
         if (s) {
@@ -62,6 +65,7 @@ int main(int argc, char **argv) {
     }
 
     if (b) {
+	//pi_bbp();
         printf("pi_bbp() = %16.15lf, M_PI = %16.15lf, diff = %16.15lf\n", pi_bbp(), M_PI,
             absolute(pi_bbp() - M_PI));
         if (s) {
@@ -70,6 +74,7 @@ int main(int argc, char **argv) {
     }
 
     if (v) {
+	//pi_viete();
         printf("pi_viete() = %15.16lf, M_PI = %16.15lf, diff = %16.15lf\n", pi_viete(), M_PI,
             absolute(pi_viete() - M_PI));
         if (s) {
@@ -84,7 +89,7 @@ int main(int argc, char **argv) {
         puts("\t./mathlib-test [-aebmrvnsh]\n");
         puts("OPTIONS\n");
         puts("\t-a  Runs all tests.\n\t-e  Runs e test.\n\t-b  Runs BBP pi test.");
-        puts("\t-m  Runs Madhava pi test.\n\t-r  Runs Ruler pi test.\n\t-v  Runs Viete pi test.");
+        puts("\t-m  Runs Madhava pi test.\n\t-r  Runs Euler pi test.\n\t-v  Runs Viete pi test.");
         puts("\t-n  Runs Newton square root tests.\n\t-s  Print verbose statistics.\n\t-h  Display "
              "program synopsis and usage.");
     }
