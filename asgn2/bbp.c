@@ -4,10 +4,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static int terms;
+static int terms; //a global var that keeps tracks of the # of terms calculated
 
 //code taken from 10/4/21 lecture
 //Prof. Darrell Long is the original author of this code
+//
+//
+//Calculates pi using the bbp formaula
+//Returns a double of the number pi
+//
+//no input is allowed
 double pi_bbp(void) {
     int counter = 0;
     double sum = 0.0, sixteen = 1.0, k = 0, term = 1;
@@ -26,6 +32,8 @@ double pi_bbp(void) {
     return sum;
 }
 
+//returns the number of terms calculated
+//Returns the numbe of terms calculated in pi_bbp()
 int pi_bbp_terms(void) {
     return terms;
 }
