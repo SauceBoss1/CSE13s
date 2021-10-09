@@ -4,8 +4,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static int terms;
+static int terms; //keeps track of the numbers of terms calculated
 
+//calculates pi using Euler's solution
+//Returns the value of pi as a double type
+//
+//no input is allowed
 double pi_euler(void) {
     double sum = 0, k = 1, term = 1, counter = 0;
     while (term > EPSILON) {
@@ -24,6 +28,10 @@ double pi_euler(void) {
     return sqrt_newton(6 * sum);
 }
 
+//Handles returning the number of terms calculated
+//Returns the number of terms calculated
+//
+//no inputs are allowed
 int pi_euler_terms(void) {
     return terms;
 }
