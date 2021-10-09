@@ -5,8 +5,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-static int terms = 0;
+static int terms = 0; //keeps tracks of how many terms were calculated
 
+//calculates Euler's number
+//returns the value of e as a double
+//
+//no inputs are allowed
 double e(void) {
     double factorial = 1, k = 1, sum = 0, term = 0;
     do {
@@ -25,6 +29,11 @@ double e(void) {
     return sum;
 }
 
+
+//Handles the number of terms calculated 
+//Returns the number of terms calculated as an int
+//
+//no input is allowed
 int e_terms(void) {
     return terms;
 }
