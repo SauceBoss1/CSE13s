@@ -29,8 +29,7 @@ double e(void) {
     return sum;
 }
 
-
-//Handles the number of terms calculated 
+//Handles the number of terms calculated
 //Returns the number of terms calculated as an int
 //
 //no input is allowed
