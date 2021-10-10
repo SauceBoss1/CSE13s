@@ -22,11 +22,12 @@ double pi_viete(void) {
         a = sqrt_newton(2 + a); //change the value of a while using the previous value of a
         counter++;
 
-        //printf("pi_viete(%lf) = %16.15lf, M_PI(%lf) = %16.15lf\n", counter, 2/result, counter, absolute(M_PI - (2/result)));
+        //printf("pi_viete(%lf) = %16.15lf, M_PI(%lf) = %16.15lf\n",
+        //counter, 2/result, counter, absolute(M_PI - (2/result)));
     } while (absolute(previous_term - cur_term)
              > EPSILON); // since the formula only gets bigger we must take
-        // difference between the current calculated term and the
-        // previous term and compare that to epsilon
+    // difference between the current calculated term and the
+    // previous term and compare that to epsilon
 
     terms = counter;
 
