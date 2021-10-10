@@ -88,7 +88,7 @@ int main(int argc, char **argv) {
 
     if (v) { //displays a formatted output for the viete formaula and comapres it to M_PI
         //pi_viete();
-        printf("pi_viete() = %15.16lf, M_PI = %16.15lf, diff = %16.15lf\n", pi_viete(), M_PI,
+        printf("pi_viete() = %16.15lf, M_PI = %16.15lf, diff = %16.15lf\n", pi_viete(), M_PI,
             absolute(pi_viete() - M_PI));
         if (s) {
             printf("pi_viete() terms = %d\n", pi_viete_factors());
