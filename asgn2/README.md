@@ -28,15 +28,15 @@ Once you are done with the program, you can type `make clean` in order to remove
 Once you have your executable, you can type `./mathlib-test -h` to view all commands line options avaliable and its usage.
 
 Here are the command line options:
-	- -a : runs all thests
-	- -e : runs the e approximation test
-	- -b : runs the BBP pi tests
-	- -m : runs the Madhava pi test
-	- -r : runs Ruler's solution for pi test
-	- -v : runs the Viete pi test
-	- -n : runs newton's sqrt() approximation test
-	- -s : enables printing of statistics to see computed terms of each test
-	- -h : displays the help message
+- -a : runs all thests
+- -e : runs the e approximation test
+- -b : runs the BBP pi tests
+- -m : runs the Madhava pi test
+- -r : runs Ruler's solution for pi test
+- -v : runs the Viete pi test
+- -n : runs newton's sqrt() approximation test
+- -s : enables printing of statistics to see computed terms of each test
+- -h : displays the help message
 
 ## Issues
 
