@@ -18,7 +18,7 @@ double pi_euler(void) {
         k++;
         counter++;
 
-        //if( k < 100){
+        //if( k < 100){ //this prints only the first 100 terms since the equation is big/
         //    printf("pi_euler(%lf) = %16.15lf, M_PI(%lf) = %16.15lf\n", k, sqrt_newton(6*sum), k, absolute(sqrt_newton(6*sum) - M_PI));
         //}
     }

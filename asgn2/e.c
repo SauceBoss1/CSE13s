@@ -15,15 +15,16 @@ double e(void) {
     double factorial = 1, k = 1, sum = 0, term = 0;
     do {
         factorial = 1;
-        for (double i = 1; i < k; ++i) {
+        for (double i = 1; i < k; ++i) { //deals with calculating the factorial
+            //without the use of a function or recursion
             factorial *= 1 / i;
         }
         k++;
         sum += factorial;
-        term++;
+        term++; //keeps track of the number of iterations the loop has gone through
 
         //printf("e(%lf) = %16.15lf, M_E(%lf) = %16.15lf\n", k, sum, k, absolute(M_E - sum));
-    } while (factorial > EPSILON);
+    } while (factorial > EPSILON); //make sure our calculation is still bigger than epsilon
 
     terms = term;
     return sum;
