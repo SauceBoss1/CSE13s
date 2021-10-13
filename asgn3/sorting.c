@@ -42,9 +42,9 @@ int main(int argc, char **argv) {
     if (member_set(INSERTION, s)) {
         make_array(A, arr_size);
         insertion_sort(&stats, A, arr_size);
-        print_array("Insertion Sort, " PRIu32 " elements, " PRIu32 " moves", arr_size, stats.moves);
+        printf("Insertion Sort, %" PRIu32 " elements, %" PRIu64 " moves\n", arr_size, stats.moves);
         print_array(A, arr_size);
-        stats.reset(stats);
+        reset(&stats);
     }
 
     free(A);
