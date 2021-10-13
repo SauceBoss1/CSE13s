@@ -32,7 +32,7 @@ int main(int argc, char **argv) {
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
         switch (opt) {
         case 'i': s = insert_set(INSERTION, s); break;
-        case 'n': arr_size = strtol(optarg, NULL, 10);
+        case 'n': arr_size = strtol(optarg, NULL, 10); break;
         }
     }
 
