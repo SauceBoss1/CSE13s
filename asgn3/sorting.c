@@ -3,7 +3,7 @@
 #include "quick.h"
 #include "set.h" //given to us by Prof. Long
 #include "shell.h"
-#include "stats.h"
+#include "stats.h" //given to us by Prof. Long
 
 #include <inttypes.h>
 #include <stdbool.h>
@@ -42,7 +42,8 @@ int main(int argc, char **argv) {
     if (member_set(INSERTION, s)) {
         make_array(A, arr_size);
         insertion_sort(&stats, A, arr_size);
-        printf("Insertion Sort, %" PRIu32 " elements, %" PRIu64 " moves\n", arr_size, stats.moves);
+        printf("Insertion Sort, %" PRIu32 " elements, %" PRIu64 " moves, %" PRIu64 " compares\n",
+            arr_size, stats.moves, stats.compares);
         print_array(A, arr_size);
         reset(&stats);
     }
