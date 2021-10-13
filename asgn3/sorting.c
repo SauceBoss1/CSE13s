@@ -18,11 +18,12 @@
 #define ARRAY_DISPLAY 100
 
 typedef enum { INSERTION, HEAP, SHELL, QUICK } Sorts; //suggested by Eugene
-char *names[] = { "Insertion Sort", "Heap Sort", "Shell Sort", "Quick Sort" }; //suggested by Eugene
+const char *names[]
+    = { "Insertion Sort", "Heap Sort", "Shell Sort", "Quick Sort" }; //suggested by Eugene
 
 void make_array(uint32_t *A, uint32_t n);
 void print_array(uint32_t *A, int arr_size, int arr_display);
-void print_stats(Stats *s, uint32_t arr_size, char algorithm[]);
+void print_stats(Stats *s, uint32_t arr_size, const char algorithm[]);
 
 int main(int argc, char **argv) {
     Set s = empty_set();
@@ -49,18 +50,18 @@ int main(int argc, char **argv) {
 
     for (Sorts x = INSERTION; x < QUICK; x++) {
         if (member_set(x, s)) {
+            make_array(A, arr_size);
+
             switch (x) {
-            case INSERTION:
-                make_array(A, arr_size);
-                insertion_sort(&stats, A, arr_size);
-                print_stats(&stats, arr_size, names[x]);
-                print_array(A, arr_size, arr_diplay);
-                reset(&stats);
-                break;
+            case INSERTION: insertion_sort(&stats, A, arr_size); break;
             case HEAP: break;
             case SHELL: break;
             case QUICK: break;
             }
+
+            print_stats(&stats, arr_size, names[x]);
+            print_array(A, arr_size, arr_diplay);
+            reset(&stats);
         }
     }
 
@@ -97,7 +98,7 @@ void print_array(uint32_t *A, int arr_size, int arr_display) {
     return;
 }
 
-void print_stats(Stats *s, uint32_t arr_size, char algorithm[]) {
+void print_stats(Stats *s, uint32_t arr_size, const char algorithm[]) {
     printf("%s, %" PRIu32 " elements, %" PRIu64 " moves, %" PRIu64 " compares\n", algorithm,
         arr_size, s->moves, s->compares);
     return;
