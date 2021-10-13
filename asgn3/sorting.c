@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
     if (member_set(INSERTION, s)) {
         make_array(A, arr_size);
         insertion_sort(&stats, A, arr_size);
-        print_array("Insertion Sort, "PRIu32" elements, "PRIu32" moves", arr_size, stats.moves);  
+        print_array("Insertion Sort, " PRIu32 " elements, " PRIu32 " moves", arr_size, stats.moves);
         print_array(A, arr_size);
         stats.reset(stats);
     }
@@ -61,7 +61,7 @@ void make_array(uint32_t *A, uint32_t n) {
 void print_array(uint32_t *A, int arr_size) {
     for (int i = 0; i < arr_size; i++) {
         printf("%13" PRIu32 " ", A[i]);
-        if ((( i + 1) % 5) == 0) {
+        if (((i + 1) % 5) == 0) {
             printf("\n");
         }
     }
