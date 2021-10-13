@@ -11,16 +11,18 @@
 #include <stdlib.h>
 #include <unistd.h> //this library is used for command line args
 
-#define OPTIONS    "aeisqhr:n:p:"
-#define SEED       13371453
-#define ARRAY_SIZE 100
-#define ELEMENTS   100
+#define OPTIONS       "aeisqhr:n:p:"
+#define SEED          13371453
+#define ARRAY_SIZE    100
+#define ELEMENTS      100
 #define ARRAY_DISPLAY 100
 
 typedef enum { INSERTION, HEAP, SHELL, QUICK } Sorts; //suggested by Eugene
+char *names[] = { "Insertion Sort", "Heap Sort", "Shell Sort", "Quick Sort" }; //suggested by Eugene
+
 void make_array(uint32_t *A, uint32_t n);
 void print_array(uint32_t *A, int arr_size, int arr_display);
-void print_stats(Stats *s, uint32_t arr_size, char algorithm[]); 
+void print_stats(Stats *s, uint32_t arr_size, char algorithm[]);
 
 int main(int argc, char **argv) {
     Set s = empty_set();
@@ -37,19 +39,38 @@ int main(int argc, char **argv) {
         switch (opt) {
         case 'i': s = insert_set(INSERTION, s); break;
         case 'n': arr_size = strtol(optarg, NULL, 10); break;
+        case 'p': arr_diplay = strtol(optarg, NULL, 10); break;
+        case 'r': seed = strtol(optarg, NULL, 10); break;
         }
     }
 
     srandom(seed);
     uint32_t *A = (uint32_t *) calloc(arr_size, sizeof(uint32_t)); //initialize array
 
-    if (member_set(INSERTION, s)) {
-        make_array(A, arr_size);
-        insertion_sort(&stats, A, arr_size);
-        print_stats(&stats, arr_size, "Insertion Sort");
-        print_array(A, arr_size, arr_diplay);
-        reset(&stats);
+    for (Sorts x = INSERTION; x < QUICK; x++) {
+        if (member_set(x, s)) {
+            switch (x) {
+            case INSERTION:
+                make_array(A, arr_size);
+                insertion_sort(&stats, A, arr_size);
+                print_stats(&stats, arr_size, names[x]);
+                print_array(A, arr_size, arr_diplay);
+                reset(&stats);
+                break;
+            case HEAP: break;
+            case SHELL: break;
+            case QUICK: break;
+            }
+        }
     }
+
+    //if (member_set(INSERTION, s)) {
+    //    make_array(A, arr_size);
+    //    insertion_sort(&stats, A, arr_size);
+    //    print_stats(&stats, arr_size, "Insertion Sort");
+    //    print_array(A, arr_size, arr_diplay);
+    //    reset(&stats);
+    //}
 
     free(A);
     return 0;
@@ -63,7 +84,7 @@ void make_array(uint32_t *A, uint32_t n) {
 }
 
 void print_array(uint32_t *A, int arr_size, int arr_display) {
-    if (arr_size < arr_display){
+    if (arr_size < arr_display) {
         arr_display = arr_size;
     }
 
@@ -76,8 +97,8 @@ void print_array(uint32_t *A, int arr_size, int arr_display) {
     return;
 }
 
-void print_stats(Stats *s, uint32_t arr_size, char algorithm[]){
-    printf("%s, %" PRIu32 " elements, %" PRIu64 " moves, %" PRIu64 " compares\n",
-            algorithm, arr_size, s->moves, s->compares);
-
+void print_stats(Stats *s, uint32_t arr_size, char algorithm[]) {
+    printf("%s, %" PRIu32 " elements, %" PRIu64 " moves, %" PRIu64 " compares\n", algorithm,
+        arr_size, s->moves, s->compares);
+    return;
 }
