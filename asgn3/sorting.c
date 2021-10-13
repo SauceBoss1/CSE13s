@@ -15,10 +15,12 @@
 #define SEED       13371453
 #define ARRAY_SIZE 100
 #define ELEMENTS   100
+#define ARRAY_DISPLAY 100
 
 typedef enum { INSERTION, HEAP, SHELL, QUICK } Sorts; //suggested by Eugene
 void make_array(uint32_t *A, uint32_t n);
-void print_array();
+void print_array(uint32_t *A, int arr_size, int arr_display);
+void print_stats(Stats *s, uint32_t arr_size, char algorithm[]); 
 
 int main(int argc, char **argv) {
     Set s = empty_set();
@@ -29,6 +31,8 @@ int main(int argc, char **argv) {
     int opt = 0;
     uint32_t arr_size = ARRAY_SIZE;
     uint32_t seed = SEED;
+    uint32_t arr_diplay = ARRAY_DISPLAY;
+
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
         switch (opt) {
         case 'i': s = insert_set(INSERTION, s); break;
@@ -42,9 +46,8 @@ int main(int argc, char **argv) {
     if (member_set(INSERTION, s)) {
         make_array(A, arr_size);
         insertion_sort(&stats, A, arr_size);
-        printf("Insertion Sort, %" PRIu32 " elements, %" PRIu64 " moves, %" PRIu64 " compares\n",
-            arr_size, stats.moves, stats.compares);
-        print_array(A, arr_size);
+        print_stats(&stats, arr_size, "Insertion Sort");
+        print_array(A, arr_size, arr_diplay);
         reset(&stats);
     }
 
@@ -59,12 +62,22 @@ void make_array(uint32_t *A, uint32_t n) {
     return;
 }
 
-void print_array(uint32_t *A, int arr_size) {
-    for (int i = 0; i < arr_size; i++) {
+void print_array(uint32_t *A, int arr_size, int arr_display) {
+    if (arr_size < arr_display){
+        arr_display = arr_size;
+    }
+
+    for (int i = 0; i < arr_display; i++) {
         printf("%13" PRIu32 " ", A[i]);
         if (((i + 1) % 5) == 0) {
             printf("\n");
         }
     }
     return;
+}
+
+void print_stats(Stats *s, uint32_t arr_size, char algorithm[]){
+    printf("%s, %" PRIu32 " elements, %" PRIu64 " moves, %" PRIu64 " compares\n",
+            algorithm, arr_size, s->moves, s->compares);
+
 }
