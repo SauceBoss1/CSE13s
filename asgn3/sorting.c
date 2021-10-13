@@ -48,11 +48,11 @@ int main(int argc, char **argv) {
     srandom(seed);
     uint32_t *A = (uint32_t *) calloc(arr_size, sizeof(uint32_t)); //initialize array
 
-    for (Sorts x = INSERTION; x < QUICK; x++) {
+    for (Sorts x = INSERTION; x < QUICK; x++) { //go through each enum and see which is in the set
         if (member_set(x, s)) {
             make_array(A, arr_size);
 
-            switch (x) {
+            switch (x) { //decides which algorithm to use
             case INSERTION: insertion_sort(&stats, A, arr_size); break;
             case HEAP: break;
             case SHELL: break;
@@ -64,14 +64,6 @@ int main(int argc, char **argv) {
             reset(&stats);
         }
     }
-
-    //if (member_set(INSERTION, s)) {
-    //    make_array(A, arr_size);
-    //    insertion_sort(&stats, A, arr_size);
-    //    print_stats(&stats, arr_size, "Insertion Sort");
-    //    print_array(A, arr_size, arr_diplay);
-    //    reset(&stats);
-    //}
 
     free(A);
     return 0;
@@ -85,7 +77,8 @@ void make_array(uint32_t *A, uint32_t n) {
 }
 
 void print_array(uint32_t *A, int arr_size, int arr_display) {
-    if (arr_size < arr_display) {
+    if (arr_size < arr_display) { //set the display to the array length
+        //if the user specified a bigger display output
         arr_display = arr_size;
     }
 
