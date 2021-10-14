@@ -38,6 +38,10 @@ int main(int argc, char **argv) {
 
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
         switch (opt) {
+        case 'a':
+            for (Sorts x = INSERTION; x <= QUICK; ++x) {
+                s = insert_set(x, s);
+            }
         case 'i': s = insert_set(INSERTION, s); break;
         case 's': s = insert_set(SHELL, s); break;
         case 'e': s = insert_set(HEAP, s); break;
