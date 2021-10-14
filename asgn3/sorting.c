@@ -52,10 +52,10 @@ int main(int argc, char **argv) {
         }
     }
 
-    srandom(seed);
     uint32_t *A = (uint32_t *) calloc(arr_size, sizeof(uint32_t)); //initialize array
 
     for (Sorts x = INSERTION; x <= QUICK; x++) { //go through each enum and see which is in the set
+        srandom(seed);
         if (member_set(x, s)) {
             make_array(A, arr_size);
 
