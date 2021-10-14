@@ -41,6 +41,7 @@ int main(int argc, char **argv) {
         case 'i': s = insert_set(INSERTION, s); break;
         case 's': s = insert_set(SHELL, s); break;
         case 'e': s = insert_set(HEAP, s); break;
+        case 'q': s = insert_set(QUICK, s); break;
         case 'n': arr_size = strtol(optarg, NULL, 10); break;
         case 'p': arr_diplay = strtol(optarg, NULL, 10); break;
         case 'r': seed = strtol(optarg, NULL, 10); break;
@@ -50,7 +51,7 @@ int main(int argc, char **argv) {
     srandom(seed);
     uint32_t *A = (uint32_t *) calloc(arr_size, sizeof(uint32_t)); //initialize array
 
-    for (Sorts x = INSERTION; x < QUICK; x++) { //go through each enum and see which is in the set
+    for (Sorts x = INSERTION; x <= QUICK; x++) { //go through each enum and see which is in the set
         if (member_set(x, s)) {
             make_array(A, arr_size);
 
@@ -58,7 +59,7 @@ int main(int argc, char **argv) {
             case INSERTION: insertion_sort(&stats, A, arr_size); break;
             case HEAP: heap_sort(&stats, A, arr_size); break;
             case SHELL: shell_sort(&stats, A, arr_size); break;
-            case QUICK: break;
+            case QUICK: quick_sort(&stats, A, arr_size); break;
             }
 
             print_stats(&stats, arr_size, names[x]);
