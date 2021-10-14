@@ -39,6 +39,7 @@ int main(int argc, char **argv) {
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
         switch (opt) {
         case 'i': s = insert_set(INSERTION, s); break;
+        case 's': s = insert_set(SHELL, s); break;
         case 'n': arr_size = strtol(optarg, NULL, 10); break;
         case 'p': arr_diplay = strtol(optarg, NULL, 10); break;
         case 'r': seed = strtol(optarg, NULL, 10); break;
@@ -55,7 +56,7 @@ int main(int argc, char **argv) {
             switch (x) { //decides which algorithm to use
             case INSERTION: insertion_sort(&stats, A, arr_size); break;
             case HEAP: break;
-            case SHELL: break;
+            case SHELL: shell_sort(&stats, A, arr_size); break;
             case QUICK: break;
             }
 
