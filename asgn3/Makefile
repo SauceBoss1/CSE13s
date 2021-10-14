@@ -1,6 +1,6 @@
 CC = clang
 CFLAGS = -Wall -Wpedantic -Werror -Wextra
-OBJS = insert.o stats.o shell.o
+OBJS = insert.o stats.o shell.o heap.o
 LFLAGS = -lm
 
 all: sorting
@@ -19,6 +19,9 @@ stats.o: stats.c stats.h
 
 shell.o: shell.c shell.h
 	$(CC) $(CFLAGS) -c shell.c
+
+heap.o: heap.c heap.h
+	$(CC) $(CFLAGS) -c heap.c
 
 clean:
 	rm -f sorting *.o
