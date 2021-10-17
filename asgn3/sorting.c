@@ -54,16 +54,20 @@ int main(int argc, char **argv) {
         case 'n': arr_size = strtol(optarg, NULL, 10); break;
         case 'p': arr_diplay = strtol(optarg, NULL, 10); break;
         case 'r': seed = strtol(optarg, NULL, 10); break;
-        case 'h': help_msg(); break;
-        default: help_msg(); break;
+        case 'h':
+            help_msg();
+            break; //no default cases needed since if_sorting_called variable will be the default option
         }
     }
 
     uint32_t *A = (uint32_t *) calloc(arr_size, sizeof(uint32_t)); //initialize array
 
+    int if_sorting_called = 0;
     for (Sorts x = INSERTION; x <= QUICK; x++) { //go through each enum and see which is in the set
         srandom(seed);
+
         if (member_set(x, s)) {
+            if_sorting_called++; //increment if the user has called at least one sorting option
             make_array(A, arr_size);
 
             switch (x) { //decides which algorithm to use
@@ -77,6 +81,10 @@ int main(int argc, char **argv) {
             print_array(A, arr_size, arr_diplay);
             reset(&stats);
         }
+    }
+
+    if (if_sorting_called == 0) { //checks if the user has called a sorting option
+        help_msg();
     }
 
     free(A);
@@ -107,11 +115,16 @@ void print_array(uint32_t *A, int arr_size, int arr_display) {
         arr_display = arr_size;
     }
 
-    for (int i = 0; i < arr_display; i++) {
+    int x = 0;
+    for (int i = 0; i < arr_display; i++, x++) {
         printf("%13" PRIu32 " ", A[i]);
         if (((i + 1) % 5) == 0) { //after 5 columns print onto the next line
             printf("\n");
         }
+    }
+
+    if (x % 5 != 0) {
+        printf("\n");
     }
     return;
 }
