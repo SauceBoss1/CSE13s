@@ -24,7 +24,13 @@ const char *names[]
 void make_array(uint32_t *A, uint32_t n);
 void print_array(uint32_t *A, int arr_size, int arr_display);
 void print_stats(Stats *s, uint32_t arr_size, const char algorithm[]);
+void help_msg(void);
 
+
+//Handles all command line options for the test harness
+//Returns 0 to signify success
+//
+//argc, **argv: allows input from command line
 int main(int argc, char **argv) {
     Set s = empty_set();
     Stats stats;
@@ -37,9 +43,9 @@ int main(int argc, char **argv) {
     uint32_t arr_diplay = ARRAY_DISPLAY;
 
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
-        switch (opt) {
+        switch (opt) { //determines which sorting algorithm to use
         case 'a':
-            for (Sorts x = INSERTION; x <= QUICK; ++x) {
+            for (Sorts x = INSERTION; x <= QUICK; ++x) { //adds all options to the set
                 s = insert_set(x, s);
             }
         case 'i': s = insert_set(INSERTION, s); break;
@@ -49,6 +55,8 @@ int main(int argc, char **argv) {
         case 'n': arr_size = strtol(optarg, NULL, 10); break;
         case 'p': arr_diplay = strtol(optarg, NULL, 10); break;
         case 'r': seed = strtol(optarg, NULL, 10); break;
+        case 'h': help_msg(); break;
+        default: help_msg(); break;
         }
     }
 
@@ -76,6 +84,11 @@ int main(int argc, char **argv) {
     return 0;
 }
 
+//Randomizes an array
+//Returns nothing but it manipulates a referenced array
+//
+//*A: pass in an array to be randomized
+//n: specifies the size of the array
 void make_array(uint32_t *A, uint32_t n) {
     for (uint32_t i = 0; i < n; i++) {
         A[i] = random() & 0x3FFFFFFF; //masked in 30 bits in hexadecimal
@@ -83,6 +96,13 @@ void make_array(uint32_t *A, uint32_t n) {
     return;
 }
 
+
+//Displays the array when called
+//returns nothing but it uses printf as an output
+//
+//*A: pass in an array to be printed
+//arr_size: takes in the true size of the array
+//arr_display: takes in an uint32_t type that specified how many elements to be displayed
 void print_array(uint32_t *A, int arr_size, int arr_display) {
     if (arr_size < arr_display) { //set the display to the array length
         //if the user specified a bigger display output
@@ -91,15 +111,47 @@ void print_array(uint32_t *A, int arr_size, int arr_display) {
 
     for (int i = 0; i < arr_display; i++) {
         printf("%13" PRIu32 " ", A[i]);
-        if (((i + 1) % 5) == 0) {
+        if (((i + 1) % 5) == 0) { //after 5 columns print onto the next line
             printf("\n");
         }
     }
     return;
 }
 
+
+
+//Prints the move and compares statics of the sorting algorithm
+//Returns nothing but outputs to printf
+//
+//*s: takes the Stats struct
+//arr_size: takes in the number of elements in the array
+//algorithm[]: takes in the name of the algorithm as a char
 void print_stats(Stats *s, uint32_t arr_size, const char algorithm[]) {
     printf("%s, %" PRIu32 " elements, %" PRIu64 " moves, %" PRIu64 " compares\n", algorithm,
         arr_size, s->moves, s->compares);
+    return;
+}
+
+
+//Prints out the help message
+//Returns nothing but outputs to the print
+//
+//No inputs are taken in
+void help_msg(void) {
+    puts("SYNOPSIS");
+    puts("\tA collection of comparison-based sorting algorithms.\n");
+    puts("USAGE");
+    puts("\t./sorting [-haeisqn:p:r:] [-n length] [-p elements] [-r seed]\n");
+    puts("OPTIONS");
+    puts("    -h          display program help and usage.");
+    puts("    -a          enable all sorts.");
+    puts("    -e          enable Heap Sort.");
+    puts("    -i          enable Insertion Sort.");
+    puts("    -s          enable Shell Sort.");
+    puts("    -q          enable Quick Sort.");
+    puts("    -n length   specify number of array elements (default: 100).");
+    puts("    -p elements specify numebr of elements to print (default: 100).");
+    puts("    -r seed     specify random seed (default: 13371453).");
+
     return;
 }
