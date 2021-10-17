@@ -26,7 +26,6 @@ void print_array(uint32_t *A, int arr_size, int arr_display);
 void print_stats(Stats *s, uint32_t arr_size, const char algorithm[]);
 void help_msg(void);
 
-
 //Handles all command line options for the test harness
 //Returns 0 to signify success
 //
@@ -96,7 +95,6 @@ void make_array(uint32_t *A, uint32_t n) {
     return;
 }
 
-
 //Displays the array when called
 //returns nothing but it uses printf as an output
 //
@@ -118,8 +116,6 @@ void print_array(uint32_t *A, int arr_size, int arr_display) {
     return;
 }
 
-
-
 //Prints the move and compares statics of the sorting algorithm
 //Returns nothing but outputs to printf
 //
@@ -131,7 +127,6 @@ void print_stats(Stats *s, uint32_t arr_size, const char algorithm[]) {
         arr_size, s->moves, s->compares);
     return;
 }
-
 
 //Prints out the help message
 //Returns nothing but outputs to the print
