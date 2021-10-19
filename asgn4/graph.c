@@ -10,7 +10,7 @@ struct Graph {
     uint32_t vertices;
     bool undirected;
     bool visited[VERTICES];
-    uint32_t matrix[VERTICES][VERTICES];
+    uint32_t matrix[VERTICES][VERTICES] = {0};
 }
 
 Graph *graph_create(uint32_t vertices, bool undirected){
