@@ -34,7 +34,13 @@ bool graph_add_edge(Graph *G, uint32_t i, uint32_t j, uint32_t k){
     if ((i > G->vertices) || (j > G->vertices)){
         return false;
     }
-    G->matrix[i][j] = k;
+
+    if( G->undirected ){
+        G->matrix[i][j] = k;
+        G->matrix[j][i] = k;
+    }else{
+        G->matrix[i][j] = k;
+    }
     return true;
 }
 
@@ -72,7 +78,7 @@ void graph_mark_unvisited(Graph *G, uint32_t v){
 void graph_print(Graph *G){
     for (uint32_t i = 0; i < G->vertices; ++i){
         for (uint32_t j = 0; j < G->vertices; ++i){
-            printf("% "PRIu32,G->matrix[i][j]);
+            printf("% "PRIu32, G->matrix[i][j]);
         }
         printf("\n");
     }
