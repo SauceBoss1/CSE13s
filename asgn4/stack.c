@@ -80,7 +80,7 @@ bool stack_peek(Stack *s, uint32_t *x){
 }
 
 void stack_copy(Stack *dst, Stack *src){
-    for (uint32_t i = 0; i < src->capacity; ++i){
+    for (uint32_t i = 0; i < src->top; ++i){
         dst->items[i] = src->items[i];
     }
     return;
