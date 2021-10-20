@@ -27,7 +27,7 @@ void graph_delete(Graph **G){
 }
 
 uint32_t graph_vertices(Graph *G){
-    G->vertices;
+    return G->vertices;
 }
 
 bool graph_add_edge(Graph *G, uint32_t i, uint32_t j, uint32_t k){
@@ -43,6 +43,8 @@ bool graph_add_edge(Graph *G, uint32_t i, uint32_t j, uint32_t k){
     }
     return true;
 }
+
+//implment graph_has_edge
 
 uint32_t graph_edge_weight(Graph *G, uint32_t i, uint32_t j){
     if ((i > G->vertices) || (j > G->vertices)){
