@@ -11,7 +11,7 @@ struct Graph {
     bool undirected;
     bool visited[VERTICES];
     uint32_t matrix[VERTICES][VERTICES];
-}
+};
 
 Graph *graph_create(uint32_t vertices, bool undirected){
     Graph *G = (Graph *)calloc(1, sizeof(Graph));
@@ -44,7 +44,12 @@ bool graph_add_edge(Graph *G, uint32_t i, uint32_t j, uint32_t k){
     return true;
 }
 
-//implment graph_has_edge
+bool graph_has_edge(Graph *G, uint32_t i, uint32_t j){
+    if ( (i > G->vertices) || (j > G->verticies) || (G->matrix[i][j] < 1) ){
+        return false;
+    }
+    return true;
+}
 
 uint32_t graph_edge_weight(Graph *G, uint32_t i, uint32_t j){
     if ((i > G->vertices) || (j > G->vertices)){
