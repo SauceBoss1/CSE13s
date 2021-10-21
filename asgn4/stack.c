@@ -9,8 +9,7 @@ struct Stack {
     uint32_t top;
     uint32_t capacity;
     uint32_t *items;
-} Stack;
-
+};
 
 Stack *stack_create(uint32_t capacity){
     Stack *s = (Stack *)malloc(sizeof(Stack));
@@ -50,7 +49,7 @@ bool stack_full(Stack *s){
 }
 
 uint32_t stack_size(Stack *s){
-    return s->top;
+    return s->top - 1;
 }
 
 bool stack_push(Stack *s, uint32_t x){
@@ -83,6 +82,7 @@ void stack_copy(Stack *dst, Stack *src){
     for (uint32_t i = 0; i < src->top; ++i){
         dst->items[i] = src->items[i];
     }
+    dst->top = src->top;
     return;
 }
 
