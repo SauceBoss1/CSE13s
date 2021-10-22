@@ -42,22 +42,30 @@ bool stack_empty(Stack *s) {
 }
 
 bool stack_full(Stack *s) {
-    if (s->top - 1 == s->capacity) {
+    if (s->top == s->capacity) {
         return true;
     }
     return false;
 }
 
 uint32_t stack_size(Stack *s) {
-    return s->top - 1;
+    //printf("s->top : %"PRIu32"\n", s->top);
+    return s->top;
 }
 
 bool stack_push(Stack *s, uint32_t x) {
+    printf("x: %" PRIu32 "\n", x);
+    puts("stack1");
     if (stack_full(s)) {
         return false;
     }
+    puts("stack2");
     s->items[s->top] = x;
-    s->top++;
+    puts("stack3");
+    printf("s->top : %" PRIu32 "\n", s->top);
+    puts("stack4");
+    s->top += 1;
+    puts("stack5");
     return true;
 }
 

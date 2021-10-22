@@ -12,8 +12,10 @@
 
 #define OPTIONS "hvui:o:"
 
+static int recursive_calls = 0; //this keeps track of the number of times dfs has been called
 void matrix_parser(Graph *G, FILE *infile);
-void dfs(Graph *G, uint32_t v, Path *curr, Path *shortest, char *cities[], FILE *outfile);
+void dfs(Graph *G, uint32_t v, Path *curr, Path *shortest, char *cities[], FILE *outfile,
+    uint32_t vertices);
 
 int main(int argc, char **argv) {
     FILE *infile = stdin;
@@ -50,6 +52,9 @@ int main(int argc, char **argv) {
     Path *curr = path_create();
     Path *shortest = path_create();
 
+    recursive_calls = 0; //make sure we start our recursion at 0
+    dfs(G, START_VERTEX, curr, shortest, cities, outfile, vertices);
+    path_print(shortest, outfile, cities);
     ////////////////////////////////////////////////////////////////////////////////////
     //USE THE SECTION BELOW TO FREE MEMORY
 
@@ -88,16 +93,30 @@ void matrix_parser(Graph *G, FILE *infile) {
 }
 
 //figure out how to deal with the shortest length
-void dfs(Graph *G, uint32_t v, Path *curr, path *shortest, char *cities[], FILE *outfile){
-    graph_mark_visited(G, v);
-    path_push_vertex(curr, v, G);
+void dfs(Graph *G, uint32_t v, Path *curr, Path *shortest, char *cities[], FILE *outfile,
+    uint32_t vertices) {
+    recursive_calls++;
 
-    for (uint32_t w = 0; w <= graph_vertices(G); ++w){
-        if (!graph_visited(G, w)){
-            dfs(G, w, curr, shortest, cities, outfile);
-            if(!graph_has_edge(G, v, w)){
-                uint32_t *y = 0;
-                path_pop_vertex(curr, y, G);
+    if (path_vertices(curr) >= vertices) {
+        //printf("here\n");
+        if (path_length(shortest) == 0) {
+            path_copy(shortest, curr);
+        } else if (path_length(curr) < path_length(shortest)) {
+            path_copy(shortest, curr);
+        }
+    }
+
+    graph_mark_visited(G, v);
+    if (!path_push_vertex(curr, v, G)) {
+        printf("failed push\n");
+    }
+
+    for (uint32_t w = 0; w <= graph_vertices(G); ++w) {
+        if (!graph_visited(G, w) && graph_has_edge(G, v, w)) {
+            dfs(G, w, curr, shortest, cities, outfile, vertices);
+            uint32_t y = 0;
+            if (!path_pop_vertex(curr, &y, G)) {
+                printf("failed pop\n");
             }
         }
     }
