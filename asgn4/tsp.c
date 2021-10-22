@@ -13,6 +13,7 @@
 #define OPTIONS "hvui:o:"
 
 void matrix_parser(Graph *G, FILE *infile);
+void dfs(Graph *G, uint32_t v, Path *curr, Path *shortest, char *cities[], FILE *outfile);
 
 int main(int argc, char **argv) {
     FILE *infile = stdin;
@@ -44,7 +45,11 @@ int main(int argc, char **argv) {
 
     Graph *G = graph_create((uint32_t) vertices, undirected);
     matrix_parser(G, infile);
-    graph_print(G);
+    //graph_print(G);
+
+    Path *curr = path_create();
+    Path *shortest = path_create();
+
     ////////////////////////////////////////////////////////////////////////////////////
     //USE THE SECTION BELOW TO FREE MEMORY
 
@@ -58,6 +63,9 @@ int main(int argc, char **argv) {
     cities = NULL;
 
     graph_delete(&G);
+
+    path_delete(&curr);
+    path_delete(&shortest);
 
     fclose(infile);
     fclose(outfile);
@@ -76,5 +84,24 @@ void matrix_parser(Graph *G, FILE *infile) {
         graph_add_edge(G, i, j, k);
         //printf("<%"PRIu32", %"PRIu32", %"PRIu32">\n", i, j ,k);
     }
+    return;
+}
+
+//figure out how to deal with the shortest length
+void dfs(Graph *G, uint32_t v, Path *curr, path *shortest, char *cities[], FILE *outfile){
+    graph_mark_visited(G, v);
+    path_push_vertex(curr, v, G);
+
+    for (uint32_t w = 0; w <= graph_vertices(G); ++w){
+        if (!graph_visited(G, w)){
+            dfs(G, w, curr, shortest, cities, outfile);
+            if(!graph_has_edge(G, v, w)){
+                uint32_t *y = 0;
+                path_pop_vertex(curr, y, G);
+            }
+        }
+    }
+
+    graph_mark_unvisited(G, v);
     return;
 }
