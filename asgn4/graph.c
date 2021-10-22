@@ -84,9 +84,14 @@ void graph_mark_unvisited(Graph *G, uint32_t v) {
 }
 
 void graph_print(Graph *G) {
+    for (uint32_t x = 0; x < G->vertices; ++x) {
+        printf("%" PRIu32 " ", x);
+    }
+    printf("\n");
     for (uint32_t i = 0; i < G->vertices; ++i) {
-        for (uint32_t j = 0; j < G->vertices; ++i) {
-            printf("%" PRIu32 " ", G->matrix[i][j]);
+        printf("%" PRIu32 " ", i);
+        for (uint32_t j = 0; j < G->vertices; ++j) {
+            printf(" %" PRIu32, G->matrix[i][j]);
         }
         printf("\n");
     }
