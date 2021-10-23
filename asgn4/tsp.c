@@ -97,7 +97,7 @@ void dfs(Graph *G, uint32_t v, Path *curr, Path *shortest, char *cities[], FILE 
     uint32_t vertices) {
     recursive_calls++;
 
-    printf("path_vertices: %"PRIu32 " vertices: %"PRIu32"\n", path_vertices(curr), vertices);
+    //printf("path_vertices: %" PRIu32 " vertices: %" PRIu32 "\n", path_vertices(curr), vertices);
     if (path_vertices(curr) >= vertices - 1) {
         if (path_length(shortest) == 0) {
             path_copy(shortest, curr);
