@@ -37,15 +37,15 @@ bool path_push_vertex(Path *p, uint32_t v, Graph *G) {
         return false;
     }
 
-    //if (!stack_empty(p->vertices)) {
-    uint32_t x = 0;
-    uint32_t *i = &x;
-    //printf("i: %"PRIu32"\n",i);
+    if (!stack_empty(p->vertices)) {
+        uint32_t x = 0;
+        uint32_t *i = &x;
+      //printf("i: %"PRIu32"\n",i);
 
-    stack_peek(p->vertices, i);
-
-    p->length += graph_edge_weight(G, *i, v);
-    //}
+        stack_peek(p->vertices, i);
+        //printf("edge weight: %"PRIu32"\n", graph_edge_weight(G, v, *i));
+        p->length += graph_edge_weight(G, *i, v);
+    }
 
     stack_size(p->vertices);
     stack_push(p->vertices, v);
