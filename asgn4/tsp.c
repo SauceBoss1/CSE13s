@@ -55,6 +55,7 @@ int main(int argc, char **argv) {
     recursive_calls = 0; //make sure we start our recursion at 0
     dfs(G, START_VERTEX, curr, shortest, cities, outfile, vertices);
     path_print(shortest, outfile, cities);
+    printf("Recursive Calls: %d\n", recursive_calls);
     ////////////////////////////////////////////////////////////////////////////////////
     //USE THE SECTION BELOW TO FREE MEMORY
 
@@ -96,12 +97,17 @@ void matrix_parser(Graph *G, FILE *infile) {
 void dfs(Graph *G, uint32_t v, Path *curr, Path *shortest, char *cities[], FILE *outfile,
     uint32_t vertices) {
     recursive_calls++;
+    uint32_t y = 0;
+    uint32_t *z = &y;
 
     //printf("path_vertices: %" PRIu32 " vertices: %" PRIu32 "\n", path_vertices(curr), vertices);
-    if (path_vertices(curr) >= vertices - 1) {
+    if (path_vertices(curr) + 1 >= vertices) {
+        if (*z == 0){
+            path_push_vertex(curr, *z, G);
+        }
         if (path_length(shortest) == 0) {
-            path_copy(shortest, curr);
-        } else if (path_length(curr) < path_length(shortest)) {
+            path_copy(shortest, curr); //if there's not shortest length so far
+        }else if (path_length(curr) < path_length(shortest)) {
             path_copy(shortest, curr);
         }
     }
@@ -110,10 +116,17 @@ void dfs(Graph *G, uint32_t v, Path *curr, Path *shortest, char *cities[], FILE 
     path_push_vertex(curr, v, G);
 
     for (uint32_t w = 0; w <= graph_vertices(G); ++w) {
+        //if (graph_visited(G, w)){
+        //    printf("NO EDGE: v: %"PRIu32" w: %"PRIu32" weight: %" PRIu32"\n", v, w, graph_edge_weight(G, v, w));
+
+        //}
+
+        if ( w == 0){
+            graph_mark_unvisited(G,0);
+        }
         if (!graph_visited(G, w) && graph_has_edge(G, v, w)) {
+            //printf("v: %"PRIu32" w: %"PRIu32" weight: %" PRIu32"\n", v, w, graph_edge_weight(G, v, w));
             dfs(G, w, curr, shortest, cities, outfile, vertices);
-            uint32_t y = 0;
-            uint32_t *z = &y;
             path_pop_vertex(curr, z, G);
         }
     }
