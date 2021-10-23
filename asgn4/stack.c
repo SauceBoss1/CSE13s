@@ -54,18 +54,13 @@ uint32_t stack_size(Stack *s) {
 }
 
 bool stack_push(Stack *s, uint32_t x) {
-    printf("x: %" PRIu32 "\n", x);
-    puts("stack1");
+    //printf("x: %" PRIu32 "\n", x);
     if (stack_full(s)) {
         return false;
     }
-    puts("stack2");
     s->items[s->top] = x;
-    puts("stack3");
-    printf("s->top : %" PRIu32 "\n", s->top);
-    puts("stack4");
+    //printf("s->top : %" PRIu32 "\n", s->top);
     s->top += 1;
-    puts("stack5");
     return true;
 }
 
