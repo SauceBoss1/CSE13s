@@ -41,8 +41,10 @@ bool path_push_vertex(Path *p, uint32_t v, Graph *G) {
         u = START_VERTEX;
     }
     stack_push(p->vertices, v);
-    p->length += graph_edge_weight(G, u, v);
 
+    if (u != v) {
+        p->length += graph_edge_weight(G, u, v);
+    }
     //printf("u: %"PRIu32"\n", u);
     //printf("u: %"PRIu32" v: %"PRIu32" weight: %"PRIu32"\n", u, v, graph_edge_weight(G, u, v));
     //printf("pushing: %"PRIu32"\n", p->length);
@@ -71,6 +73,7 @@ bool path_pop_vertex(Path *p, uint32_t *v, Graph *G) {
         y = START_VERTEX;
     }
     p->length -= graph_edge_weight(G, y, x);
+    //printf("backtracking: %"PRIu32"\n", p->length);
     //printf("top: %"PRIu32" *v: %"PRIu32" ", y, x);
     //printf("edge weight: %"PRIu32"\n", graph_edge_weight(G, y, x));
     //printf("backtrack: %"PRIu32"\n", (p->length - graph_edge_weight(G, x, *v)));

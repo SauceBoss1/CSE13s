@@ -112,6 +112,17 @@ void matrix_parser(Graph *G, FILE *infile) {
     return;
 }
 
+//finds the shortest hamiltonian path for a given graph
+//Returns nothing
+//
+//G: input graph
+//v: starting vertex
+//curr: current path
+//shortest: shortest path
+//cities[]: an array of cities
+//outfile: how you want the program to be outputted
+//vertices: number of vertices in the graph
+//verbos: enables verbose printing
 void dfs(Graph *G, uint32_t v, Path *curr, Path *shortest, char *cities[], FILE *outfile,
     uint32_t vertices, bool verbose) {
     recursive_calls++;
@@ -122,7 +133,7 @@ void dfs(Graph *G, uint32_t v, Path *curr, Path *shortest, char *cities[], FILE 
 
     //printf("v: %"PRIu32"\n", v);
     //printf("curr length: %"PRIu32"\n", path_length(curr));
-    if (path_vertices(curr) >= vertices && graph_has_edge(G, v, START_VERTEX)) {
+    if (path_vertices(curr) >= graph_vertices(G) && graph_has_edge(G, v, START_VERTEX)) {
         path_push_vertex(curr, START_VERTEX, G);
         //printf("PATH=> v: %"PRIu32" w: %"PRIu32" weight: %" PRIu32"\n", v, START_VERTEX, graph_edge_weight(G, v, START_VERTEX));
         if (verbose) {
@@ -146,12 +157,12 @@ void dfs(Graph *G, uint32_t v, Path *curr, Path *shortest, char *cities[], FILE 
         if (!graph_visited(G, w) && graph_has_edge(G, v, w)) {
             //printf("v: %"PRIu32" w: %"PRIu32" weight: %" PRIu32"\n", v, w, graph_edge_weight(G, v, w));
             dfs(G, w, curr, shortest, cities, outfile, vertices, verbose);
-            path_pop_vertex(curr, &z, G);
+            //path_pop_vertex(curr, &z, G);
             //printf("v: %"PRIu32" w: %"PRIu32" weight: %" PRIu32"\n", v, w, graph_edge_weight(G, v, w));
             //printf("z: %" PRIu32 "\n", z);
         }
     }
-
+    path_pop_vertex(curr, &z, G);
     graph_mark_unvisited(G, v);
     return;
 }
