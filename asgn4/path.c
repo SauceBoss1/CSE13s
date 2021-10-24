@@ -42,13 +42,9 @@ bool path_push_vertex(Path *p, uint32_t v, Graph *G) {
     }
     stack_push(p->vertices, v);
 
-    if (u != v) {
+    if (u != v) { //check to make sure the vertices are not the same
         p->length += graph_edge_weight(G, u, v);
     }
-    //printf("u: %"PRIu32"\n", u);
-    //printf("u: %"PRIu32" v: %"PRIu32" weight: %"PRIu32"\n", u, v, graph_edge_weight(G, u, v));
-    //printf("pushing: %"PRIu32"\n", p->length);
-    //printf("*top: %" PRIu32 " pushed: %" PRIu32 "\n", u, v);
     return true;
 }
 
@@ -64,19 +60,10 @@ bool path_pop_vertex(Path *p, uint32_t *v, Graph *G) {
     stack_pop(p->vertices, v);
 
     uint32_t y = 0;
-    //stack_peek(p->vertices, &y);
-    //printf("v: %"PRIu32"\n", *v);
-    //uint32_t x = 0;
-    //stack_peek(p->vertices, &x);
-    //printf("x: %"PRIu32"\n", x);
     if (!stack_peek(p->vertices, &y)) {
         y = START_VERTEX;
     }
     p->length -= graph_edge_weight(G, y, x);
-    //printf("backtracking: %"PRIu32"\n", p->length);
-    //printf("top: %"PRIu32" *v: %"PRIu32" ", y, x);
-    //printf("edge weight: %"PRIu32"\n", graph_edge_weight(G, y, x));
-    //printf("backtrack: %"PRIu32"\n", (p->length - graph_edge_weight(G, x, *v)));
     return true;
 }
 
