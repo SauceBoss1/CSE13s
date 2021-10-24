@@ -118,7 +118,7 @@ void dfs(Graph *G, uint32_t v, Path *curr, Path *shortest, char *cities[], FILE 
         } else if (path_length(curr) < path_length(shortest)) {
             path_copy(shortest, curr);
         }
-        
+
         path_pop_vertex(curr, &z, G);
     }
 
