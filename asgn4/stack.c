@@ -49,7 +49,7 @@ bool stack_full(Stack *s) {
 }
 
 uint32_t stack_size(Stack *s) {
-    //printf("s->top : %"PRIu32"\n", s->top);
+    //printf("syack size : %"PRIu32"\n", s->top);
     return s->top;
 }
 
@@ -60,6 +60,7 @@ bool stack_push(Stack *s, uint32_t x) {
     }
     s->items[s->top] = x;
     //printf("s->top : %" PRIu32 "\n", s->top);
+    //printf("s->items[s->top] = %"PRIu32"\n", s->items[s->top]);
     s->top += 1;
     return true;
 }
@@ -68,7 +69,7 @@ bool stack_pop(Stack *s, uint32_t *x) {
     if (stack_empty(s)) {
         return false;
     }
-    *x = s->items[s->top - 1];
+    *x = s->items[s->top];
     s->top--;
     return true;
 }
