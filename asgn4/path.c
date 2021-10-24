@@ -45,7 +45,7 @@ bool path_push_vertex(Path *p, uint32_t v, Graph *G) {
     if (v > 0){
         stack_push(p->vertices, v);
     }
-    printf("u: %"PRIu32" v: %"PRIu32" weight: %"PRIu32"\n", u, v, graph_edge_weight(G, u, v));
+    //printf("u: %"PRIu32" v: %"PRIu32" weight: %"PRIu32"\n", u, v, graph_edge_weight(G, u, v));
     
     p->length += graph_edge_weight(G, u, v);
     if (graph_has_edge(G, v, START_VERTEX)){
