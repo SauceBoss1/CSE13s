@@ -103,18 +103,22 @@ void dfs(Graph *G, uint32_t v, Path *curr, Path *shortest, char *cities[], FILE 
     graph_mark_visited(G, v);
     path_push_vertex(curr, v, G);
 
-    if (path_vertices(curr) == vertices && graph_has_edge(G, v, START_VERTEX)) {
+    //printf("v: %"PRIu32"\n", v);
+    //printf("curr length: %"PRIu32"\n", path_length(curr));
+    if (path_vertices(curr) >= vertices && graph_has_edge(G, v, START_VERTEX)) {
         path_push_vertex(curr, START_VERTEX, G);
-
+        //printf("PATH=> v: %"PRIu32" w: %"PRIu32" weight: %" PRIu32"\n", v, START_VERTEX, graph_edge_weight(G, v, START_VERTEX));
         if (verbose) {
             path_print(curr, outfile, cities);
         }
 
         if (path_length(shortest) == 0) {
             path_copy(shortest, curr); //if there's no shortest length so far
+            //printf("len: %"PRIu32"\n", path_length(shortest));
         } else if (path_length(curr) < path_length(shortest)) {
             path_copy(shortest, curr);
         }
+        
         path_pop_vertex(curr, &z, G);
     }
 
@@ -123,9 +127,9 @@ void dfs(Graph *G, uint32_t v, Path *curr, Path *shortest, char *cities[], FILE 
     for (uint32_t w = 0; w <= graph_vertices(G); ++w) {
         //printf("v: %"PRIu32" w: %"PRIu32" weight: %" PRIu32"\n", v, w, graph_edge_weight(G, v, w));
         if (!graph_visited(G, w) && graph_has_edge(G, v, w)) {
-            //printf("v: %"PRIu32" w: %"PRIu32" weight: %" PRIu32"\n", v, w, graph_edge_weight(G, v, w));
             dfs(G, w, curr, shortest, cities, outfile, vertices, verbose);
             path_pop_vertex(curr, &z, G);
+            //printf("v: %"PRIu32" w: %"PRIu32" weight: %" PRIu32"\n", v, w, graph_edge_weight(G, v, w));
             //printf("z: %" PRIu32 "\n", z);
         }
     }
