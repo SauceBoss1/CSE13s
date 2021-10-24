@@ -70,6 +70,7 @@ bool stack_pop(Stack *s, uint32_t *x) {
         return false;
     }
     *x = s->items[s->top];
+    //printf("*x: %"PRIu32"\n", *x);
     s->top--;
     return true;
 }
