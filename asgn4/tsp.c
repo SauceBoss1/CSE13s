@@ -17,6 +17,19 @@ void matrix_parser(Graph *G, FILE *infile);
 void dfs(Graph *G, uint32_t v, Path *curr, Path *shortest, char *cities[], FILE *outfile,
     uint32_t vertices, bool verbose);
 
+void help_msg(void) {
+    puts("SYNOPSIS");
+    puts("    Traveling Salesman Problem using DFS.\n");
+    puts("USAGE");
+    puts("    ./tsp [-u] [-v] [-h] [-i infile] [-o outfile]\n");
+    puts("OPTIONS");
+    puts("  -u             Use undirected graph.");
+    puts("  -v             Enable verbose printing.");
+    puts("  -h             Program usage and help.");
+    puts("  -i infile      Input containing graph (default: stdin");
+    puts("  -o outfile     Output of computed path (default: stdout)");
+}
+
 int main(int argc, char **argv) {
     FILE *infile = stdin;
     FILE *outfile = stdout;
@@ -30,6 +43,10 @@ int main(int argc, char **argv) {
         case 'o': outfile = fopen(optarg, "w"); break;
         case 'u': undirected = true; break;
         case 'v': verbose = true; break;
+        case 'h':
+            help_msg();
+            return 1;
+            break;
         }
     }
 
@@ -127,6 +144,7 @@ void dfs(Graph *G, uint32_t v, Path *curr, Path *shortest, char *cities[], FILE 
     for (uint32_t w = 0; w <= graph_vertices(G); ++w) {
         //printf("v: %"PRIu32" w: %"PRIu32" weight: %" PRIu32"\n", v, w, graph_edge_weight(G, v, w));
         if (!graph_visited(G, w) && graph_has_edge(G, v, w)) {
+            //printf("v: %"PRIu32" w: %"PRIu32" weight: %" PRIu32"\n", v, w, graph_edge_weight(G, v, w));
             dfs(G, w, curr, shortest, cities, outfile, vertices, verbose);
             path_pop_vertex(curr, &z, G);
             //printf("v: %"PRIu32" w: %"PRIu32" weight: %" PRIu32"\n", v, w, graph_edge_weight(G, v, w));
