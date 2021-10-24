@@ -37,14 +37,16 @@ bool path_push_vertex(Path *p, uint32_t v, Graph *G) {
         return false;
     }
 
-    uint32_t x = 0;
-    uint32_t *i = &x;
-    stack_peek(p->vertices, i);
+    uint32_t u = 0;
+    if (!stack_peek(p->vertices, &u)) {
+        u = START_VERTEX;
+    }
 
-    //printf("*i: %"PRIu32" v: %" PRIu32 "\n", *i, v);
-    p->length += graph_edge_weight(G, *i, v);
+    p->length += graph_edge_weight(G, u, v);
     //printf("p->length: %"PRIu32"\n", p->length);
     stack_push(p->vertices, v);
+    stack_peek(p->vertices, &u);
+    //printf("*top: %"PRIu32" pushed: %" PRIu32 "\n", u, v);
     return true;
 }
 
@@ -54,10 +56,12 @@ bool path_pop_vertex(Path *p, uint32_t *v, Graph *G) {
     }
 
     stack_pop(p->vertices, v);
+    //printf("v: %"PRIu32"\n", *v);
     uint32_t x = 0;
-    uint32_t *i = &x;
-    stack_peek(p->vertices, i);
-    p->length -= graph_edge_weight(G, *i, *v);
+    if (!stack_peek(p->vertices, &x)) {
+        x = START_VERTEX;
+    }
+    p->length -= graph_edge_weight(G, x, *v);
     return true;
 }
 

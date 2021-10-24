@@ -68,7 +68,7 @@ bool stack_pop(Stack *s, uint32_t *x) {
     if (stack_empty(s)) {
         return false;
     }
-    x = &s->items[s->top - 1];
+    *x = s->items[s->top - 1];
     s->top--;
     return true;
 }
@@ -77,7 +77,7 @@ bool stack_peek(Stack *s, uint32_t *x) {
     if (stack_empty(s)) {
         return false;
     }
-    x = &s->items[s->top];
+    *x = s->items[s->top - 1];
     //printf("s->items[s->top] = %"PRIu32"\n", s->items[s->top]);
     return true;
 }
