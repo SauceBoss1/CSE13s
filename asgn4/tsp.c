@@ -124,9 +124,16 @@ int main(int argc, char **argv) {
 void matrix_parser(Graph *G, FILE *infile) {
     uint32_t i, j, k;
     i = j = k = 0;
-    while (fscanf(infile, "%" PRIu32 " %" PRIu32 " %" PRIu32, &i, &j, &k) != EOF) {
+    int input;
+    while ((input = fscanf(infile, "%" PRIu32 " %" PRIu32 " %" PRIu32, &i, &j, &k)) != EOF) {
+        //deal with malformed line
+        if (input == 0) {
+            fprintf(stderr, "MALFORMED LINE\n");
+            exit(1);
+        }
         graph_add_edge(G, i, j, k);
     }
+
     return;
 }
 
