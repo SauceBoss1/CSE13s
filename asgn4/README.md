@@ -24,7 +24,7 @@ Once you have made the executable, you can then type `./tsp -h` to see all the r
 Since this program takes in files as the input, you can use `stdin` and `stdout` to input and output your files. Below is an example of how the
 program can be used:
 
-- `./tsp -arg1 -arg2 <infile >outfile'
+- `./tsp -arg1 -arg2 <infile >outfile`
 
 Here are the avaliable command line options at the user's disposal:
 
