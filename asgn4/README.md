@@ -33,3 +33,10 @@ Here are the avaliable command line options at the user's disposal:
 - -v:           Prints all verbose hamiltonian paths found
 - -i: infile    inputs in a user's graph file. (stdin is used by default)
 - -o: outfile   Outputs the program's results to a file. (stdout is used by default)
+
+## Issues
+
+So far, there are no significant issues. However, the algorithm has significantly more recursive calls than the 
+example binary but the shorest length outputs are the same.
+
+With that being said, the recursive algorihm is currently not optimized for quick run times
