@@ -14,8 +14,8 @@
 
 static int recursive_calls = 0; //this keeps track of the number of times dfs has been called
 void matrix_parser(Graph *G, FILE *infile);
-void dfs(Graph *G, uint32_t v, Path *curr, Path *shortest, char *cities[], FILE *outfile,
-    uint32_t vertices, bool verbose);
+void dfs(
+    Graph *G, uint32_t v, Path *curr, Path *shortest, char *cities[], FILE *outfile, bool verbose);
 
 //handles with printing the help msg
 void help_msg(void) {
@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
     int opt = 0;
     bool undirected = false;
     bool verbose = false;
-    while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
+    while ((opt = getopt(argc, argv, OPTIONS)) != -1) { //handles command line options
         switch (opt) {
         case 'i': infile = fopen(optarg, "r"); break;
         case 'o': outfile = fopen(optarg, "w"); break;
@@ -50,21 +50,39 @@ int main(int argc, char **argv) {
             break;
         }
     }
+    ////////////////////////////////////////////////////////////////
 
+    //The below code handles with the cities
     char buf[1024];
-    fgets(buf, 1024, infile);
+    if (fgets(buf, 1024, infile) == NULL) {
+        fprintf(stderr, "Bad Read!\n");
+        return 1;
+    }
+
     buf[strlen(buf) - 1] = '\0';
     int vertices = strtol(buf, NULL, 10); //number of cities in file
+    if (vertices <= 1) {
+        fprintf(stderr, "There is no where to go.\n");
+        return 1;
+    }
 
-    char **cities = malloc(vertices * sizeof(char *));
+    char **cities = malloc(vertices * sizeof(char *)); //dynamicall create an array of strings
     for (int i = 0; i < vertices; ++i) {
         char buf[1024];
-        fgets(buf, 1024, infile);
+
+        if (fgets(buf, 1024, infile) == NULL) { //checks to see if fgets() is a success
+            fprintf(stderr, "Bad Read!\n");
+            return 1;
+        }
+
         buf[strlen(buf) - 1] = '\0';
         cities[i] = strdup(buf); //add the city to the array
             //NOTE: strdup uses malloc already
     }
 
+    /////////////////////////////////////////////////////////////
+
+    //The code below handles the meat of the program
     Graph *G = graph_create((uint32_t) vertices, undirected);
     matrix_parser(G, infile);
     //graph_print(G);
@@ -73,9 +91,10 @@ int main(int argc, char **argv) {
     Path *shortest = path_create();
 
     recursive_calls = 0; //make sure we start our recursion at 0
-    dfs(G, START_VERTEX, curr, shortest, cities, outfile, vertices, verbose);
+    dfs(G, START_VERTEX, curr, shortest, cities, outfile, verbose);
     path_print(shortest, outfile, cities);
-    printf("Recursive Calls: %d\n", recursive_calls);
+    fprintf(outfile, "Recursive Calls: %d\n", recursive_calls);
+
     ////////////////////////////////////////////////////////////////////////////////////
     //USE THE SECTION BELOW TO FREE MEMORY
 
@@ -123,18 +142,20 @@ void matrix_parser(Graph *G, FILE *infile) {
 //vertices: number of vertices in the graph
 //verbos: enables verbose printing
 //
-//NOTE: DFS algorithm was inspired from the assignment pdf pseudocode
-void dfs(Graph *G, uint32_t v, Path *curr, Path *shortest, char *cities[], FILE *outfile,
-    uint32_t vertices, bool verbose) {
+//NOTE: DFS algorithm was based from the assignment pdf pseudocode
+void dfs(
+    Graph *G, uint32_t v, Path *curr, Path *shortest, char *cities[], FILE *outfile, bool verbose) {
+
     recursive_calls++;
-    uint32_t z = 0;
+    uint32_t z = 0; //keeps track of the popped vertices
 
     graph_mark_visited(G, v);
     path_push_vertex(curr, v, G);
 
     if (path_vertices(curr) >= graph_vertices(G) && graph_has_edge(G, v, START_VERTEX)) {
+        //check if we reached a full hamiltonian path
         path_push_vertex(curr, START_VERTEX, G);
-        if (verbose) {
+        if (verbose) { //print all hamiltonian paths if this is called
             path_print(curr, outfile, cities);
         }
 
@@ -149,7 +170,7 @@ void dfs(Graph *G, uint32_t v, Path *curr, Path *shortest, char *cities[], FILE 
 
     for (uint32_t w = 0; w <= graph_vertices(G); ++w) {
         if (!graph_visited(G, w) && graph_has_edge(G, v, w)) {
-            dfs(G, w, curr, shortest, cities, outfile, vertices, verbose);
+            dfs(G, w, curr, shortest, cities, outfile, verbose);
         }
     }
     path_pop_vertex(curr, &z, G);
