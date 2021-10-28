@@ -28,6 +28,8 @@ void node_delete(Node **n) {
 
 Node *node_join(Node *left, Node *right) {
     Node *n = node_create('$', left->frequency + right->frequency);
+    n->left = left;
+    n->right = right;
     return n;
 }
 
@@ -37,16 +39,15 @@ void node_print(Node *n) {
 
 //Below is an example of how Node will be used
 
-//int main(void) {
-//    Node *left = node_create('a', 3);
-//    Node *right = node_create('a', 2);
-//    Node *n = node_join(left, right);
-//    node_print(n);
+int main(void) {
+    Node *left = node_create('a', 3);
+    Node *right = node_create('a', 2);
+    Node *n = node_join(left, right);
+    node_print(n);
 
-//    node_delete(&n);
-//    node_delete(&left);
-//    node_delete(&right);
-//
-//    return 0;
-//}
+    node_delete(&n);
+    node_delete(&left);
+    node_delete(&right);
 
+    return 0;
+}
