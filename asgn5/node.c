@@ -35,6 +35,8 @@ void node_print(Node *n) {
     printf("symbol: %" PRIu8 " frequence: %" PRIu64 "\n", n->symbol, n->frequency);
 }
 
+//Below is an example of how Node will be used
+
 //int main(void) {
 //    Node *left = node_create('a', 3);
 //    Node *right = node_create('a', 2);
@@ -44,5 +46,7 @@ void node_print(Node *n) {
 //    node_delete(&n);
 //    node_delete(&left);
 //    node_delete(&right);
+//
+//    return 0;
 //}
 
