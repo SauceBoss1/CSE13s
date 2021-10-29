@@ -1,0 +1,190 @@
+#include "pq.h"
+#include "node.h"
+
+#include <stdbool.h>
+#include <stdlib.h>
+#include <inttypes.h>
+#include <stdio.h>
+#include <math.h>
+
+struct PriorityQueue {
+    uint32_t top;
+    uint32_t capacity;
+    Node **items;
+};
+
+PriorityQueue *pq_create(uint32_t capacity){
+    PriorityQueue *pq = (PriorityQueue *) malloc(sizeof(PriorityQueue));
+    if(pq){
+        pq->top = 0;
+        pq->capacity = capacity;
+        pq->items = (Node **) calloc(capacity, sizeof(Node));
+
+        for (uint32_t i = 0; i < capacity; i++){
+            pq->items[i] = node_create('\0', 0);
+        }
+        if (!pq->items){
+            free(pq);
+            pq = NULL;
+        }
+    } else {
+        free(pq);
+        pq = NULL;
+    }
+    return pq;
+}
+
+void pq_delete(PriorityQueue **q){
+    if( *q && (*q)->items){
+        //printf("cap: %"PRIu32"\n",(*q)->capacity);
+
+        for(uint32_t i = 0; i < (*q)->capacity; ++i){
+            printf("i: %"PRIu32"\n", i);
+
+            node_delete(&(*q)->items[i]);
+            //free(&(*q)->items[i]);
+        }
+        free((*q)->items);
+        free(*q);
+        *q = NULL;
+    }
+    return;
+}
+
+/////////////////////////////////////////////
+//HEAP IMPLEMENTATION BELOW
+
+static uint32_t min_child(PriorityQueue *q, uint32_t first, uint32_t last){
+    uint32_t left = 2* first;
+    uint32_t right = left + 1;
+
+    if((right >= last) && (q->items[right -1]->frequency < q->items[left - 1]->frequency)){
+        return right;
+    }
+    return left;
+}
+
+void swap(Node *x, Node *y){
+    //puts("here");
+    Node t = *x;
+    *x = *y;
+    *y = t;
+
+    return;
+}
+
+static void fix_heap(PriorityQueue *q, uint32_t first, uint32_t last){
+    bool found = false;
+    uint32_t mother = first, great = min_child(q, mother, last);
+    
+    while ((mother >= floor(last/2)) && !found){
+        //printf("mother: %"PRIu32"\n", mother);
+        if(q->items[mother-1]->frequency > q->items[great - 1]->frequency){
+            swap(q->items[mother - 1], q->items[great - 1]);
+            mother = great;
+            great = min_child(q, mother, last);
+        } else {
+            found = true;
+        }
+    }
+    return;
+
+}
+
+///////////////////////////////////////////
+
+bool pq_empty(PriorityQueue *q){
+    if (q->top == 0){
+        return true;
+    }
+    return false;
+}
+
+bool pq_full(PriorityQueue *q){
+    if(q->top == q->capacity){
+        return true;
+    }
+    return false;
+}
+
+uint32_t pq_size(PriorityQueue *q){
+    return q->top;
+}
+
+bool enqueue(PriorityQueue *q, Node *n){
+    if (pq_full(q)){
+        return false;
+    }
+
+    q->items[q->top] = n;
+    q->top++;
+
+    fix_heap(q, 1, q->capacity);
+
+    return true;
+}
+
+bool dequeue(PriorityQueue *q, Node **n){
+    if (pq_empty(q)){
+        return false;
+    }
+
+    *n = q->items[0];
+    q->items[0]->frequency = 0;
+    q->items[0]->symbol = '\0';
+    q->top--;
+
+    fix_heap(q, 1, q->capacity);
+
+    return true;
+}
+
+void pq_print(PriorityQueue *q){
+    printf("[");
+    for(uint32_t i = 0; i < q->capacity; ++i){
+        printf(" %"PRIu64, q->items[i]->frequency); //tries to print NULL leading to segfault
+    }
+    printf(" ]\n");
+
+    return;
+}
+
+/////////////////////////////////////////////////
+//BELOW IS AN EXAMPLE OF HOW THE ADT WILL BE USED
+
+int main(void){
+    PriorityQueue *q = pq_create(5);
+
+    Node *a = node_create('a', 10);
+    Node *b = node_create('b', 51);
+    Node *c = node_create('c', 1);
+    Node *d = node_create('d', 8);
+    Node *e = node_create('e', 5);
+    
+    
+    enqueue(q, a);
+    pq_print(q);
+    enqueue(q, b);
+    enqueue(q, c);
+    enqueue(q, d);
+    pq_print(q);
+    enqueue(q,e);
+    pq_print(q);
+    
+    Node *n = node_create('\0', 0);
+    
+    dequeue(q, &n);
+    pq_print(q);
+    dequeue(q, &n);
+    pq_print(q);
+    node_print(n);
+    pq_delete(&q);
+    //node_delete(&a);
+    //node_delete(&b);
+    //node_delete(&c);
+    //node_delete(&d);
+    //node_delete(&e);
+    //node_delete(&n);
+ 
+    return 0;
+}
