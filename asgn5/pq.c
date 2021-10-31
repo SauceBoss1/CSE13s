@@ -157,7 +157,7 @@ int main(void){
     Node *a = node_create('a', 10);
     Node *b = node_create('b', 51);
     Node *c = node_create('c', 1);
-    Node *d = node_create('d', 8);
+    Node *d = node_create('d', 37);
     Node *e = node_create('e', 5);
     
     enqueue(q, a);
