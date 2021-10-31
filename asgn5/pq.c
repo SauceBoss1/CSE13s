@@ -13,17 +13,17 @@ struct PriorityQueue {
     Node **items;
 };
 
-PriorityQueue *pq_create(uint32_t capacity){
+PriorityQueue *pq_create(uint32_t capacity) {
     PriorityQueue *pq = (PriorityQueue *) malloc(sizeof(PriorityQueue));
-    if(pq){
+    if (pq) {
         pq->top = 0;
         pq->capacity = capacity;
         pq->items = (Node **) calloc(capacity, sizeof(Node));
 
-        for (uint32_t i = 0; i < capacity; i++){
+        for (uint32_t i = 0; i < capacity; i++) {
             pq->items[i] = node_create('\0', 0);
         }
-        if (!pq->items){
+        if (!pq->items) {
             free(pq);
             pq = NULL;
         }
@@ -34,12 +34,12 @@ PriorityQueue *pq_create(uint32_t capacity){
     return pq;
 }
 
-void pq_delete(PriorityQueue **q){
-    if( *q && (*q)->items){
+void pq_delete(PriorityQueue **q) {
+    if (*q && (*q)->items) {
         //printf("cap: %"PRIu32"\n",(*q)->capacity);
 
-        for(uint32_t i = 0; i < (*q)->capacity; ++i){
-            printf("i: %"PRIu32"\n", i);
+        for (uint32_t i = 0; i < (*q)->capacity; ++i) {
+            //printf("i: %"PRIu32"\n", i);
 
             node_delete(&(*q)->items[i]);
             //free(&(*q)->items[i]);
@@ -54,17 +54,17 @@ void pq_delete(PriorityQueue **q){
 /////////////////////////////////////////////
 //HEAP IMPLEMENTATION BELOW
 
-static uint32_t min_child(PriorityQueue *q, uint32_t first, uint32_t last){
-    uint32_t left = 2* first;
+static uint32_t min_child(PriorityQueue *q, uint32_t first, uint32_t last) {
+    uint32_t left = 2 * first;
     uint32_t right = left + 1;
 
-    if((right >= last) && (q->items[right -1]->frequency < q->items[left - 1]->frequency)){
-        return right;
+    if ((right <= last) && (q->items[left - 1]->frequency < q->items[right - 1]->frequency)) {
+        return left;
     }
-    return left;
+    return right;
 }
 
-void swap(Node *x, Node *y){
+void swap(Node *x, Node *y) {
     //puts("here");
     Node t = *x;
     *x = *y;
@@ -73,13 +73,15 @@ void swap(Node *x, Node *y){
     return;
 }
 
-static void fix_heap(PriorityQueue *q, uint32_t first, uint32_t last){
+static void fix_heap(PriorityQueue *q, uint32_t first, uint32_t last) {
     bool found = false;
     uint32_t mother = first, great = min_child(q, mother, last);
-    
-    while ((mother >= floor(last/2)) && !found){
-        //printf("mother: %"PRIu32"\n", mother);
-        if(q->items[mother-1]->frequency > q->items[great - 1]->frequency){
+
+    while ((mother <= floor(last / 2)) && !found) {
+        if (q->items[0]->frequency == 0) {
+            swap(q->items[0], q->items[q->top - 1]);
+        }
+        if (q->items[mother - 1]->frequency > q->items[great - 1]->frequency) {
             swap(q->items[mother - 1], q->items[great - 1]);
             mother = great;
             great = min_child(q, mother, last);
@@ -88,61 +90,58 @@ static void fix_heap(PriorityQueue *q, uint32_t first, uint32_t last){
         }
     }
     return;
-
 }
 
 ///////////////////////////////////////////
 
-bool pq_empty(PriorityQueue *q){
-    if (q->top == 0){
+bool pq_empty(PriorityQueue *q) {
+    if (q->top == 0) {
         return true;
     }
     return false;
 }
 
-bool pq_full(PriorityQueue *q){
-    if(q->top == q->capacity){
+bool pq_full(PriorityQueue *q) {
+    if (q->top == q->capacity) {
         return true;
     }
     return false;
 }
 
-uint32_t pq_size(PriorityQueue *q){
+uint32_t pq_size(PriorityQueue *q) {
     return q->top;
 }
 
-bool enqueue(PriorityQueue *q, Node *n){
-    if (pq_full(q)){
+bool enqueue(PriorityQueue *q, Node *n) {
+    if (pq_full(q)) {
         return false;
     }
 
     q->items[q->top] = n;
+    fix_heap(q, 1, q->top);
     q->top++;
-
-    fix_heap(q, 1, q->capacity);
 
     return true;
 }
 
-bool dequeue(PriorityQueue *q, Node **n){
-    if (pq_empty(q)){
+bool dequeue(PriorityQueue *q, Node **n) {
+    if (pq_empty(q)) {
         return false;
     }
 
     *n = q->items[0];
     q->items[0]->frequency = 0;
     q->items[0]->symbol = '\0';
+    fix_heap(q, 1, q->top);
     q->top--;
-
-    fix_heap(q, 1, q->capacity);
 
     return true;
 }
 
-void pq_print(PriorityQueue *q){
+void pq_print(PriorityQueue *q) {
     printf("[");
-    for(uint32_t i = 0; i < q->capacity; ++i){
-        printf(" %"PRIu64, q->items[i]->frequency); //tries to print NULL leading to segfault
+    for (uint32_t i = 0; i < q->capacity; ++i) {
+        printf(" %" PRIu64, q->items[i]->frequency); //tries to print NULL leading to segfault
     }
     printf(" ]\n");
 
@@ -151,7 +150,7 @@ void pq_print(PriorityQueue *q){
 
 /////////////////////////////////////////////////
 //BELOW IS AN EXAMPLE OF HOW THE ADT WILL BE USED
-
+/*
 int main(void){
     PriorityQueue *q = pq_create(5);
 
@@ -161,14 +160,11 @@ int main(void){
     Node *d = node_create('d', 8);
     Node *e = node_create('e', 5);
     
-    
     enqueue(q, a);
-    pq_print(q);
     enqueue(q, b);
     enqueue(q, c);
     enqueue(q, d);
-    pq_print(q);
-    enqueue(q,e);
+    enqueue(q, e);
     pq_print(q);
     
     Node *n = node_create('\0', 0);
@@ -178,13 +174,19 @@ int main(void){
     dequeue(q, &n);
     pq_print(q);
     node_print(n);
+    
+    //pq_delete(&q);
+    
+    node_delete(&a);
+    node_delete(&b);
+    node_delete(&c);
+    node_delete(&d);
+    node_delete(&e);
+    node_delete(&n);
+    
     pq_delete(&q);
-    //node_delete(&a);
-    //node_delete(&b);
-    //node_delete(&c);
-    //node_delete(&d);
-    //node_delete(&e);
-    //node_delete(&n);
  
     return 0;
 }
+
+*/
