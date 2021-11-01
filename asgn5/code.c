@@ -29,7 +29,7 @@ bool code_empty(Code *c){
 }
 
 bool code_full(Code *c){
-    if (c->top == MAX_CODE_SIZE){
+    if (c->top == ALPHABET){
         return true;
     }
     return false;
@@ -65,7 +65,7 @@ bool code_push_bit(Code *c, uint8_t bit){
         return false;
     }
 
-    c->bits[i / 8] |= (bit << i % 8);
+    c->bits[c->top / 8] |= (bit << c->top % 8);
     c->top++;
     return true;
 }
@@ -75,7 +75,7 @@ bool code_pop_bit(Code *c, uint8_t *bit){
         return false;
     }
 
-    *bit = code_get_bit(c->top);
+    *bit = code_get_bit(c, c->top);
     c->top--;
     return true;
 }
@@ -92,8 +92,9 @@ int main(void){
     Code c;
     c = code_init();
     
-    code_push_bit(&c, 1);
-    
+    code_push_bit(&c, 0x1);
+    code_push_bit(&c, 0x1);
+    code_push_bit(&c, 0x1);    
     code_print(&c);
     return 0;
 }
