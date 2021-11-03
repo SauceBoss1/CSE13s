@@ -39,6 +39,7 @@ void node_print(Node *n) {
 
 //Below is an example of how Node will be used
 
+/*
 int main(void) {
     Node *left = node_create('a', 3);
     Node *right = node_create('a', 2);
@@ -50,4 +51,4 @@ int main(void) {
     node_delete(&right);
 
     return 0;
-}
+}*/

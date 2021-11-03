@@ -23,7 +23,7 @@ Stack *stack_create(uint32_t capacity) {
         if (!s->items) {
             free(s);
             s = NULL;
-        } else {           
+        } else {
             for (uint32_t i = 0; i < capacity; ++i) {
                 s->items[i] = node_create('\0', 0);
             }
@@ -100,19 +100,19 @@ void stack_print(Stack *s) {
 ///////////////////////////////////////////////////////////
 //EXAMPLE USAGE OF STACK BELOW
 
-
+/*
 int main(void) {
     Node *a = node_create('a', 10);
     Node *b = node_create('b', 25);
     Node *c = node_create('c', 110);
 
     Stack *s = stack_create(3);
-    
+
     stack_push(s, a);
     stack_push(s, b);
     stack_push(s, c);
     stack_print(s);
-    
+
     Node *x = node_create('\0', 0);
 
     stack_pop(s, &x);
@@ -125,4 +125,4 @@ int main(void) {
 
     stack_delete(&s);
     return 0;
-}
+}*/
