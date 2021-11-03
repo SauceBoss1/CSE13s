@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 //NOTE: code was inspired from Christian
 int read_bytes(int infile, uint8_t *buf, int nbytes) {
@@ -17,6 +18,7 @@ int read_bytes(int infile, uint8_t *buf, int nbytes) {
     int bytes_currently_read = 0;
 
     while ((bytes_currently_read = read(infile, buf + bytes_read, nbytes - bytes_read)) > 0) {
+        printf("bytes currently read: %d\n", bytes_currently_read);
         bytes_read += bytes_currently_read;
         if (bytes_read == nbytes || bytes_currently_read == 0) {
             break;
@@ -35,6 +37,7 @@ int write_bytes(int outfile, uint8_t *buf, int nbytes) {
     int bytes_currently_written = 0;
 
     while ((bytes_currently_written = write(outfile, buf + bytes_written, nbytes)) > 0) {
+        printf("bytes currently writte: %d\n", bytes_currently_written);
         bytes_written += bytes_currently_written;
         if (bytes_written == nbytes || bytes_currently_written == 0) {
             break;
@@ -101,10 +104,12 @@ void flush_codes(int outfile) { //would this use write bytes?
     }
 }
 
+///////////////////////////////////////////////////////////////////
+//Some example usage below
+
 int main(void) {
     uint8_t bytes;
-    read_bytes(STDIN_FILENO, &bytes, 12);
-    //write_bytes(STDOUT_FILENO, &bytes, BLOCK);
-    write(STDOUT_FILENO, &bytes, 12);
+    read_bytes(STDIN_FILENO, &bytes, BLOCK);
+    write_bytes(STDOUT_FILENO, &bytes, BLOCK);
     return 0;
 }
