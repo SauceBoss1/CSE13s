@@ -53,7 +53,7 @@ bool stack_empty(Stack *s) {
 }
 
 bool stack_full(Stack *s) {
-    if (s->top  >= s->capacity) {
+    if (s->top >= s->capacity) {
         return true;
     }
     return false;
