@@ -60,7 +60,7 @@ bool stack_full(Stack *s) {
 }
 
 uint32_t stack_size(Stack *s) {
-    return s->top - 1;
+    return s->top;
 }
 
 bool stack_push(Stack *s, Node *n) {
