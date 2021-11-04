@@ -127,17 +127,16 @@ bool dequeue(PriorityQueue *q, Node **n) {
     }
 
     *n = q->items[0];
-    q->items[0]->frequency = 0;
-    q->items[0]->symbol = '\0';
-    fix_heap(q, 1, q->top);
+    swap(q->items[0], q->items[q->top - 1]);
     q->top--;
+    fix_heap(q, 1, q->top);
 
     return true;
 }
 
 void pq_print(PriorityQueue *q) {
     printf("[");
-    for (uint32_t i = 0; i < q->capacity; ++i) {
+    for (uint32_t i = 0; i < q->top; ++i) {
         printf(" %" PRIu64, q->items[i]->frequency); //tries to print NULL leading to segfault
     }
     printf(" ]\n");
@@ -177,4 +176,3 @@ int main(void){
     return 0;
 }
 */
-
