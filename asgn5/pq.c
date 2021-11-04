@@ -126,8 +126,8 @@ bool dequeue(PriorityQueue *q, Node **n) {
         return false;
     }
 
-    *n = q->items[0];
     swap(q->items[0], q->items[q->top - 1]);
+    *n = q->items[q->top - 1];
     q->top--;
     fix_heap(q, 1, q->top);
 
@@ -166,10 +166,10 @@ int main(void){
     Node *n;
     
     dequeue(q, &n);
+    node_print(n);
     pq_print(q);
     dequeue(q, &n);
     pq_print(q);
-    node_print(n);
     
     pq_delete(&q);
  
