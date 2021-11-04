@@ -107,9 +107,11 @@ void flush_codes(int outfile) { //would this use write bytes?
 ///////////////////////////////////////////////////////////////////
 //Some example usage below
 
+/*
 int main(void) {
     uint8_t bytes;
     read_bytes(STDIN_FILENO, &bytes, BLOCK);
     write_bytes(STDOUT_FILENO, &bytes, BLOCK);
     return 0;
 }
+*/
