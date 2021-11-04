@@ -53,14 +53,14 @@ bool stack_empty(Stack *s) {
 }
 
 bool stack_full(Stack *s) {
-    if (s->top == s->capacity) {
+    if (s->top  >= s->capacity) {
         return true;
     }
     return false;
 }
 
 uint32_t stack_size(Stack *s) {
-    return s->top;
+    return s->top - 1;
 }
 
 bool stack_push(Stack *s, Node *n) {
@@ -68,8 +68,7 @@ bool stack_push(Stack *s, Node *n) {
         return false;
     }
 
-    s->items[s->top]->symbol = n->symbol;
-    s->items[s->top]->frequency = n->frequency;
+    s->items[s->top] = n;
     s->top++;
     return true;
 }
@@ -79,7 +78,7 @@ bool stack_pop(Stack *s, Node **n) {
         return false;
     }
 
-    *n = s->items[s->top];
+    *n = s->items[s->top - 1];
     //(*n)->frequency = s->items[s->top]->frequency;
     //(*n)->symbol = s->items[s->top]->symbol;
     s->top--;
@@ -112,7 +111,6 @@ int main(void) {
     Node *x;
 
     stack_pop(s, &x);
-    node_delete(&x);
     stack_print(s);
     //node_print(x);
     stack_delete(&s);
