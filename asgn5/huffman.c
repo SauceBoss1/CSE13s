@@ -15,16 +15,14 @@
 
 Node *build_tree(uint64_t hist[static ALPHABET]) {
     PriorityQueue *q = pq_create(ALPHABET);
-    Node *n = node_create('\0', 0);
+    Node *n;
     for (uint64_t i = 0; i < ALPHABET; ++i) {
         if (hist[i] > 0) {
-            n->symbol = i;
-            n->frequency = hist[i];
+            n = node_create(i, hist[i]);
 
             enqueue(q, n);
         }
     }
-    node_delete(&n);
 
     Node *left;
     Node *right;
@@ -35,6 +33,7 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
         dequeue(q, &right);
 
         parent = node_join(left, right);
+        enqueue(q, parent);
     }
     dequeue(q, &root);
 
@@ -43,22 +42,27 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
     return root;
 }
 
-void build_codes(Node *root, Code table[static ALPHABET]) {
-    Code c = { 0, { 0 } }; //recommended by Eric
+void build_code(Node *root, Code table[static ALPHABET], Code *c) {
     uint8_t bit = 0;
     if (root != NULL) {
         if (!root->left && !root->right) {
-            table[root->symbol] = c;
+            table[root->symbol] = *c;
         } else {
-            code_push_bit(&c, 0);
+            code_push_bit(c, 0);
             build_codes(root->left, table);
-            code_pop_bit(&c, &bit);
+            code_pop_bit(c, &bit);
 
-            code_push_bit(&c, 1);
+            code_push_bit(c, 1);
             build_codes(root->right, table);
-            code_pop_bit(&c, &bit);
+            code_pop_bit(c, &bit);
         }
     }
+    return;
+}
+
+void build_codes(Node *root, Code table[static ALPHABET]) {
+    Code c = code_init();
+    build_code(root, table, &c);
     return;
 }
 
@@ -84,7 +88,6 @@ Node *rebuild_tree(uint16_t bytes, uint8_t tree_dump[static bytes]) {
     Node *left, *right, *join, *root;
     for (uint16_t i = 0; i < bytes; ++i) {
         if (tree_dump[i] == 'L') {
-            n->symbol = i + 1;
             n->symbol = tree_dump[i + 1];
             stack_push(s, n);
             i++;
