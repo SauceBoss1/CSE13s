@@ -1,8 +1,8 @@
 CC = clang
 CFLAGS = -Wall -Wpedantic -Werror -Wextra
-OBJS = node.o pq.o code.o stack.o io.o
+OBJS = node.o pq.o code.o stack.o io.o huffman.o
 LFLAGS = -lm
-EXECBIN = io
+EXECBIN = huffman
 
 all: $(EXECBIN)
 
@@ -23,6 +23,9 @@ stack.o: stack.c stack.h node.o
 
 io.o: io.c io.h defines.h code.h
 	$(CC) $(CFLAGS) -c io.c
+
+huffman.o: huffman.c huffman.h node.h pq.h code.h stack.h io.h
+	$(CC) $(CFLAGS) -c huffman.c
 
 clean:
 	rm -rf $(EXECBIN) *.o
