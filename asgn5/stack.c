@@ -23,10 +23,6 @@ Stack *stack_create(uint32_t capacity) {
         if (!s->items) {
             free(s);
             s = NULL;
-        } else {
-            for (uint32_t i = 0; i < capacity; ++i) {
-                s->items[i] = node_create('\0', 0);
-            }
         }
     } else {
         free(s);
@@ -113,16 +109,12 @@ int main(void) {
     stack_push(s, c);
     stack_print(s);
 
-    Node *x = node_create('\0', 0);
+    Node *x;
 
     stack_pop(s, &x);
     node_delete(&x);
     stack_print(s);
     //node_print(x);
-    node_delete(&a);
-    node_delete(&b);
-    node_delete(&c);
-
     stack_delete(&s);
     return 0;
 }*/

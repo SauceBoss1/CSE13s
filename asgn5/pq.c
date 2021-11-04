@@ -20,9 +20,6 @@ PriorityQueue *pq_create(uint32_t capacity) {
         pq->capacity = capacity;
         pq->items = (Node **) calloc(capacity, sizeof(Node));
 
-        for (uint32_t i = 0; i < capacity; i++) {
-            pq->items[i] = node_create('\0', 0);
-        }
         if (!pq->items) {
             free(pq);
             pq = NULL;
@@ -167,7 +164,7 @@ int main(void){
     enqueue(q, e);
     pq_print(q);
     
-    Node *n = node_create('\0', 0);
+    Node *n;
     
     dequeue(q, &n);
     pq_print(q);
@@ -175,18 +172,9 @@ int main(void){
     pq_print(q);
     node_print(n);
     
-    //pq_delete(&q);
-    
-    node_delete(&a);
-    node_delete(&b);
-    node_delete(&c);
-    node_delete(&d);
-    node_delete(&e);
-    node_delete(&n);
-    
     pq_delete(&q);
  
     return 0;
 }
-
 */
+
