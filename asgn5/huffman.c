@@ -112,7 +112,7 @@ void delete_tree(Node **root) {
         node_delete(root);
     }
 }
-
+/*
 int main(void) {
     return 0;
-}
+}*/
