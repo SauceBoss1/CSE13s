@@ -15,46 +15,52 @@
 
 Node *build_tree(uint64_t hist[static ALPHABET]) {
     PriorityQueue *q = pq_create(ALPHABET);
-    Node *n;
     for (uint64_t i = 0; i < ALPHABET; ++i) {
         if (hist[i] > 0) {
-            n = node_create(i, hist[i]);
-
+            Node *n = node_create(i, hist[i]);
             enqueue(q, n);
+            //node_print(n);
         }
     }
 
-    Node *left;
-    Node *right;
-    Node *parent;
-    Node *root;
     while (pq_size(q) > 1) {
+        Node *left, *right;
         dequeue(q, &left);
         dequeue(q, &right);
 
-        parent = node_join(left, right);
-        enqueue(q, parent);
+        //node_print(left);
+        //node_print(right);
+
+        enqueue(q, node_join(left, right));
     }
+    Node *root;
     dequeue(q, &root);
 
     pq_delete(&q);
+    //node_print(root);
 
     return root;
 }
 
-void build_code(Node *root, Code table[static ALPHABET], Code *c) {
+void build_code(Node *root, Code table[static ALPHABET], Code c) {
     uint8_t bit = 0;
     if (root != NULL) {
-        if (!root->left && !root->right) {
-            table[root->symbol] = *c;
+        //puts("if root != NULL");
+        if (root->left == NULL && root->right == NULL) {
+            //puts("build_code: left and right == null");
+            table[root->symbol] = c;
         } else {
-            code_push_bit(c, 0);
-            build_codes(root->left, table);
-            code_pop_bit(c, &bit);
+            if (root->left != NULL) {
+                code_push_bit(&c, 0);
+                build_codes(root->left, table);
+                code_pop_bit(&c, &bit);
+            }
 
-            code_push_bit(c, 1);
-            build_codes(root->right, table);
-            code_pop_bit(c, &bit);
+            if (root->right != NULL) {
+                code_push_bit(&c, 1);
+                build_codes(root->right, table);
+                code_pop_bit(&c, &bit);
+            }
         }
     }
     return;
@@ -62,7 +68,7 @@ void build_code(Node *root, Code table[static ALPHABET], Code *c) {
 
 void build_codes(Node *root, Code table[static ALPHABET]) {
     Code c = code_init();
-    build_code(root, table, &c);
+    build_code(root, table, c);
     return;
 }
 

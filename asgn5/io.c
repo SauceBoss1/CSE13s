@@ -15,12 +15,12 @@ int read_bytes(int infile, uint8_t *buf, int nbytes) {
     }
 
     int bytes_read = 0;
-    int bytes_currently_read = 0;
+    int bytes_currently_read = -1;
 
     while ((bytes_currently_read = read(infile, buf + bytes_read, nbytes - bytes_read)) > 0) {
         //printf("bytes currently read: %d\n", bytes_currently_read);
         bytes_read += bytes_currently_read;
-        if (bytes_read == nbytes || bytes_currently_read == 0) {
+        if (bytes_read == 0) {
             break;
         }
     }

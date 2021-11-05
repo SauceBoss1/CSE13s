@@ -59,19 +59,17 @@ int main(int argc, char **argv) {
             if (hist[buff[i]] == 0) {
                 unique_symbols++;
             }
-            
+
             hist[buff[i]]++;
         }
     }
 
-
-
     Node *root = build_tree(hist);
     //node_print(root); //<= TODO REMOVE
-    
+
     Code table[ALPHABET];
     build_codes(root, table);
-    
+
     struct stat buffer;
     fstat(infile, &buffer);
 
