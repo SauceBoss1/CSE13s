@@ -75,21 +75,21 @@ bool code_pop_bit(Code *c, uint8_t *bit) {
     }
 
     *bit = code_get_bit(c, c->top - 1);
-    //code_clr_bit(c, c->top - 1);
+    code_clr_bit(c, c->top - 1);
     c->top--;
     return true;
 }
 
 void code_print(Code *c) {
-    printf("[");
-
-    for (uint32_t i = 0; i < ALPHABET; ++i) {
-        if ((i + 1) % 8 == 0) {
-            printf(" ");
+    //printf("[");
+    
+    for (uint32_t i = 0 ; i < ALPHABET; ++i){
+        if ((i + 1) % 8 == 0){
+            printf("\n");
         }
-        printf("%" PRIu8, code_get_bit(c, i));
+        printf("%"PRIu8, code_get_bit(c, i));
     }
-    printf("]\n");
+    printf("\n");
 }
 
 //////////////////////////////////////////////////
