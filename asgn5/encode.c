@@ -25,7 +25,6 @@ int main(int argc, char **argv) {
     int infile = STDIN_FILENO;
     int outfile = STDOUT_FILENO;
     //bool verbose = false;
-
     int opt = 0;
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
         switch (opt) {
@@ -37,7 +36,7 @@ int main(int argc, char **argv) {
                 exit(1);
             }
         case 'o':
-            outfile = open(optarg, O_WRONLY | O_CREAT | O_TRUNC);
+            outfile = open(optarg, O_WRONLY | O_CREAT);
 
             if (outfile < 0) {
                 fprintf(stderr, "Error Writing File!\n");
@@ -67,20 +66,22 @@ int main(int argc, char **argv) {
     Node *root = build_tree(hist);
     //node_print(root); //<= TODO REMOVE
 
-    Code table[ALPHABET];
+    Code table[ALPHABET] = {0};
     build_codes(root, table);
+    printf("code_size: %"PRIu32"\n", code_size(table));
 
     struct stat buffer;
     fstat(infile, &buffer);
+    fchmod(outfile, buffer.st_mode );
 
-    Header h;
+    Header h = {0, 0, 0, 0};
     h.magic = MAGIC;
     h.permissions = buffer.st_mode;
     h.tree_size = (3 * unique_symbols) - 1;
     h.file_size = buffer.st_size;
 
     write_bytes(outfile, (uint8_t *) &h, sizeof(h));
-
+    
     dump_tree(outfile, root);
 
     lseek(infile, 0, SEEK_SET);
@@ -89,6 +90,8 @@ int main(int argc, char **argv) {
             write_code(outfile, &table[buff[i]]);
         }
     }
+    flush_codes(outfile);
+    
     delete_tree(&root);
     close(infile);
     close(outfile);
