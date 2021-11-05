@@ -34,13 +34,14 @@ PriorityQueue *pq_create(uint32_t capacity) {
 void pq_delete(PriorityQueue **q) {
     if (*q && (*q)->items) {
         //printf("cap: %"PRIu32"\n",(*q)->capacity);
-
+       /* 
         for (uint32_t i = 0; i < (*q)->capacity; ++i) {
             //printf("i: %"PRIu32"\n", i);
 
             node_delete(&(*q)->items[i]);
             //free(&(*q)->items[i]);
         }
+        */
         free((*q)->items);
         free(*q);
         *q = NULL;
