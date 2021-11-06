@@ -100,8 +100,8 @@ void min_insert_heap(PriorityQueue *q, uint32_t i){
 }
 
 void fix_heap(PriorityQueue *q, uint32_t i){
-    uint32_t left = i * 2;
-    uint32_t right = i * 2 + 1;
+    uint32_t left = i * 2 + 1;
+    uint32_t right = i * 2 + 2;
     uint32_t small = 0;
     
     if ((left <= pq_size(q)) && (q->items[left]->frequency < q->items[i]->frequency)){
@@ -161,10 +161,11 @@ bool dequeue(PriorityQueue *q, Node **n) {
     if (pq_empty(q)) {
         return false;
     }
-	*n = q->items[0];
-	q->items[0] = q->items[q->top - 1];
+	swap(q->items[0], q->items[q->top -1]);
+	//q->items[0] = q->items[q->top - 1];
+	*n = q->items[q-> top -1];
 	q->top--;
-	fix_heap(q,0);
+	fix_heap(q, 0);
     //fix_heap(q, 1, q->top);
     //swap(q->items[0], q->items[q->top - 1]);
     //*n = q->items[q->top - 1];
