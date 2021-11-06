@@ -43,7 +43,7 @@ void node_print(Node *n) {
         if (n->right != NULL) {
             node_print(n->right);
         }
-        printf("symbol: %c frequency: %" PRIu64 "\n", n->symbol, n->frequency);
+        fprintf(stderr,"symbol: %c frequency: %" PRIu64 "\n", n->symbol, n->frequency);
     }
 }
 

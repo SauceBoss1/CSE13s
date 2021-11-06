@@ -23,23 +23,30 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
         }
     }
 
-    Node *left, *right;
+    Node *left, *right, *parent;
     while (pq_size(q) > 1) {
-        pq_print(q);
+        //pq_print(q);
         dequeue(q, &left);
         dequeue(q, &right);
 
+		/*
+		printf("LEFT\n");
+		node_print(left);
+		printf("RIGHT\n");
+		node_print(right);
+		puts("");
         //node_print(left);
         //node_print(right);
-
-        enqueue(q, node_join(left, right));
+		*/
+		parent = node_join(left,right);
+        enqueue(q, parent);
 
     }
     Node *root;
     dequeue(q, &root);
 
     pq_delete(&q);
-    node_print(root);
+    //node_print(root);
 
     return root;
 }
@@ -53,7 +60,8 @@ void build_codes(Node *root, Code table[static ALPHABET]) {
         if (root->left == NULL && root->right == NULL) {
             //puts("build_code: left and right == null");
             table[root->symbol] = c;
-            code_print(&table[root->symbol]);
+			//printf("%c ", root->symbol);
+            //code_print(&table[root->symbol]);
         } else {
             if(root->left != NULL){
                 code_push_bit(&c, 0);
@@ -81,11 +89,11 @@ void build_codes(Node *root, Code table[static ALPHABET]) {
 }*/
 
 void dump_tree(int outfile, Node *root) {
-    if (root != NULL) {
+    if (root) {
         dump_tree(outfile, root->left);
         dump_tree(outfile, root->right);
 
-        if (root->left == NULL && root->right == NULL) {
+        if (!root->left && !root->right) {
             //uint8_t buffer[] = { 'L', root->symbol };
             //write_bytes(outfile, buffer, 2);
 

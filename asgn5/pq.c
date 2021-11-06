@@ -51,7 +51,7 @@ void pq_delete(PriorityQueue **q) {
 
 /////////////////////////////////////////////
 //HEAP IMPLEMENTATION BELOW
-/*
+
 static uint32_t min_child(PriorityQueue *q, uint32_t first, uint32_t last) {
     uint32_t left = 2 * first;
     uint32_t right = left + 1;
@@ -60,7 +60,7 @@ static uint32_t min_child(PriorityQueue *q, uint32_t first, uint32_t last) {
         return left;
     }
     return right;
-}*/
+}
 
 void swap(Node *x, Node *y) {
     //puts("here");
@@ -71,7 +71,7 @@ void swap(Node *x, Node *y) {
     return;
 }
 
-/*
+
 static void fix_heap(PriorityQueue *q, uint32_t first, uint32_t last) {
     bool found = false;
     uint32_t mother = first, great = min_child(q, mother, last);
@@ -86,9 +86,9 @@ static void fix_heap(PriorityQueue *q, uint32_t first, uint32_t last) {
         }
     }
     return;
-}*/
+}
 
-
+/*
 void min_insert_heap(PriorityQueue *q, uint32_t i){
     //recommended by TA in section
     uint32_t parent = (i - 1)/2;
@@ -119,10 +119,28 @@ void fix_heap(PriorityQueue *q, uint32_t i){
         swap(q->items[i], q->items[small]);
         fix_heap(q, small);
     }
-}
+}*/
 
 ///////////////////////////////////////////
+//INSERTION SORT
 
+/*
+void insertion_sort(PriorityQueue *q, uint32_t n){
+	for (uint32_t i = 1; i < n; ++i){
+		uint32_t j = i;
+		Node *temp = q->items[i];
+
+		while ((j > 0) && ((*temp).frequency < q->items[j - 1]->frequency)){
+			q->items[j] = q->items[j-1];
+			j--;
+		}
+
+		q->items[j] = temp;
+	}
+	return;
+}
+*/
+///////////////////////////////////////////
 bool pq_empty(PriorityQueue *q) {
     if (q->top == 0) {
         return true;
@@ -151,8 +169,9 @@ bool enqueue(PriorityQueue *q, Node *n) {
 		return true;
 	}
     q->items[q->top] = n;
-    //fix_heap(q, 1, q->top);
-    min_insert_heap(q, q->top);
+	//insertion_sort(q, q->top);
+    fix_heap(q, 1, q->top);
+    //min_insert_heap(q, q->top);
     q->top++;
 
     return true;
@@ -162,16 +181,17 @@ bool dequeue(PriorityQueue *q, Node **n) {
     if (pq_empty(q)) {
         return false;
     }
-	swap(q->items[0], q->items[q->top -1]);
-	//q->items[0] = q->items[q->top - 1];
-	*n = q->items[q-> top -1];
-	q->top--;
-	fix_heap(q, 0);
+	//swap(q->items[0], q->items[q->top -1]);
+	//*n = q->items[q-> top -1];
+	//q->top--;
+	//fix_heap(q, 0);
+
     //fix_heap(q, 1, q->top);
-    //swap(q->items[0], q->items[q->top - 1]);
-    //*n = q->items[q->top - 1];
-    //q->top--;
-    //fix_heap(q, 1, q->top);
+    swap(q->items[0], q->items[q->top - 1]);
+    *n = q->items[q->top - 1];
+    q->top--;
+    fix_heap(q, 1, q->top);
+	//insertion_sort(q, q->top);
 
     return true;
 }

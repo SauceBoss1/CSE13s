@@ -38,7 +38,7 @@ int write_bytes(int outfile, uint8_t *buf, int nbytes) {
     int bytes_written = 0;
     int bytes_currently_written = 0;
 
-    while ((bytes_currently_written = write(outfile, buf + bytes_written, nbytes)) > 0) {
+    while ((bytes_currently_written = write(outfile, buf + bytes_written, nbytes - bytes_written)) > 0) {
         //printf("bytes currently writte: %d\n", bytes_currently_written);
         bytes_written += bytes_currently_written;
         if (bytes_written == nbytes || bytes_currently_written == 0) {
@@ -96,9 +96,8 @@ void write_code(int outfile, Code *c) {
         }
         buf_index++;
         
-        if (buf_index >= BLOCK * 8) {
+        if (buf_index == BLOCK * 8) {
             write_bytes(outfile, buffer, BLOCK);
-            //memset(buffer, 0 , BLOCK);
             buf_index = 0;
             //flush_codes(outfile);
             
@@ -121,9 +120,7 @@ void write_code(int outfile, Code *c) {
 
 void flush_codes(int outfile) { //would this use write bytes?
     int bytes_to_write = 0;
-    if (buf_index > 0){
-        bytes_to_write = (buf_index % 8 ) == 0 ? (buf_index / 8) : (buf_index / 8 ) + 1;
-    }
+    bytes_to_write = (buf_index % 8 ) == 0 ? (buf_index / 8) : (buf_index / 8 ) + 1;
     write_bytes(outfile, buffer, bytes_to_write);
 }
 
