@@ -70,12 +70,12 @@ int main(int argc, char **argv) {
     Node *root = build_tree(hist);
     //node_print(root); //<= TODO REMOVE
 
-    Code table[ALPHABET] = {0};
+    Code table[ALPHABET] = { 0 };
     build_codes(root, table);
     //printf("code_size: %"PRIu32"\n", code_size(table));
     struct stat buffer;
     fstat(infile, &buffer);
-    fchmod(outfile, buffer.st_mode );
+    fchmod(outfile, buffer.st_mode);
 
     Header h;
     h.magic = MAGIC;
@@ -83,8 +83,8 @@ int main(int argc, char **argv) {
     h.tree_size = (3 * (unique_symbols)) - 1;
     h.file_size = buffer.st_size;
     //printf("tree size: %"PRIu32"\n", h.tree_size);
-    write(outfile, &h, sizeof(Header));
-    
+    write_bytes(outfile, (uint8_t *) &h, sizeof(h));
+
     dump_tree(outfile, root);
 
     lseek(infile, 0, SEEK_SET);
@@ -94,7 +94,7 @@ int main(int argc, char **argv) {
         }
     }
     flush_codes(outfile);
-    
+
     delete_tree(&root);
     close(infile);
     close(outfile);
