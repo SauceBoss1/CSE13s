@@ -64,7 +64,12 @@ bool code_push_bit(Code *c, uint8_t bit) {
         return false;
     }
     //printf("bit: %" PRIu8 "\n", bit);
-    c->bits[c->top / 8] |= (bit << c->top % 8);
+    if( bit == 1 ){
+        code_set_bit(c, c->top);
+    } else {
+        code_clr_bit(c, c->top);
+    }
+    //c->bits[c->top / 8] |= (bit << c->top % 8);
     c->top++;
     return true;
 }
@@ -83,7 +88,7 @@ bool code_pop_bit(Code *c, uint8_t *bit) {
 void code_print(Code *c) {
     //printf("[");
     
-    for (uint32_t i = 0 ; i < ALPHABET; ++i){
+    for (uint32_t i = 0 ; i < code_size(c); ++i){
         if ((i + 1) % 8 == 0){
             printf("\n");
         }
