@@ -2,6 +2,8 @@
 #include "code.h"
 #include "defines.h"
 
+#include <string.h>
+#include <inttypes.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdint.h>
@@ -78,30 +80,50 @@ bool read_bit(int infile, uint8_t *bit) {
 //write code & flush code buffer and index below
 
 static uint8_t buffer[BLOCK];
-static int index = 0; //tracks position of buffer
+static int buf_index = 0; //tracks position of buffer
 
 void write_code(int outfile, Code *c) {
+    //printf("code size: %"PRIu32"\n", code_size(c));
+    
     for (uint32_t i = 0; i < code_size(c); ++i) {
         uint8_t bit = code_get_bit(c, i);
-
         if (bit == 1) {
-            buffer[index / 8] |= (1 << index % 8);
+            buffer[buf_index / 8] |= (1 << buf_index % 8);
             //code_set_bit(c, index);
         } else {
-            buffer[index / 8] &= ~(1 << index % 8);
-            //code_clear_bit(c, index);
+            buffer[buf_index / 8] &= ~(0 << buf_index % 8);
+            //code_clr_bit(c, index);
         }
-        index++;
-
-        if (index >= BLOCK * 8) {
-            flush_codes(outfile);
+        buf_index++;
+        
+        if (buf_index >= BLOCK * 8) {
+            write_bytes(outfile, buffer, BLOCK);
+            //memset(buffer, 0 , BLOCK);
+            buf_index = 0;
+            //flush_codes(outfile);
+            
         }
     }
+	/*
+	for (uint32_t i = 0; i < code_size(c); ++i){
+		if (code_get_bit(c, i) == 1){
+			buffer[buf_index / 8] |= (1 << buf_index % 8);
+		}
+	}
+	buf_index = (buf_index + 1) % (BLOCK * 8);
+
+	if (buf_index == 0){
+		write_bytes(outfile, buffer, BLOCK);
+		memset(buffer, 0, BLOCK);
+		buf_index = 0;
+	}*/
 }
 
 void flush_codes(int outfile) { //would this use write bytes?
-    int bytes_to_write = (index % 8) == 0 ? (index / 8) : (index / 8) + 1;
-    //suggested by eric
+    int bytes_to_write = 0;
+    if (buf_index > 0){
+        bytes_to_write = (buf_index % 8 ) == 0 ? (buf_index / 8) : (buf_index / 8 ) + 1;
+    }
     write_bytes(outfile, buffer, bytes_to_write);
 }
 

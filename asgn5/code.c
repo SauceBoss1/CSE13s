@@ -69,7 +69,6 @@ bool code_push_bit(Code *c, uint8_t bit) {
     } else {
         code_clr_bit(c, c->top);
     }
-    //c->bits[c->top / 8] |= (bit << c->top % 8);
     c->top++;
     return true;
 }
@@ -80,7 +79,7 @@ bool code_pop_bit(Code *c, uint8_t *bit) {
     }
 
     *bit = code_get_bit(c, c->top - 1);
-    code_clr_bit(c, c->top - 1);
+    //code_clr_bit(c, c->top - 1);
     c->top--;
     return true;
 }

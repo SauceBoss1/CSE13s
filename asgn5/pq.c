@@ -99,6 +99,7 @@ void min_insert_heap(PriorityQueue *q, uint32_t i){
     }
 }
 
+//also recommended
 void fix_heap(PriorityQueue *q, uint32_t i){
     uint32_t left = i * 2 + 1;
     uint32_t right = i * 2 + 2;

@@ -62,25 +62,28 @@ int main(int argc, char **argv) {
             hist[buff[i]]++;
         }
     }
+    /*
+    for (int i = 0; i < BLOCK; ++i){
+        printf(" %"PRIu8,buff[i]);
+    }*/
 
     Node *root = build_tree(hist);
     //node_print(root); //<= TODO REMOVE
 
     Code table[ALPHABET] = {0};
     build_codes(root, table);
-    printf("code_size: %"PRIu32"\n", code_size(table));
-
+    //printf("code_size: %"PRIu32"\n", code_size(table));
     struct stat buffer;
     fstat(infile, &buffer);
     fchmod(outfile, buffer.st_mode );
 
-    Header h = {0, 0, 0, 0};
+    Header h;
     h.magic = MAGIC;
     h.permissions = buffer.st_mode;
-    h.tree_size = (3 * unique_symbols) - 1;
+    h.tree_size = (3 * (unique_symbols)) - 1;
     h.file_size = buffer.st_size;
-
-    write_bytes(outfile, (uint8_t *) &h, sizeof(h));
+    //printf("tree size: %"PRIu32"\n", h.tree_size);
+    write(outfile, &h, sizeof(Header));
     
     dump_tree(outfile, root);
 

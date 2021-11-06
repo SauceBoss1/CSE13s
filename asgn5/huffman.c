@@ -23,8 +23,9 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
         }
     }
 
+    Node *left, *right;
     while (pq_size(q) > 1) {
-        Node *left, *right;
+        pq_print(q);
         dequeue(q, &left);
         dequeue(q, &right);
 
@@ -32,57 +33,70 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
         //node_print(right);
 
         enqueue(q, node_join(left, right));
+
     }
     Node *root;
     dequeue(q, &root);
 
     pq_delete(&q);
-    //node_print(root);
+    node_print(root);
 
     return root;
 }
 
-void build_code(Node *root, Code table[static ALPHABET], Code c) {
+void build_codes(Node *root, Code table[static ALPHABET]) {
+    static Code c = {0, {0}};
     uint8_t bit = 0;
+    //printf("bit: %"PRIu8"\n", bit);
     if (root != NULL) {
         //puts("if root != NULL");
         if (root->left == NULL && root->right == NULL) {
             //puts("build_code: left and right == null");
             table[root->symbol] = c;
+            code_print(&table[root->symbol]);
         } else {
-            if (root->left != NULL) {
+            if(root->left != NULL){
                 code_push_bit(&c, 0);
                 build_codes(root->left, table);
                 code_pop_bit(&c, &bit);
             }
 
-            if (root->right != NULL) {
+            if(root->right != NULL){
                 code_push_bit(&c, 1);
                 build_codes(root->right, table);
                 code_pop_bit(&c, &bit);
             }
+            
+            //code_print(table);
         }
     }
     return;
 }
-
+/*
 void build_codes(Node *root, Code table[static ALPHABET]) {
-    Code c = code_init();
-    build_code(root, table, c);
+    static Code c = code_init();
+    build_code(root, table, &c);
+    //code_print(&c);
     return;
-}
+}*/
 
 void dump_tree(int outfile, Node *root) {
     if (root != NULL) {
         dump_tree(outfile, root->left);
         dump_tree(outfile, root->right);
 
-        if (!root->left && !root->right) {
-            uint8_t buffer[] = { 'L', root->symbol };
-            write_bytes(outfile, buffer, 2);
+        if (root->left == NULL && root->right == NULL) {
+            //uint8_t buffer[] = { 'L', root->symbol };
+            //write_bytes(outfile, buffer, 2);
+
+            //LEAF
+            uint8_t L = 'L';
+            write_bytes(outfile, &L, 1);
+            write_bytes(outfile, &root->symbol, 1);
         } else {
-            uint8_t buffer[] = { 'I' };
-            write_bytes(outfile, buffer, 1);
+            //INTERIOR
+            uint8_t I = 'I';
+            write_bytes(outfile, &I, 1);
         }
     }
 }

@@ -36,14 +36,14 @@ Node *node_join(Node *left, Node *right) {
 }
 
 void node_print(Node *n) {
-    if (n != NULL) {
-        printf("symbol: %c frequency: %" PRIu64 "\n", n->symbol, n->frequency);
+    if (n != NULL) { 
         if (n->left != NULL) {
             node_print(n->left);
         }
         if (n->right != NULL) {
             node_print(n->right);
         }
+        printf("symbol: %c frequency: %" PRIu64 "\n", n->symbol, n->frequency);
     }
 }
 
