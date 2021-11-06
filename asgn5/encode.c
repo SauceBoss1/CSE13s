@@ -17,7 +17,18 @@
 #include <sys/stat.h>
 
 #define OPTIONS "hi:o:v"
-
+void help_msg(void) {
+    fprintf(stderr, "SYNOPSIS\n");
+    fprintf(stderr, "  A Huffman encoder.\n");
+    fprintf(stderr, "  Compresses a file using the Huffman coding algorithm.\n\n");
+    fprintf(stderr, "USAGE\n");
+    fprintf(stderr, "  ./encode [-h] [-i infile] [-o outfile]\n\n");
+    fprintf(stderr, "OPTIONS\n");
+    fprintf(stderr, "  -h             Program usage and help.\n");
+    fprintf(stderr, "  -v             Print compression statistics.\n");
+    fprintf(stderr, "  -i infile      Input file to compress.\n");
+    fprintf(stderr, "  -o outfile     Output of compressed data.\n");
+}
 int main(int argc, char **argv) {
     ////////////////////////////
     //COMMAND LINE HANDLING
@@ -28,6 +39,10 @@ int main(int argc, char **argv) {
     int opt = 0;
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
         switch (opt) {
+        case 'h':
+            help_msg();
+            exit(1);
+            break;
         case 'i':
             infile = open(optarg, O_RDONLY);
 
@@ -35,6 +50,7 @@ int main(int argc, char **argv) {
                 fprintf(stderr, "Error Reading File!\n");
                 exit(1);
             }
+            break;
         case 'o':
             outfile = open(optarg, O_WRONLY | O_CREAT);
 
@@ -42,6 +58,7 @@ int main(int argc, char **argv) {
                 fprintf(stderr, "Error Writing File!\n");
                 exit(1);
             }
+            break;
         }
     }
     ////////////////////////////
@@ -82,7 +99,7 @@ int main(int argc, char **argv) {
     h.permissions = buffer.st_mode;
     h.tree_size = (3 * (unique_symbols)) - 1;
     h.file_size = buffer.st_size;
-    //printf("tree size: %"PRIu32"\n", h.tree_size);
+    printf("tree size: %" PRIu32 "\n", h.tree_size);
     write_bytes(outfile, (uint8_t *) &h, sizeof(h));
 
     dump_tree(outfile, root);

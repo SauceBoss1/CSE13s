@@ -71,7 +71,6 @@ void swap(Node *x, Node *y) {
     return;
 }
 
-
 static void fix_heap(PriorityQueue *q, uint32_t first, uint32_t last) {
     bool found = false;
     uint32_t mother = first, great = min_child(q, mother, last);
@@ -163,13 +162,13 @@ bool enqueue(PriorityQueue *q, Node *n) {
     if (pq_full(q)) {
         return false;
     }
-	if (pq_empty(q)){
-		q->items[q->top] = n;
-		q->top++;
-		return true;
-	}
+    if (pq_empty(q)) {
+        q->items[q->top] = n;
+        q->top++;
+        return true;
+    }
     q->items[q->top] = n;
-	//insertion_sort(q, q->top);
+    //insertion_sort(q, q->top);
     fix_heap(q, 1, q->top);
     //min_insert_heap(q, q->top);
     q->top++;
@@ -181,17 +180,17 @@ bool dequeue(PriorityQueue *q, Node **n) {
     if (pq_empty(q)) {
         return false;
     }
-	//swap(q->items[0], q->items[q->top -1]);
-	//*n = q->items[q-> top -1];
-	//q->top--;
-	//fix_heap(q, 0);
+    //swap(q->items[0], q->items[q->top -1]);
+    //*n = q->items[q-> top -1];
+    //q->top--;
+    //fix_heap(q, 0);
 
     //fix_heap(q, 1, q->top);
     swap(q->items[0], q->items[q->top - 1]);
     *n = q->items[q->top - 1];
     q->top--;
     fix_heap(q, 1, q->top);
-	//insertion_sort(q, q->top);
+    //insertion_sort(q, q->top);
 
     return true;
 }
@@ -199,7 +198,7 @@ bool dequeue(PriorityQueue *q, Node **n) {
 void pq_print(PriorityQueue *q) {
     printf("[");
     for (uint32_t i = 0; i < q->top; ++i) {
-        printf(" {%c, %"PRIu64"}", q->items[i]->symbol, q->items[i]->frequency); 
+        printf(" {%c, %" PRIu64 "}", q->items[i]->symbol, q->items[i]->frequency);
     }
     printf(" ]\n");
 

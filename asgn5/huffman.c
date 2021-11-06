@@ -29,7 +29,7 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
         dequeue(q, &left);
         dequeue(q, &right);
 
-		/*
+        /*
 		printf("LEFT\n");
 		node_print(left);
 		printf("RIGHT\n");
@@ -38,9 +38,8 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
         //node_print(left);
         //node_print(right);
 		*/
-		parent = node_join(left,right);
+        parent = node_join(left, right);
         enqueue(q, parent);
-
     }
     Node *root;
     dequeue(q, &root);
@@ -52,7 +51,7 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
 }
 
 void build_codes(Node *root, Code table[static ALPHABET]) {
-    static Code c = {0, {0}};
+    static Code c = { 0, { 0 } };
     uint8_t bit = 0;
     //printf("bit: %"PRIu8"\n", bit);
     if (root != NULL) {
@@ -60,21 +59,21 @@ void build_codes(Node *root, Code table[static ALPHABET]) {
         if (root->left == NULL && root->right == NULL) {
             //puts("build_code: left and right == null");
             table[root->symbol] = c;
-			//printf("%c ", root->symbol);
+            //printf("%c ", root->symbol);
             //code_print(&table[root->symbol]);
         } else {
-            if(root->left != NULL){
+            if (root->left != NULL) {
                 code_push_bit(&c, 0);
                 build_codes(root->left, table);
                 code_pop_bit(&c, &bit);
             }
 
-            if(root->right != NULL){
+            if (root->right != NULL) {
                 code_push_bit(&c, 1);
                 build_codes(root->right, table);
                 code_pop_bit(&c, &bit);
             }
-            
+
             //code_print(table);
         }
     }
