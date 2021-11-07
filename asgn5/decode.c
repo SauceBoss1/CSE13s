@@ -31,8 +31,8 @@ void help_msg(void) {
     fprintf(stderr, "  -o outfile     Output of decompressed data.\n");
 }
 
-int main(int argc, char **argv){
-	////////////////////////////
+int main(int argc, char **argv) {
+    ////////////////////////////
     //COMMAND LINE HANDLING
 
     int infile = STDIN_FILENO;
@@ -64,55 +64,54 @@ int main(int argc, char **argv){
         }
     }
     ////////////////////////////
-	
 
-	//NOTE: This implementation was taken literally from the assignment doc
-	Header h;
-	read_bytes(infile, (uint8_t *) &h, sizeof(Header));
-	
-	//verify magic number
-	if (h.magic	!= MAGIC){
-		fprintf(stderr, "Incorrect magic number!\n");
-		exit(1);
-	}
-	
-	//match file perms
-	struct stat inbuffer;
-	fstat(infile, &inbuffer);
-	fchmod(outfile, h.permissions);
+    //NOTE: This implementation was taken literally from the assignment doc
+    Header h;
+    read_bytes(infile, (uint8_t *) &h, sizeof(Header));
 
-	uint8_t tree_dump[h.tree_size];
-	read_bytes(infile, tree_dump, h.tree_size);
-	Node *dump_node = rebuild_tree(h.tree_size, tree_dump);
-	
-	uint64_t bytes_wrote = 0; //keeps track of the bytes that was wrote
-	uint8_t bit = 0;
-	uint8_t output_buff[BLOCK];
-	uint32_t buff_index = 0;
-	Node *root = dump_node;
-	while ((bytes_wrote < h.file_size) && read_bit(infile, &bit)){
-		if(bit){
-			root = root->right;
-		} else {
-			root = root->left;
-		}
+    //verify magic number
+    if (h.magic != MAGIC) {
+        fprintf(stderr, "Incorrect magic number!\n");
+        exit(1);
+    }
 
-		if(root->left == NULL && root->right == NULL){ //we will use this to find the leaf
-			output_buff[buff_index++] = root->symbol;
-			root = dump_node;
-			bytes_wrote++;
+    //match file perms
+    struct stat inbuffer;
+    fstat(infile, &inbuffer);
+    fchmod(outfile, h.permissions);
 
-			if (buff_index == BLOCK){
-				write_bytes(outfile, output_buff, BLOCK);
-				buff_index = 0;
-			}
-		}
-	}
-	//equivalent of using flush_codes
-	write_bytes(outfile, output_buff, buff_index);
-	delete_tree(&dump_node);
+    uint8_t tree_dump[h.tree_size];
+    read_bytes(infile, tree_dump, h.tree_size);
+    Node *dump_node = rebuild_tree(h.tree_size, tree_dump);
 
-	close(infile);
-	close(outfile);
-	return 0;
+    uint64_t bytes_wrote = 0; //keeps track of the bytes that was wrote
+    uint8_t bit = 0;
+    uint8_t output_buff[BLOCK];
+    uint32_t buff_index = 0;
+    Node *root = dump_node;
+    while ((bytes_wrote < h.file_size) && read_bit(infile, &bit)) {
+        if (bit) {
+            root = root->right;
+        } else {
+            root = root->left;
+        }
+
+        if (root->left == NULL && root->right == NULL) { //we will use this to find the leaf
+            output_buff[buff_index++] = root->symbol;
+            root = dump_node;
+            bytes_wrote++;
+
+            if (buff_index == BLOCK) {
+                write_bytes(outfile, output_buff, BLOCK);
+                buff_index = 0;
+            }
+        }
+    }
+    //equivalent of using flush_codes
+    write_bytes(outfile, output_buff, buff_index);
+    delete_tree(&dump_node);
+
+    close(infile);
+    close(outfile);
+    return 0;
 }
