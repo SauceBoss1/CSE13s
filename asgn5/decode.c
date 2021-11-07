@@ -90,7 +90,7 @@ int main(int argc, char **argv) {
     uint32_t buff_index = 0;
     Node *root = dump_node;
     while ((bytes_wrote < h.file_size) && read_bit(infile, &bit)) {
-        if (bit) {
+        if (bit == 1) {
             root = root->right;
         } else {
             root = root->left;
