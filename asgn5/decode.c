@@ -84,12 +84,14 @@ int main(int argc, char **argv) {
     read_bytes(infile, tree_dump, h.tree_size);
     Node *dump_node = rebuild_tree(h.tree_size, tree_dump);
 
+    //going through the reconstructed tree
     uint64_t bytes_wrote = 0; //keeps track of the bytes that was wrote
     uint8_t bit = 0;
     uint8_t output_buff[BLOCK];
     uint32_t buff_index = 0;
     Node *root = dump_node;
     while ((bytes_wrote < h.file_size) && read_bit(infile, &bit)) {
+        //fprintf(stderr,"bit: %"PRIu8"\n", bit);
         if (bit == 1) {
             root = root->right;
         } else {
@@ -97,6 +99,7 @@ int main(int argc, char **argv) {
         }
 
         if (root->left == NULL && root->right == NULL) { //we will use this to find the leaf
+            //fprintf(stderr, "%c\n",root->symbol);
             output_buff[buff_index++] = root->symbol;
             root = dump_node;
             bytes_wrote++;
