@@ -2,12 +2,21 @@ CC = clang
 CFLAGS = -Wall -Wpedantic -Werror -Wextra
 OBJS = node.o pq.o code.o stack.o io.o huffman.o
 LFLAGS = -lm
-EXECBIN = huffman
+EXECBIN = encode decode
 
 all: $(EXECBIN)
 
-$(EXECBIN): $(OBJS)
-	$(CC) -g -o $(EXECBIN) $(OBJS) $(LFLAGS)
+encode: encode.o $(OBJS)
+	$(CC) -g -o encode encode.o $(OBJS) $(LFLAGS)
+
+encode.o: encode.c $(OBJS)
+	$(CC) $(CFLAGS) -c encode.c
+
+decode: decode.o $(OBJS)
+	$(CC) -g -o decode decode.o $(OBJS) $(LFLAGS)
+
+decode.o: decode.c $(OBJS)
+	$(CC) $(CFLAGS) -c decode.c
 
 node.o: node.c node.h
 	$(CC) $(CFLAGS) -c node.c
