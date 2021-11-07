@@ -65,14 +65,14 @@ bool read_bit(int infile, uint8_t *bit) {
             //End is marked as 1 after the last valid bit
             end = (bytes * 8) + 1;
         }
+    }
 
-        //Return a bit out of buffer
-        *bit = (buffer[index / 8] >> index % 8); //<= TODO
-        index += 1;
+    //Return a bit out of buffer
+    *bit = (buffer[index / 8] >> index % 8); //<= TODO
+    index += 1;
 
-        if (index == BLOCK * 8) {
-            index = 0;
-        }
+    if (index == BLOCK * 8) {
+        index = 0;
     }
 
     return index != end;

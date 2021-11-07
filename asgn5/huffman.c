@@ -111,13 +111,12 @@ void dump_tree(int outfile, Node *root) {
 Node *rebuild_tree(uint16_t bytes, uint8_t tree_dump[static bytes]) {
     Stack *s = stack_create(bytes);
 
-    Node *n = node_create('\0', 0);
     Node *left, *right, *join, *root;
     for (uint16_t i = 0; i < bytes; ++i) {
         if (tree_dump[i] == 'L') {
-            n->symbol = tree_dump[i + 1];
+            Node *n = node_create(tree_dump[i + 1], 0);
             stack_push(s, n);
-            i++;
+            i++; //prevents iterating through the same symbol
         }
 
         if (tree_dump[i] == 'I') {

@@ -99,7 +99,6 @@ int main(int argc, char **argv) {
     h.permissions = buffer.st_mode;
     h.tree_size = (3 * (unique_symbols + 2)) - 1;
     h.file_size = buffer.st_size;
-    printf("tree size: %" PRIu32 "\n", h.tree_size);
     write_bytes(outfile, (uint8_t *) &h, sizeof(h));
 
     dump_tree(outfile, root);
