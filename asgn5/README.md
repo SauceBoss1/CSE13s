@@ -7,20 +7,20 @@ This program uses Huffman Coding to compress files. In this assignment, we have 
 
 ## Building the program
 
-Once you have all the files locally, just type ```make` ``in the terminal in order to build both the decode and encode executables.
+Once you have all the files locally, just type `make` in the terminal in order to build both the decode and encode executables.
 
-Once you are done with the program and want to delete the program, just type ```make clean` ``in order to remove all executables and all object files.
+Once you are done with the program and want to delete the program, just type `make clean` in order to remove all executables and all object files.
 
 ## How to run the program 
 
-Once you have either ```decode` ``````or ```````encode` ``just type the following:
+Once you have either `decode` or `encode` just type the following:
+-`./<executable> -h` 
 
-````- `````` `./<executable> -h` ``
 This will give you all the help flags needed in order for you to run the program.
 
 ### Encoding:
 
-The following is the command line options for the ```````````````````encode````````` ``executable:
+The following is the command line options for the `encode` executable:
 
 - -h: Prints out a help message describing the purpose of the program and the command-line op-
 tions it accepts, exiting the program afterwards. Refer to the reference program in the resources
@@ -33,7 +33,7 @@ be set as stdout.
 the compressed file size, and space saving.
 
 ### Decoding:
-The following is the command line options for the ```decode````````````````` ``program:
+The following is the command line options for the `decode` program:
 
 - -h: Prints out a help message describing the purpose of the program and the command-line op-
 tions it accepts, exiting the program afterwards. Refer to the reference program in the resources
