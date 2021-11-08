@@ -17,6 +17,8 @@
 #include <sys/stat.h>
 
 #define OPTIONS "hi:o:v"
+
+//prints the help message
 void help_msg(void) {
     fprintf(stderr, "SYNOPSIS\n");
     fprintf(stderr, "  A Huffman encoder.\n");
@@ -29,13 +31,15 @@ void help_msg(void) {
     fprintf(stderr, "  -i infile      Input file to compress.\n");
     fprintf(stderr, "  -o outfile     Output of compressed data.\n");
 }
+
+//MAIN
 int main(int argc, char **argv) {
     ////////////////////////////
     //COMMAND LINE HANDLING
 
     int infile = STDIN_FILENO;
     int outfile = STDOUT_FILENO;
-    //bool verbose = false;
+    bool verbose = false;
     int opt = 0;
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
         switch (opt) {
@@ -59,6 +63,9 @@ int main(int argc, char **argv) {
                 exit(1);
             }
             break;
+
+        case 'v': verbose = true; break;
+        default: infile = STDIN_FILENO; outfile = STDOUT_FILENO;
         }
     }
     ////////////////////////////
@@ -68,6 +75,7 @@ int main(int argc, char **argv) {
     uint32_t unique_symbols = 0;
     hist[0]++, hist[ALPHABET - 1]++;
 
+    //create a histogram
     uint8_t buff[BLOCK];
     int bytes_curr_read;
     while ((bytes_curr_read = read_bytes(infile, buff, BLOCK)) > 0) {
@@ -79,21 +87,20 @@ int main(int argc, char **argv) {
             hist[buff[i]]++;
         }
     }
-    /*
-    for (int i = 0; i < BLOCK; ++i){
-        printf(" %"PRIu8,buff[i]);
-    }*/
 
+    //build the huffman tree
     Node *root = build_tree(hist);
-    //node_print(root); //<= TODO REMOVE
 
+    //Find the codes for the tree
     Code table[ALPHABET] = { 0 };
     build_codes(root, table);
-    //printf("code_size: %"PRIu32"\n", code_size(table));
+
+    //set file permissions
     struct stat buffer;
     fstat(infile, &buffer);
     fchmod(outfile, buffer.st_mode);
 
+    //construct and output header
     Header h;
     h.magic = MAGIC;
     h.permissions = buffer.st_mode;
@@ -101,17 +108,30 @@ int main(int argc, char **argv) {
     h.file_size = buffer.st_size;
     write_bytes(outfile, (uint8_t *) &h, sizeof(h));
 
+    //write the dumped tree
     dump_tree(outfile, root);
 
+    //emit the Huffman code
     lseek(infile, 0, SEEK_SET);
     while ((bytes_curr_read = read_bytes(infile, buff, BLOCK)) > 0) {
         for (int i = 0; i < bytes_curr_read; ++i) {
             write_code(outfile, &table[buff[i]]);
         }
     }
-    flush_codes(outfile);
+    flush_codes(outfile); //make sure any extra bits are flushed
+
+    if (verbose) {
+        fprintf(stderr, "Uncompressed size: %" PRIu64 "\n", h.file_size);
+        fprintf(stderr, "Compressed size: %" PRIu64 "\n", bytes_written);
+        double space_saving = 100 * (1 - ((double) bytes_written / (double) h.file_size));
+        fprintf(stderr, "Space Saving: %.2lf%%\n", space_saving);
+    }
+
+    ///////////////////
+    //EXIT PROCEDURES
 
     delete_tree(&root);
+
     close(infile);
     close(outfile);
     return 0;

@@ -13,6 +13,9 @@ struct Stack {
     Node **items;
 };
 
+//Allocates memory for a stack of nodes
+//Returns a stack pointer
+//capacity: number of elements in stack
 Stack *stack_create(uint32_t capacity) {
     Stack *s = (Stack *) malloc(sizeof(Stack));
     if (s) {
@@ -32,12 +35,10 @@ Stack *stack_create(uint32_t capacity) {
     return s;
 }
 
+//Deletes a stack
+//**s: takes in a stack to delete
 void stack_delete(Stack **s) {
     if (*s && (*s)->items) {
-        /*for (uint32_t i = 0; i < (*s)->capacity; ++i) {
-            node_delete(&(*s)->items[i]);
-        }*/
-
         free((*s)->items);
         free(*s);
         *s = NULL;
@@ -45,6 +46,7 @@ void stack_delete(Stack **s) {
     return;
 }
 
+//Check if stack is empty
 bool stack_empty(Stack *s) {
     if (s->top == 0) {
         return true;
@@ -52,6 +54,7 @@ bool stack_empty(Stack *s) {
     return false;
 }
 
+//check if the stack is full
 bool stack_full(Stack *s) {
     if (s->top >= s->capacity) {
         return true;
@@ -59,10 +62,14 @@ bool stack_full(Stack *s) {
     return false;
 }
 
+//returns the size of the stack
 uint32_t stack_size(Stack *s) {
     return s->top;
 }
 
+//push a node onto the stack
+//returns false if the stack is false
+//returns true if it has been pushed successfully
 bool stack_push(Stack *s, Node *n) {
     if (stack_full(s)) {
         return false;
@@ -73,18 +80,22 @@ bool stack_push(Stack *s, Node *n) {
     return true;
 }
 
+//Pops a node from the stack
+//Uses pass by reference to "return" the node
+//Returns false if the stack is empty
+//
+//returns true if the stack has been popped successfully
 bool stack_pop(Stack *s, Node **n) {
     if (stack_empty(s)) {
         return false;
     }
 
     *n = s->items[s->top - 1];
-    //(*n)->frequency = s->items[s->top]->frequency;
-    //(*n)->symbol = s->items[s->top]->symbol;
     s->top--;
     return true;
 }
 
+//Debug function to print the stack
 void stack_print(Stack *s) {
     printf("[ ");
     for (uint32_t i = 0; i < s->top; ++i) {

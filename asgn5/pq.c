@@ -13,6 +13,8 @@ struct PriorityQueue {
     Node **items;
 };
 
+//creates a priority queue
+//capacity: takes in the capacity of the pq
 PriorityQueue *pq_create(uint32_t capacity) {
     PriorityQueue *pq = (PriorityQueue *) malloc(sizeof(PriorityQueue));
     if (pq) {
@@ -31,17 +33,9 @@ PriorityQueue *pq_create(uint32_t capacity) {
     return pq;
 }
 
+//deletes the priority queue
 void pq_delete(PriorityQueue **q) {
     if (*q && (*q)->items) {
-        //printf("cap: %"PRIu32"\n",(*q)->capacity);
-        /* 
-        for (uint32_t i = 0; i < (*q)->capacity; ++i) {
-            //printf("i: %"PRIu32"\n", i);
-
-            node_delete(&(*q)->items[i]);
-            //free(&(*q)->items[i]);
-        }
-        */
         free((*q)->items);
         free(*q);
         *q = NULL;
@@ -51,7 +45,12 @@ void pq_delete(PriorityQueue **q) {
 
 /////////////////////////////////////////////
 //HEAP IMPLEMENTATION BELOW
+//Taken straight from asgn3
 
+//Finds the min child for the PQ
+//uses the same logic as asgn3 with the signs switched
+//
+//returns the min_child of the heap
 static uint32_t min_child(PriorityQueue *q, uint32_t first, uint32_t last) {
     uint32_t left = 2 * first;
     uint32_t right = left + 1;
@@ -62,8 +61,8 @@ static uint32_t min_child(PriorityQueue *q, uint32_t first, uint32_t last) {
     return right;
 }
 
+//swaps two given nodes
 void swap(Node *x, Node *y) {
-    //puts("here");
     Node t = *x;
     *x = *y;
     *y = t;
@@ -71,6 +70,10 @@ void swap(Node *x, Node *y) {
     return;
 }
 
+//fixes the heap for the priority queue
+//
+//first: first index
+//last: last specified index
 static void fix_heap(PriorityQueue *q, uint32_t first, uint32_t last) {
     bool found = false;
     uint32_t mother = first, great = min_child(q, mother, last);
@@ -87,59 +90,10 @@ static void fix_heap(PriorityQueue *q, uint32_t first, uint32_t last) {
     return;
 }
 
-/*
-void min_insert_heap(PriorityQueue *q, uint32_t i){
-    //recommended by TA in section
-    uint32_t parent = (i - 1)/2;
-    while( i >= 0 && (q->items[parent]->frequency > q->items[i]->frequency) ){
-        swap(q->items[parent], q->items[i]);
-        i = parent;
-        parent = i / 2;
-    }
-}
-
-//also recommended
-void fix_heap(PriorityQueue *q, uint32_t i){
-    uint32_t left = i * 2 + 1;
-    uint32_t right = i * 2 + 2;
-    uint32_t small = 0;
-    
-    if ((left <= pq_size(q)) && (q->items[left]->frequency < q->items[i]->frequency)){
-        small = left;
-    } else {
-        small = i;
-    }
-
-    if ((right <= pq_size(q)) && (q->items[right]->frequency < q->items[small]->frequency)){
-        small = right;
-    }
-
-    if (small != i){
-        swap(q->items[i], q->items[small]);
-        fix_heap(q, small);
-    }
-}*/
-
 ///////////////////////////////////////////
-//INSERTION SORT
 
-/*
-void insertion_sort(PriorityQueue *q, uint32_t n){
-	for (uint32_t i = 1; i < n; ++i){
-		uint32_t j = i;
-		Node *temp = q->items[i];
-
-		while ((j > 0) && ((*temp).frequency < q->items[j - 1]->frequency)){
-			q->items[j] = q->items[j-1];
-			j--;
-		}
-
-		q->items[j] = temp;
-	}
-	return;
-}
-*/
-///////////////////////////////////////////
+//checks if the pq is empty
+//returns true if it is
 bool pq_empty(PriorityQueue *q) {
     if (q->top == 0) {
         return true;
@@ -147,6 +101,8 @@ bool pq_empty(PriorityQueue *q) {
     return false;
 }
 
+//checks if the pq is full
+//returns true if it is
 bool pq_full(PriorityQueue *q) {
     if (q->top == q->capacity) {
         return true;
@@ -154,10 +110,15 @@ bool pq_full(PriorityQueue *q) {
     return false;
 }
 
+//returns the size of the pq
 uint32_t pq_size(PriorityQueue *q) {
     return q->top;
 }
 
+//Enqueues a node onto the priority queue
+//returns false if enqueue has failed
+//
+//*n: the node to enqueue
 bool enqueue(PriorityQueue *q, Node *n) {
     if (pq_full(q)) {
         return false;
@@ -168,33 +129,30 @@ bool enqueue(PriorityQueue *q, Node *n) {
         return true;
     }
     q->items[q->top] = n;
-    //insertion_sort(q, q->top);
-    fix_heap(q, 1, q->top);
-    //min_insert_heap(q, q->top);
+    fix_heap(q, 1, q->top); //fix heap after pushing to the pq
     q->top++;
 
     return true;
 }
 
+//dequeues a node from the pq
+//returns false if we have failed to dequeue
+//
+//**n: a node to reference to
 bool dequeue(PriorityQueue *q, Node **n) {
     if (pq_empty(q)) {
         return false;
     }
-    //swap(q->items[0], q->items[q->top -1]);
-    //*n = q->items[q-> top -1];
-    //q->top--;
-    //fix_heap(q, 0);
 
-    //fix_heap(q, 1, q->top);
     swap(q->items[0], q->items[q->top - 1]);
-    *n = q->items[q->top - 1];
+    *n = q->items[q->top - 1]; //"return" the smallest element
     q->top--;
     fix_heap(q, 1, q->top);
-    //insertion_sort(q, q->top);
 
     return true;
 }
 
+//Debug function that prints the priority queue
 void pq_print(PriorityQueue *q) {
     printf("[");
     for (uint32_t i = 0; i < q->top; ++i) {

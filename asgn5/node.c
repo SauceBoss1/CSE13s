@@ -5,6 +5,11 @@
 #include <stdio.h>
 #include <inttypes.h>
 
+//Creates a node
+//Returns a node pointer
+//
+//symbol: symbol to set node as
+//frequence: the frequency of the symbol
 Node *node_create(uint8_t symbol, uint64_t frequency) {
     Node *n = (Node *) malloc(sizeof(Node));
     if (n) {
@@ -20,6 +25,7 @@ Node *node_create(uint8_t symbol, uint64_t frequency) {
     return n;
 }
 
+//deletes the node
 void node_delete(Node **n) {
     if (*n) {
         free(*n);
@@ -28,6 +34,8 @@ void node_delete(Node **n) {
     return;
 }
 
+//Joins two nodes together and sets their symbol to '$'
+//returns another node pointer
 Node *node_join(Node *left, Node *right) {
     Node *n = node_create('$', left->frequency + right->frequency);
     n->left = left;
@@ -35,6 +43,7 @@ Node *node_join(Node *left, Node *right) {
     return n;
 }
 
+//Debug function that prints the node and its children
 void node_print(Node *n) {
     if (n != NULL) {
         if (n->left != NULL) {
