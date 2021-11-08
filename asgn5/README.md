@@ -14,7 +14,8 @@ Once you are done with the program and want to delete the program, just type `ma
 ## How to run the program 
 
 Once you have either `decode` or `encode` just type the following:
--`./<executable> -h` 
+
+- `./<executable> -h` 
 
 This will give you all the help flags needed in order for you to run the program.
 
