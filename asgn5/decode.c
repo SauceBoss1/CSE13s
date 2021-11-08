@@ -112,6 +112,7 @@ int main(int argc, char **argv) {
     }
     //equivalent of using flush_codes
     write_bytes(outfile, output_buff, buff_index);
+
     delete_tree(&dump_node);
 
     close(infile);
