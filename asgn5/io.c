@@ -10,23 +10,29 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+uint64_t bytes_read = 0;
+uint64_t bytes_written = 0;
+
 //NOTE: code was inspired from Christian
 int read_bytes(int infile, uint8_t *buf, int nbytes) {
     if (nbytes == 0) {
         return 0;
     }
 
-    int bytes_read = 0;
+    int total_bytes_read = 0;
     int bytes_currently_read = -1;
 
-    while ((bytes_currently_read = read(infile, buf + bytes_read, nbytes - bytes_read)) > 0) {
+    while ((bytes_currently_read = read(infile, buf + total_bytes_read, nbytes - total_bytes_read))
+           > 0) {
         //printf("bytes currently read: %d\n", bytes_currently_read);
-        bytes_read += bytes_currently_read;
-        if (bytes_read == 0) {
-            break;
-        }
+        total_bytes_read += bytes_currently_read;
+        //if (nbytes - total_bytes_read == 0) {
+        //    break;
+        //}
     }
-    return bytes_read;
+
+    bytes_read += total_bytes_read;
+    return total_bytes_read;
 }
 
 //NOTE: code was inspired from Christian
@@ -35,18 +41,20 @@ int write_bytes(int outfile, uint8_t *buf, int nbytes) {
         return 0;
     }
 
-    int bytes_written = 0;
+    int total_bytes_written = 0;
     int bytes_currently_written = 0;
 
-    while ((bytes_currently_written = write(outfile, buf + bytes_written, nbytes - bytes_written))
+    while ((bytes_currently_written
+               = write(outfile, buf + total_bytes_written, nbytes - total_bytes_written))
            > 0) {
         //printf("bytes currently writte: %d\n", bytes_currently_written);
-        bytes_written += bytes_currently_written;
-        if (bytes_written == nbytes || bytes_currently_written == 0) {
-            break;
-        }
+        total_bytes_written += bytes_currently_written;
+        //if (total_bytes_written == nbytes || bytes_currently_written == 0) {
+        //    break;
+        //}
     }
-    return bytes_written;
+    bytes_written += total_bytes_written;
+    return total_bytes_written;
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -68,9 +76,8 @@ bool read_bit(int infile, uint8_t *bit) {
     }
 
     //Return a bit out of buffer
-    *bit = (buffer[index / 8] >> index % 8); //<= TODO
-    index += 1;
-
+    *bit = (buffer[index / 8] >> index % 8) & 0x1; //<= TODO
+    index++;
     if (index == BLOCK * 8) {
         index = 0;
     }
@@ -95,15 +102,6 @@ void write_code(int outfile, Code *c) {
             buffer[buf_index / 8] &= ~(0 << buf_index % 8);
             //code_clr_bit(c, index);
         }
-        /*
-		for(int i = 0 ;i < buf_index; ++i){
-			fprintf(stderr, "%"PRIu8, (buffer[i/8] >>i % 8) & 1);
-			if((i+1) % 8 == 0){
-				fprintf(stderr," ");
-			}
-		}
-		fprintf(stderr,"\nindex: %d-> ", buf_index);
-		*/
         buf_index++;
 
         if (buf_index == BLOCK * 8) {

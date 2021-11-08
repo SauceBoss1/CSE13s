@@ -34,9 +34,9 @@ Stack *stack_create(uint32_t capacity) {
 
 void stack_delete(Stack **s) {
     if (*s && (*s)->items) {
-        for (uint32_t i = 0; i < (*s)->capacity; ++i) {
+        /*for (uint32_t i = 0; i < (*s)->capacity; ++i) {
             node_delete(&(*s)->items[i]);
-        }
+        }*/
 
         free((*s)->items);
         free(*s);
@@ -88,7 +88,7 @@ bool stack_pop(Stack *s, Node **n) {
 void stack_print(Stack *s) {
     printf("[ ");
     for (uint32_t i = 0; i < s->top; ++i) {
-        printf("%" PRIu64 " ", s->items[i]->frequency);
+        printf("%c ", s->items[i]->symbol);
     }
     printf("]\n");
 }

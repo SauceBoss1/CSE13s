@@ -79,13 +79,6 @@ void build_codes(Node *root, Code table[static ALPHABET]) {
     }
     return;
 }
-/*
-void build_codes(Node *root, Code table[static ALPHABET]) {
-    static Code c = code_init();
-    build_code(root, table, &c);
-    //code_print(&c);
-    return;
-}*/
 
 void dump_tree(int outfile, Node *root) {
     if (root) {
@@ -111,36 +104,40 @@ void dump_tree(int outfile, Node *root) {
 Node *rebuild_tree(uint16_t bytes, uint8_t tree_dump[static bytes]) {
     Stack *s = stack_create(bytes);
 
-    Node *left, *right, *join, *root;
+    Node *root;
     for (uint16_t i = 0; i < bytes; ++i) {
-        if (tree_dump[i] == 'L') {
-            Node *n = node_create(tree_dump[i + 1], 0);
-            stack_push(s, n);
-            i++; //prevents iterating through the same symbol
-        }
-
         if (tree_dump[i] == 'I') {
+            Node *left, *right, *join;
             stack_pop(s, &right);
             stack_pop(s, &left);
 
             join = node_join(left, right);
             stack_push(s, join);
         }
+        if (tree_dump[i] == 'L') {
+            Node *n = node_create(tree_dump[i + 1], 0);
+            stack_push(s, n);
+            i++; //prevents iterating through the same symbol
+        }
     }
-
     stack_pop(s, &root);
     stack_delete(&s);
-
     return root;
 }
 
 void delete_tree(Node **root) {
-    if (*root) {
-        delete_tree(&(*root)->left);
-        delete_tree(&(*root)->right);
+    if (*root && root) {
+        if ((*root)->left) {
+            delete_tree(&(*root)->left);
+        }
+
+        if ((*root)->right) {
+            delete_tree(&(*root)->right);
+        }
         node_delete(root);
     }
 }
+
 /*
 int main(void) {
     return 0;
