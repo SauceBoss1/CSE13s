@@ -88,7 +88,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
     }
     return true;
 }
-
+/*
 int main(void) {
     return 0;
-}
+}*/
