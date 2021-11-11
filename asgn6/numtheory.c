@@ -187,7 +187,7 @@ void mod_inverse(mpz_t o, mpz_t a, mpz_t n) {
     //return t
     mpz_set(o, t);
 
-    mpz_clears(r, r_prime, t, t_prime, q, temp, mul_temp, NULL);
+    mpz_clears(r, r_prime, t, t_prime, q, temp, mul_temp, n_temp, a_temp, NULL);
     return;
 }
 
