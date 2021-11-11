@@ -123,10 +123,10 @@ void gcd(mpz_t g, mpz_t a, mpz_t b) {
     //uint64_t t = 0;
     mpz_t t, a_temp, b_temp;
     mpz_inits(t, a_temp, b_temp, NULL);
+    mpz_set_ui(t, 0);
 
     mpz_set(a_temp, a);
     mpz_set(b_temp, b);
-
     while (mpz_cmp_ui(b_temp, 0) != 0) {
         mpz_set(t, b_temp);
         mpz_mod(b_temp, a_temp, b_temp);
@@ -193,5 +193,14 @@ void mod_inverse(mpz_t o, mpz_t a, mpz_t n) {
 
 /*
 int main(void) {
+    randstate_init(2021);
+    mpz_t a, b, o;
+    mpz_inits(a,b,NULL);
+    mpz_set_ui(a, 32);
+    mpz_set_ui(b, 4);
+    gcd(o, a, b);
+    gmp_printf("gcd: %Zd\n", o);
+    mpz_clears(a, b, o, NULL);
+    randstate_clear();
     return 0;
 }*/
