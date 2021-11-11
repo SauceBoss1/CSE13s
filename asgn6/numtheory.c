@@ -49,23 +49,23 @@ bool is_prime(mpz_t n, uint64_t iters) {
     mpz_init(n_temp);
     mpz_set(n_temp, n);
 
+    mpz_t a, x, temp, y, n_minus_1, j, s_minus_1, two, s;
+    mpz_inits(a, x, temp, y, n_minus_1, j, s_minus_1, two, s, NULL);
+
+    mpz_sub_ui(n_minus_1, n_temp, 1);
+    mpz_sub_ui(s_minus_1, s, 1);
+    mpz_set_ui(two, 2);
+
     //find an r that is odd such that n = 2^s * r + 1
-    mpz_t s;
-    mpz_init(s);
     //s = n - 1
     mpz_sub_ui(s, n_temp, 1);
 
     while (mpz_even_p(s) != 0) {
         //s /= 2
         mpz_fdiv_q_ui(s, s, 2);
+        //gmp_printf("s: %Zd\n", s);
     }
 
-    mpz_t a, x, temp, y, n_minus_1, j, s_minus_1, two;
-    mpz_inits(a, x, temp, y, n_minus_1, j, s_minus_1, two, NULL);
-
-    mpz_sub_ui(n_minus_1, n_temp, 1);
-    mpz_sub_ui(s_minus_1, s, 1);
-    mpz_set_ui(two, 2);
     //m-r primality testing algorithm
     for (uint64_t i = 1; i < iters; ++i) {
         //uint64_t a = (uint64_t) (rand() % ( n - 4 )) + 2;
@@ -193,14 +193,17 @@ void mod_inverse(mpz_t o, mpz_t a, mpz_t n) {
 
 /*
 int main(void) {
-    //randstate_init(2021);
-    mpz_t a, b, o;
-    mpz_inits(a,b,o, NULL);
+    randstate_init(2021);
+    mpz_t a, b, o, prime_num;
+    mpz_inits(a, b, o, prime_num, NULL);
     mpz_set_ui(a, 5);
     mpz_set_ui(b, 13);
     mod_inverse(o, a, b);
     gmp_printf("mod_inverse: %Zd\n", o);
-    mpz_clears(a, b, o, NULL);
-    //randstate_clear();
+
+    mpz_set_ui(prime_num, 3448233248);
+    gmp_printf("Is %Zd prime? %d\n", prime_num, is_prime(prime_num, 100));
+    mpz_clears(a, b, o, prime_num, NULL);
+    randstate_clear();
     return 0;
 }*/
