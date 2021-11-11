@@ -140,7 +140,7 @@ void gcd(mpz_t g, mpz_t a, mpz_t b) {
 
 void mod_inverse(mpz_t o, mpz_t a, mpz_t n) {
     mpz_t r, r_prime, t, t_prime, q, temp, mul_temp, a_temp, n_temp;
-    mpz_inits(r, r_prime, t, t_prime, q, temp, mul_temp, a_temp, n_temp);
+    mpz_inits(r, r_prime, t, t_prime, q, temp, mul_temp, a_temp, n_temp, NULL);
 
     mpz_set(a_temp, a);
     mpz_set(n_temp, n);
@@ -179,7 +179,7 @@ void mod_inverse(mpz_t o, mpz_t a, mpz_t n) {
     }
 
     //if t < 0
-    if (mpz_cmp_ui(temp, 0) < 0) {
+    if (mpz_cmp_ui(t, 0) < 0) {
         //t←t+n
         mpz_add(t, t, n_temp);
     }
@@ -193,14 +193,14 @@ void mod_inverse(mpz_t o, mpz_t a, mpz_t n) {
 
 /*
 int main(void) {
-    randstate_init(2021);
+    //randstate_init(2021);
     mpz_t a, b, o;
-    mpz_inits(a,b,NULL);
-    mpz_set_ui(a, 32);
-    mpz_set_ui(b, 4);
-    gcd(o, a, b);
-    gmp_printf("gcd: %Zd\n", o);
+    mpz_inits(a,b,o, NULL);
+    mpz_set_ui(a, 5);
+    mpz_set_ui(b, 13);
+    mod_inverse(o, a, b);
+    gmp_printf("mod_inverse: %Zd\n", o);
     mpz_clears(a, b, o, NULL);
-    randstate_clear();
+    //randstate_clear();
     return 0;
 }*/
