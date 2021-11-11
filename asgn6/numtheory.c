@@ -53,13 +53,12 @@ bool is_prime(mpz_t n, uint64_t iters) {
     mpz_inits(a, x, temp, y, n_minus_1, j, s_minus_1, two, r, NULL);
 
     mpz_sub_ui(n_minus_1, n_temp, 1);
-    //mpz_sub_ui(s_minus_1, s, 1);
     mpz_set_ui(two, 2);
 
-    //mpz_set_ui(s, 0);
     mpz_set_ui(r, 0);
     mp_bitcnt_t s = 0;
 
+    //Find an (n-1)/(2^s) = r such that r is odd
     do {
         mpz_fdiv_q_2exp(r, n_minus_1, s);
         s++;
@@ -67,19 +66,6 @@ bool is_prime(mpz_t n, uint64_t iters) {
     s--;
 
     mpz_fdiv_q_2exp(r, n_minus_1, s);
-
-    /*
-
-    //find an r that is odd such that n = 2^s * r + 1
-    //s = n - 1
-    mpz_sub_ui(s, n_temp, 1);
-
-    while (mpz_even_p(s) != 0) {
-        //s /= 2
-        mpz_fdiv_q_ui(s, s, 2);
-        //gmp_printf("s: %Zd\n", s);
-    }
-    */
 
     //m-r primality testing algorithm
     for (uint64_t i = 1; i < iters; ++i) {
