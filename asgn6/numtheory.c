@@ -174,7 +174,7 @@ void mod_inverse(mpz_t o, mpz_t a, mpz_t n) {
     //if r > 1
     if (mpz_cmp_ui(r, 1) > 0) {
         //return no inverse
-        mpz_set(o, 0);
+        mpz_set_ui(o, 0);
         return;
     }
 
