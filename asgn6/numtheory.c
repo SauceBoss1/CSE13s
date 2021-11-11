@@ -49,12 +49,26 @@ bool is_prime(mpz_t n, uint64_t iters) {
     mpz_init(n_temp);
     mpz_set(n_temp, n);
 
-    mpz_t a, x, temp, y, n_minus_1, j, s_minus_1, two, s;
-    mpz_inits(a, x, temp, y, n_minus_1, j, s_minus_1, two, s, NULL);
+    mpz_t a, x, temp, y, n_minus_1, j, s_minus_1, two, r;
+    mpz_inits(a, x, temp, y, n_minus_1, j, s_minus_1, two, r, NULL);
 
     mpz_sub_ui(n_minus_1, n_temp, 1);
-    mpz_sub_ui(s_minus_1, s, 1);
+    //mpz_sub_ui(s_minus_1, s, 1);
     mpz_set_ui(two, 2);
+
+    //mpz_set_ui(s, 0);
+    mpz_set_ui(r, 0);
+    mp_bitcnt_t s = 0;
+
+    do {
+        mpz_fdiv_q_2exp(r, n_minus_1, s);
+        s++;
+    } while (!mpz_even_p(r));
+    s--;
+
+    mpz_fdiv_q_2exp(r, n_minus_1, s);
+
+    /*
 
     //find an r that is odd such that n = 2^s * r + 1
     //s = n - 1
@@ -65,6 +79,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
         mpz_fdiv_q_ui(s, s, 2);
         //gmp_printf("s: %Zd\n", s);
     }
+    */
 
     //m-r primality testing algorithm
     for (uint64_t i = 1; i < iters; ++i) {
@@ -75,7 +90,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
         mpz_add_ui(a, a, 2);
 
         //uint64_t y = pow_mod(a, s, n);
-        pow_mod(y, a, s, n_temp);
+        pow_mod(y, a, r, n_temp);
 
         //if( (y != 1) && (y != n - 1))
         if ((mpz_cmp_ui(y, 1) != 0) && (mpz_cmp(y, n_minus_1) != 0)) {
@@ -97,11 +112,12 @@ bool is_prime(mpz_t n, uint64_t iters) {
 
             //if (y != n - 1)
             if (mpz_cmp(y, n_minus_1) != 0) {
+                gmp_printf("y = %Zd ; n-1 = %Zd\n", y, n_minus_1);
                 return false;
             }
         }
     }
-    mpz_clears(s, a, x, temp, y, n_minus_1, j, s_minus_1, two, n_temp, NULL);
+    mpz_clears(a, x, temp, y, n_minus_1, j, s_minus_1, two, n_temp, r, NULL);
     return true;
 }
 
@@ -201,7 +217,8 @@ int main(void) {
     mod_inverse(o, a, b);
     gmp_printf("mod_inverse: %Zd\n", o);
 
-    mpz_set_ui(prime_num, 3448233248);
+    mpz_set_ui(prime_num, 104717);
+    //mpz_set_ui(prime_num, 57);
     gmp_printf("Is %Zd prime? %d\n", prime_num, is_prime(prime_num, 100));
     mpz_clears(a, b, o, prime_num, NULL);
     randstate_clear();
