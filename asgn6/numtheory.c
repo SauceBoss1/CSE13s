@@ -192,7 +192,7 @@ void mod_inverse(mpz_t o, mpz_t a, mpz_t n) {
     return;
 }
 
-
+/*
 int main(void) {
     randstate_init(2021);
     mpz_t a, b, o, prime_num;
@@ -201,11 +201,12 @@ int main(void) {
     mpz_set_ui(b, 13);
     mod_inverse(o, a, b);
     gmp_printf("mod_inverse: %Zd\n", o);
-
-    make_prime(prime_num, 128, 10000);
-    //mpz_set_ui(prime_num, 57);
-    gmp_printf("Is %Zd prime? %d\n", prime_num, is_prime(prime_num, 100));
+    
+    for (uint i = 0; i < 20; ++i){
+        make_prime(prime_num, 64, 10000);
+        gmp_printf("Is %Zd prime? %d\n", prime_num, is_prime(prime_num, 100));
+    }
     mpz_clears(a, b, o, prime_num, NULL);
     randstate_clear();
     return 0;
-}
+}*/
