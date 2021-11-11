@@ -114,17 +114,19 @@ void make_prime(mpz_t p, uint64_t bits, uint64_t iters) {
 
 void gcd(mpz_t g, mpz_t a, mpz_t b) {
     //uint64_t t = 0;
-    mpz_t t;
-    mpz_init(t);
+    mpz_t t, a_temp, b_temp;
+    mpz_init(t, a_temp, b_temp);
     mpz_set_ui(t, 0);
+    mpz_set(a_temp, a);
+    mpz_set(b_temp, b);
 
-    while (mpz_cmp_ui(b, 0) != 0) {
-        mpz_set(t, b);
-        mpz_mod(b, a, b);
-        mpz_set(a, t);
+    while (mpz_cmp_ui(b_temp, 0) != 0) {
+        mpz_set(t, b_temp);
+        mpz_mod(b_temp, a_temp, b_temp);
+        mpz_set(a_temp, t);
     }
 
-    mpz_set(g, a);
+    mpz_set(g, a_temp);
     mpz_clear(t);
     return;
 }
