@@ -178,6 +178,7 @@ void mod_inverse(mpz_t o, mpz_t a, mpz_t n) {
     return;
 }
 
+/*
 int main(void) {
     return 0;
-}
+}*/
