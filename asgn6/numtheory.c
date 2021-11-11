@@ -115,7 +115,7 @@ void make_prime(mpz_t p, uint64_t bits, uint64_t iters) {
 void gcd(mpz_t g, mpz_t a, mpz_t b) {
     //uint64_t t = 0;
     mpz_t t, a_temp, b_temp;
-    mpz_init(t, a_temp, b_temp);
+    mpz_inits(t, a_temp, b_temp, NULL);
     mpz_set_ui(t, 0);
     mpz_set(a_temp, a);
     mpz_set(b_temp, b);
