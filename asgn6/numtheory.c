@@ -32,7 +32,7 @@ void pow_mod(mpz_t o, mpz_t a, mpz_t d, mpz_t n) {
     }
 
     mpz_set(o, v);
-    mpz_clears(v, p, temp, a_temp, d_temp, n_temp NULL);
+    mpz_clears(v, p, temp, a_temp, d_temp, n_temp, NULL);
     return;
 }
 
