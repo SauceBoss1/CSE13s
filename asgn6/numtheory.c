@@ -89,6 +89,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
 
                 //if (y == 1)
                 if (mpz_cmp_ui(y, 1) == 0) {
+                    mpz_clears(a, x, temp, y, n_minus_1, j, s_minus_1, two, n_temp, r, NULL);
                     return false;
                 }
 
@@ -98,6 +99,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
 
             //if (y != n - 1)
             if (mpz_cmp(y, n_minus_1) != 0) {
+                mpz_clears(a, x, temp, y, n_minus_1, j, s_minus_1, two, n_temp, r, NULL);
                 return false;
             }
         }
@@ -109,10 +111,9 @@ bool is_prime(mpz_t n, uint64_t iters) {
 void make_prime(mpz_t p, uint64_t bits, uint64_t iters) {
     mpz_t temp;
     mpz_init(temp);
-    mp_bitcnt_t nbits = bits;
 
     do {
-        mpz_urandomb(temp, state, nbits);
+        mpz_urandomb(temp, state, bits);
     } while (!is_prime(temp, iters));
 
     mpz_set(p, temp);
@@ -176,6 +177,7 @@ void mod_inverse(mpz_t o, mpz_t a, mpz_t n) {
     if (mpz_cmp_ui(r, 1) > 0) {
         //return no inverse
         mpz_set_ui(o, 0);
+        mpz_clears(r, r_prime, t, t_prime, q, temp, mul_temp, n_temp, a_temp, NULL);
         return;
     }
 
@@ -195,18 +197,23 @@ void mod_inverse(mpz_t o, mpz_t a, mpz_t n) {
 /*
 int main(void) {
     randstate_init(2021);
-    mpz_t a, b, o, prime_num;
-    mpz_inits(a, b, o, prime_num, NULL);
-    mpz_set_ui(a, 5);
+    mpz_t a, b, c, o, prime_num;
+    mpz_inits(a, b, c, o, prime_num, NULL);
+    mpz_set_ui(a, 4563172241);
     mpz_set_ui(b, 13);
-    mod_inverse(o, a, b);
-    gmp_printf("mod_inverse: %Zd\n", o);
-    
-    for (uint i = 0; i < 20; ++i){
-        make_prime(prime_num, 64, 10000);
-        gmp_printf("Is %Zd prime? %d\n", prime_num, is_prime(prime_num, 100));
+    mpz_set_ui(c, 17);
+    //pow_mod(o, a, b, c);
+    //gmp_printf("pow_mod: %Zd\n", o);
+    //mod_inverse(o, a, b);
+    //gmp_printf("mod_inverse: %Zd\n", o);
+    //gcd(o, a, b);
+    //gmp_printf("gcd: %Zd\n", o);
+       
+    for (uint i = 0; i < 1; ++i){
+        //make_prime(prime_num, 64, 10000);
+        gmp_printf("Is %d prime?\n", is_prime(a, 10000));
     }
-    mpz_clears(a, b, o, prime_num, NULL);
+    mpz_clears(a, b, c, o, prime_num, NULL);
     randstate_clear();
     return 0;
 }*/
