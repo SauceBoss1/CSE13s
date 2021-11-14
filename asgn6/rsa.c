@@ -97,21 +97,21 @@ void rsa_read_priv(mpz_t n, mpz_t d, FILE *pvfile) {
     return;
 }
 
-void rsa_encrypt(mpz_t c, mpz_t m, mpz_t e, mpz_t n){
+void rsa_encrypt(mpz_t c, mpz_t m, mpz_t e, mpz_t n) {
     mpz_powm(c, m, e, n);
     return;
 }
 
 //This function calculates log BASE 2 (n)/
 //This pseudocode was provided to us by Prof. Long
-static void log2n(mpz_t rop, mpz_t n){
+static void log2n(mpz_t rop, mpz_t n) {
     mpz_t n_temp, c;
     mpz_inits(n_temp, c, NULL);
-    
+
     mpz_abs(n_temp, n);
     mpz_set_ui(c, 0);
 
-    while( mpz_cmp_ui(n_temp, 0) > 0 ){
+    while (mpz_cmp_ui(n_temp, 0) > 0) {
         mpz_add_ui(c, c, 1);
         mpz_fdiv_q_ui(n_temp, n_temp, 2);
     }
@@ -119,15 +119,13 @@ static void log2n(mpz_t rop, mpz_t n){
     mpz_sub_ui(c, c, 1);
     mpz_set(rop, c);
 
-
     mpz_clears(n_temp, c, NULL);
     return;
 }
 
-void rsa_encrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t e){
+void rsa_encrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t e) {
     mpz_t k;
     mpz_init(k);
-    
     //calcuates block size
     log2n(k, n);
     mpz_sub_ui(k, k, 1);
@@ -146,13 +144,15 @@ void rsa_encrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t e){
     mpz_init(message);
     uint32_t j = 0;
 
-    while( j < file_size ){
-        uint32_t true_bytes = (uint32_t) fread(block + 1, sizeof(uint8_t), mpz_get_ui(k) - 1, infile);
+    //you may need to take into account if fread() > 0
+    while (j < file_size) {
+        uint32_t true_bytes
+            = (uint32_t) fread(block + 1, sizeof(uint8_t), mpz_get_ui(k) - 1, infile);
         j += true_bytes;
         //fprintf(stderr,"j: %"PRIu32" file_size: %"PRIu32"\n", j, file_size);
         mpz_import(message, (size_t) true_bytes, 1, sizeof(uint8_t), 1, 0, block);
         rsa_encrypt(message, message, e, n);
-        gmp_fprintf(outfile,"%Zx\n", message);
+        gmp_fprintf(outfile, "%Zx\n", message);
     }
 
     mpz_clears(k, message, NULL);
@@ -161,7 +161,7 @@ void rsa_encrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t e){
 
     return;
 }
-
+/*
 int main(void) {
     randstate_init(2021);
     mpz_t p, q, n, e, d;
@@ -169,8 +169,6 @@ int main(void) {
 
     rsa_make_pub(p, q, n, e, 128, 10000);
     rsa_make_priv(d, e, p, q);
-    
-
 
     rsa_encrypt_file(stdin, stdout, n, e);
     //rsa_write_priv(n, d, stdout);
@@ -191,4 +189,4 @@ int main(void) {
     mpz_clears(p, q, n, e, d, NULL);
     randstate_clear();
     return 0;
-}
+}*/
