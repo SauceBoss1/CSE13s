@@ -9,7 +9,7 @@
 #include <stdbool.h>
 
 void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t iters) {
-    uint64_t p_bits = (random() % ((nbits * 3) / 4)) + (nbits / 4);
+    uint64_t p_bits = ((random() % (nbits / 2)) + (nbits / 4) * 2);
     uint64_t q_bits = nbits - p_bits;
 
     //printf("p_bit: %"PRIu64" q_bit: %"PRIu64"\n", p_bits, q_bits);
