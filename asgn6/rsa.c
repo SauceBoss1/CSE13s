@@ -14,15 +14,17 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
 
     //printf("p_bit: %" PRIu64 " q_bit: %" PRIu64 "\n", p_bits, q_bits);
 
-    mpz_t p_temp, q_temp, totient, e_temp, p_minus_1, q_minus_1,
-        coprime; //using temp vars so I don't accidentally overwrite arguments
-    mpz_inits(p_temp, q_temp, totient, e_temp, p_minus_1, q_minus_1, coprime, NULL);
+    mpz_t p_temp, q_temp, totient, e_temp, p_minus_1, q_minus_1, coprime,
+        n_temp; //using temp vars so I don't accidentally overwrite arguments
+    mpz_inits(p_temp, q_temp, totient, e_temp, p_minus_1, q_minus_1, coprime, n_temp, NULL);
 
     //generate random p and q
     do {
         make_prime(p_temp, p_bits, iters);
         make_prime(q_temp, q_bits, iters);
     } while ((mpz_sizeinbase(p_temp, 2) + mpz_sizeinbase(q_temp, 2)) < nbits);
+
+    mpz_mul(n_temp, p_temp, q_temp); //n = p * q
 
     mpz_sub_ui(p_minus_1, p_temp, 1);
     mpz_sub_ui(q_minus_1, q_temp, 1);
@@ -38,11 +40,11 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
     } while (mpz_cmp_ui(coprime, 1) != 0);
 
     mpz_set(e, e_temp);
-    mpz_mul(n, p_temp, q_temp); //n = p * q
+    mpz_set(n, n_temp);
     mpz_set(p, p_temp);
     mpz_set(q, q_temp);
 
-    mpz_clears(p_temp, q_temp, totient, e_temp, p_minus_1, q_minus_1, coprime, NULL);
+    mpz_clears(p_temp, q_temp, totient, e_temp, p_minus_1, q_minus_1, coprime, n_temp, NULL);
 
     return;
 }
