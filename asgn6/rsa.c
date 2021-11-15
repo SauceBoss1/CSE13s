@@ -98,7 +98,7 @@ void rsa_read_priv(mpz_t n, mpz_t d, FILE *pvfile) {
 }
 
 void rsa_encrypt(mpz_t c, mpz_t m, mpz_t e, mpz_t n) {
-    mpz_powm(c, m, e, n);
+    pow_mod(c, m, e, n);
     return;
 }
 
@@ -161,6 +161,62 @@ void rsa_encrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t e) {
 
     return;
 }
+
+void rsa_decrypt(mpz_t m, mpz_t c, mpz_t d, mpz_t n) {
+    pow_mod(m, c, d, n);
+    return;
+}
+
+void rsa_decrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t d) {
+    mpz_t c, k;
+    mpz_inits(c, k, NULL);
+
+    //calculate block size k
+    log2n(k, n);
+    mpz_sub_ui(k, k, 1);
+    mpz_fdiv_q_ui(k, k, 8);
+
+    //dynamically alocate the block
+    uint8_t *block = (uint8_t *) calloc(mpz_get_ui(k), sizeof(uint8_t));
+
+    int scanned_bytes = 0;
+    size_t j = 0;
+
+    while ((scanned_bytes = gmp_fscanf(infile, "%Zx", c)) != EOF) {
+
+        if (scanned_bytes == 0) {
+            fprintf(stderr, "bad read\n");
+            exit(1);
+        }
+
+        rsa_decrypt(c, c, d, n);
+        mpz_export(block, &j, 1, sizeof(uint8_t), 1, 0, c);
+        fwrite(&block[1], sizeof(uint8_t), j - 1, outfile);
+    }
+
+    mpz_clears(c, k, NULL);
+    free(block);
+    block = NULL;
+    return;
+}
+
+void rsa_sign(mpz_t s, mpz_t m, mpz_t d, mpz_t n) {
+    pow_mod(s, m, d, n);
+    return;
+}
+
+bool rsa_verify(mpz_t m, mpz_t s, mpz_t e, mpz_t n) {
+    mpz_t t;
+    mpz_init(t);
+
+    pow_mod(t, s, e, n);
+
+    if (mpz_cmp(t, m) == 0) {
+        return true;
+    }
+    return false;
+}
+
 /*
 int main(void) {
     randstate_init(2021);
@@ -170,7 +226,9 @@ int main(void) {
     rsa_make_pub(p, q, n, e, 128, 10000);
     rsa_make_priv(d, e, p, q);
 
-    rsa_encrypt_file(stdin, stdout, n, e);
+    //rsa_encrypt_file(stdin, stdout, n, e);
+    rsa_decrypt_file(stdin, stdout, n, d);
+    
     //rsa_write_priv(n, d, stdout);
     //rsa_read_priv(n, d, stdin);
     //gmp_printf("n: %Zd d: %Zd\n", n, d);
