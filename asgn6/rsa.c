@@ -20,8 +20,8 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
 
     //generate random p and q
     do {
-        make_prime(p_temp, p_bits, iters);
-        make_prime(q_temp, q_bits, iters);
+        make_prime(p_temp, p_bits + 1, iters);
+        make_prime(q_temp, q_bits + 1, iters);
     } while ((mpz_sizeinbase(p_temp, 2) + mpz_sizeinbase(q_temp, 2)) < nbits);
 
     mpz_mul(n_temp, p_temp, q_temp); //n = p * q
@@ -225,7 +225,7 @@ bool rsa_verify(mpz_t m, mpz_t s, mpz_t e, mpz_t n) {
 
 /*
 int main(void) {
-    randstate_init(0);
+    randstate_init(999999);
     mpz_t p, q, n, e, d;
     mpz_inits(p, q, n, e, d, NULL);
 
