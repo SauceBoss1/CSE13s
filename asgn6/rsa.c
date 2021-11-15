@@ -221,27 +221,27 @@ bool rsa_verify(mpz_t m, mpz_t s, mpz_t e, mpz_t n) {
     return false;
 }
 
-/*
+
 int main(void) {
-    randstate_init(2021);
+    randstate_init(99999999);
     mpz_t p, q, n, e, d;
     mpz_inits(p, q, n, e, d, NULL);
 
-    rsa_make_pub(p, q, n, e, 64, 10000);
+    rsa_make_pub(p, q, n, e, 128, 10000);
     rsa_make_priv(d, e, p, q);
-    gmp_printf("size of n: %d p: %d q: %d\n", mpz_sizeinbase(n, 2), mpz_sizeinbase(p, 2),
-        mpz_sizeinbase(q, 2));
+    //gmp_printf("size of n: %d p: %d q: %d\n", mpz_sizeinbase(n, 2), mpz_sizeinbase(p, 2),
+    //    mpz_sizeinbase(q, 2));
 
 
     //rsa_encrypt_file(stdin, stdout, n, e);
-    //rsa_decrypt_file(stdin, stdout, n, d);
+    rsa_decrypt_file(stdin, stdout, n, d);
 
     //rsa_write_priv(n, d, stdout);
     //rsa_read_priv(n, d, stdin);
     //gmp_printf("n: %Zd d: %Zd\n", n, d);
     //char username[1024];
 
-    gmp_printf("p: %Zd\nq: %Zd\nn: %Zd\ne: %Zd\nd: %Zd\n", p, q, n, e, d);
+    //gmp_printf("p: %Zd\nq: %Zd\nn: %Zd\ne: %Zd\nd: %Zd\n", p, q, n, e, d);
 
     //rsa_write_pub(n, e, p, "dtercian", stdout);
 
@@ -254,4 +254,4 @@ int main(void) {
     mpz_clears(p, q, n, e, d, NULL);
     randstate_clear();
     return 0;
-}*/
+}
