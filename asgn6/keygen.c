@@ -1,7 +1,3 @@
-#include "randstate.h"
-#include "rsa.h"
-#include "numtheory.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <inttypes.h>
@@ -10,6 +6,11 @@
 #include <time.h>
 #include <sys/stat.h>
 #include <gmp.h>
+
+#include "randstate.h"
+#include "rsa.h"
+#include "numtheory.h"
+
 
 #define OPTIONS "b:i:n:d:s:vh"
 
@@ -30,14 +31,14 @@ void help_msg(void){
 }
 
 int main(int argc, char **argv){
-    FILE *pbfile = fopen("/rsa.pub", "w");
-    FILE *pvfile = fopen("/rsa.priv", "w");
+    FILE *pbfile = fopen("./rsa.pub", "w");
+    FILE *pvfile = fopen("./rsa.priv", "w");
 
     int opt = 0;
     
     uint32_t iters = 50;
     uint32_t def_seed = time(NULL);
-    uint64_t nbits = -1;
+    uint64_t nbits = 128;
     bool verbose = false;
 
     while( (opt = getopt(argc, argv, OPTIONS)) != - 1){
@@ -65,12 +66,17 @@ int main(int argc, char **argv){
                 exit(1);
                 break;
             default:
-                pbfile = fopen("/rsa.pub", "w");
-                pvfile = fopen("/rsa.priv", "w");
+                pbfile = fopen("./rsa.pub", "w");
+                pvfile = fopen("./rsa.priv", "w");
                 break;
         }
     }
     
+    if((pvfile == NULL) || (pbfile == NULL)){
+        fprintf(stderr, "Couldn't open file!\n");
+        exit(1);
+    }    
+
     fchmod(fileno(pbfile), 0600);
     fchmod(fileno(pvfile), 0600);
 
