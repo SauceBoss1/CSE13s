@@ -221,7 +221,7 @@ bool rsa_verify(mpz_t m, mpz_t s, mpz_t e, mpz_t n) {
     return false;
 }
 
-
+/*
 int main(void) {
     randstate_init(99999999);
     mpz_t p, q, n, e, d;
@@ -254,4 +254,4 @@ int main(void) {
     mpz_clears(p, q, n, e, d, NULL);
     randstate_clear();
     return 0;
-}
+}*/
