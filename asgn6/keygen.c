@@ -38,7 +38,7 @@ int main(int argc, char **argv){
     
     uint32_t iters = 50;
     uint32_t def_seed = time(NULL);
-    uint64_t nbits = 128;
+    uint64_t nbits = 256;
     bool verbose = false;
 
     while( (opt = getopt(argc, argv, OPTIONS)) != - 1){
@@ -77,7 +77,6 @@ int main(int argc, char **argv){
         exit(1);
     }    
 
-    fchmod(fileno(pbfile), 0600);
     fchmod(fileno(pvfile), 0600);
 
     randstate_init(def_seed);
