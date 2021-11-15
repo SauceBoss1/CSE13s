@@ -114,7 +114,7 @@ void make_prime(mpz_t p, uint64_t bits, uint64_t iters) {
 
     do {
         mpz_urandomb(temp, state, bits);
-    } while ((!is_prime(temp, iters)) && !(mpz_sizeinbase(temp, 2) >= bits));
+    } while ((!is_prime(temp, iters)) && mpz_sizeinbase(temp, 2) <= bits);
 
     mpz_set(p, temp);
     mpz_clear(temp);
