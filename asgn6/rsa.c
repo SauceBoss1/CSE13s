@@ -38,7 +38,7 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
     mpz_set(p, p_temp);
     mpz_set(q, q_temp);
 
-    mpz_clears(p_temp, q_temp, n_temp, e_temp, p_minus_1, q_minus_1, coprime, NULL);
+    mpz_clears(p_temp, q_temp, totient, e_temp, p_minus_1, q_minus_1, coprime, NULL);
 
     return;
 }
