@@ -9,14 +9,14 @@
 #include <stdbool.h>
 
 void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t iters) {
-    uint64_t p_bits = (random() % (nbits / 2)) + (nbits / 4);
-    uint64_t q_bits = nbits - p_bits;
-
-    //printf("p_bit: %" PRIu64 " q_bit: %" PRIu64 "\n", p_bits, q_bits);
 
     mpz_t p_temp, q_temp, totient, e_temp, p_minus_1, q_minus_1, coprime,
         n_temp; //using temp vars so I don't accidentally overwrite arguments
     mpz_inits(p_temp, q_temp, totient, e_temp, p_minus_1, q_minus_1, coprime, n_temp, NULL);
+    uint64_t p_bits = (random() % (nbits / 2)) + (nbits / 4);
+    uint64_t q_bits = nbits - p_bits;
+
+    //printf("p_bit: %" PRIu64 " q_bit: %" PRIu64 "\n", p_bits, q_bits);
 
     //generate random p and q
     do {
@@ -225,18 +225,18 @@ bool rsa_verify(mpz_t m, mpz_t s, mpz_t e, mpz_t n) {
 
 /*
 int main(void) {
-    randstate_init(99999999);
+    randstate_init(0);
     mpz_t p, q, n, e, d;
     mpz_inits(p, q, n, e, d, NULL);
 
     rsa_make_pub(p, q, n, e, 128, 10000);
     rsa_make_priv(d, e, p, q);
-    //gmp_printf("size of n: %d p: %d q: %d\n", mpz_sizeinbase(n, 2), mpz_sizeinbase(p, 2),
-    //    mpz_sizeinbase(q, 2));
+    gmp_printf("size of n: %d p: %d q: %d\n", mpz_sizeinbase(n, 2), mpz_sizeinbase(p, 2),
+        mpz_sizeinbase(q, 2));
 
 
     //rsa_encrypt_file(stdin, stdout, n, e);
-    rsa_decrypt_file(stdin, stdout, n, d);
+    //rsa_decrypt_file(stdin, stdout, n, d);
 
     //rsa_write_priv(n, d, stdout);
     //rsa_read_priv(n, d, stdin);
