@@ -9,18 +9,20 @@
 #include <stdbool.h>
 
 void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t iters) {
-    uint64_t p_bits = ((random() % (nbits / 2)) + (nbits / 4) * 2);
+    uint64_t p_bits = (random() % (nbits / 2)) + (nbits / 4);
     uint64_t q_bits = nbits - p_bits;
 
-    //printf("p_bit: %"PRIu64" q_bit: %"PRIu64"\n", p_bits, q_bits);
+    //printf("p_bit: %" PRIu64 " q_bit: %" PRIu64 "\n", p_bits, q_bits);
 
     mpz_t p_temp, q_temp, totient, e_temp, p_minus_1, q_minus_1,
         coprime; //using temp vars so I don't accidentally overwrite arguments
     mpz_inits(p_temp, q_temp, totient, e_temp, p_minus_1, q_minus_1, coprime, NULL);
 
     //generate random p and q
-    make_prime(p_temp, p_bits, iters);
-    make_prime(q_temp, q_bits, iters);
+    do {
+        make_prime(p_temp, p_bits, iters);
+        make_prime(q_temp, q_bits, iters);
+    } while ((mpz_sizeinbase(p_temp, 2) + mpz_sizeinbase(q_temp, 2)) < nbits);
 
     mpz_sub_ui(p_minus_1, p_temp, 1);
     mpz_sub_ui(q_minus_1, q_temp, 1);
@@ -224,20 +226,22 @@ int main(void) {
     randstate_init(2021);
     mpz_t p, q, n, e, d;
     mpz_inits(p, q, n, e, d, NULL);
-    
-    rsa_make_pub(p, q, n, e, 16, 10000);
+
+    rsa_make_pub(p, q, n, e, 64, 10000);
     rsa_make_priv(d, e, p, q);
-    gmp_printf("size of n: %d p: %d q: %d\n", mpz_sizeinbase(n, 2), mpz_sizeinbase(p, 2), mpz_sizeinbase(q, 2));
+    gmp_printf("size of n: %d p: %d q: %d\n", mpz_sizeinbase(n, 2), mpz_sizeinbase(p, 2),
+        mpz_sizeinbase(q, 2));
+
 
     //rsa_encrypt_file(stdin, stdout, n, e);
     //rsa_decrypt_file(stdin, stdout, n, d);
-    
+
     //rsa_write_priv(n, d, stdout);
     //rsa_read_priv(n, d, stdin);
     //gmp_printf("n: %Zd d: %Zd\n", n, d);
     //char username[1024];
 
-    //gmp_printf("p: %Zd\nq: %Zd\nn: %Zd\ne: %Zd\nd: %Zd\n", p, q, n, e, d);
+    gmp_printf("p: %Zd\nq: %Zd\nn: %Zd\ne: %Zd\nd: %Zd\n", p, q, n, e, d);
 
     //rsa_write_pub(n, e, p, "dtercian", stdout);
 
