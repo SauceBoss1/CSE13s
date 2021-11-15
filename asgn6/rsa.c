@@ -9,12 +9,12 @@
 #include <stdbool.h>
 
 void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t iters) {
-    uint64_t p_bits = (random() % ((3 * nbits) / 4)) + (nbits / 4);
+    uint64_t p_bits = (random() % (nbits / 2) + (nbits / 4);
     uint64_t q_bits = nbits - p_bits;
 
-    mpz_t p_temp, q_temp, n_temp, e_temp, p_minus_1, q_minus_1,
+    mpz_t p_temp, q_temp, totient, e_temp, p_minus_1, q_minus_1,
         coprime; //using temp vars so I don't accidentally overwrite arguments
-    mpz_inits(p_temp, q_temp, n_temp, e_temp, p_minus_1, q_minus_1, coprime, NULL);
+    mpz_inits(p_temp, q_temp, totient, e_temp, p_minus_1, q_minus_1, coprime, NULL);
 
     //generate random p and q
     make_prime(p_temp, p_bits, iters);
@@ -24,17 +24,17 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
     mpz_sub_ui(q_minus_1, q_temp, 1);
 
     //compute totient
-    mpz_mul(n_temp, p_minus_1, q_minus_1);
+    mpz_mul(totient, p_minus_1, q_minus_1);
     //Find a public exponent
 
     mpz_set_ui(coprime, 0);
     do {
         mpz_urandomb(e_temp, state, nbits);
-        gcd(coprime, e_temp, n_temp);
+        gcd(coprime, e_temp, totient);
     } while (mpz_cmp_ui(coprime, 1) != 0);
 
     mpz_set(e, e_temp);
-    mpz_mul(n, p_temp, q_temp);
+    mpz_mul(n, p_temp, q_temp); //n = p * q
     mpz_set(p, p_temp);
     mpz_set(q, q_temp);
 
