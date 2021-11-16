@@ -24,7 +24,7 @@ void help_msg(void) {
                     "   -v              Display verbose program output.\n"
                     "   -i infile       Input file of data to decrypt (default: stdin).\n"
                     "   -o outfile      Output file for decrypted data (default: stdout).\n"
-                    "   -n pvfile       Private key file (default: rsa.priv).");
+                    "   -n pvfile       Private key file (default: rsa.priv).\n");
 }
 
 int main(int argc, char **argv) {
