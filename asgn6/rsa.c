@@ -136,7 +136,7 @@ void rsa_encrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t e) {
     mpz_sub_ui(k, k, 1);
     mpz_fdiv_q_ui(k, k, 8);
 
-    //gmp_fprintf(outfile, "k = %Zd\n", k);
+    //gmp_fprintf(stderr, "k = %Zd\n", k);
     //dynamically allocate memory for block
     uint8_t *block = (uint8_t *) calloc(mpz_get_ui(k), sizeof(uint8_t));
 
@@ -156,7 +156,7 @@ void rsa_encrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t e) {
             = (uint32_t) fread(block + 1, sizeof(uint8_t), mpz_get_ui(k) - 1, infile);
         j += true_bytes;
         //fprintf(stderr,"j: %"PRIu32" file_size: %"PRIu32"\n", j, file_size);
-        mpz_import(message, (size_t) true_bytes, 1, sizeof(uint8_t), 1, 0, block);
+        mpz_import(message, true_bytes + 1, 1, sizeof(uint8_t), 1, 0, block);
         rsa_encrypt(message, message, e, n);
         gmp_fprintf(outfile, "%Zx\n", message);
     }

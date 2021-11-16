@@ -52,6 +52,7 @@ int main(int argc, char **argv){
                 break;
             case 'h':
                 help_msg();
+                exit(1);
                 break;
             default:
                 infile = stdin;
