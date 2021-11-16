@@ -116,11 +116,11 @@ static void log2n(mpz_t rop, mpz_t n) {
     mpz_set_ui(c, 0);
 
     while (mpz_cmp_ui(n_temp, 0) > 0) {
-        mpz_add_ui(c, c, 1);
         mpz_fdiv_q_ui(n_temp, n_temp, 2);
+        mpz_add_ui(c,c,1);
     }
 
-    mpz_sub_ui(c, c, 1);
+    //mpz_sub_ui(c, c, 1);
     mpz_set(rop, c);
 
     mpz_clears(n_temp, c, NULL);
@@ -130,10 +130,12 @@ static void log2n(mpz_t rop, mpz_t n) {
 void rsa_encrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t e) {
     mpz_t k;
     mpz_init(k);
+
     //calcuates block size
     log2n(k, n);
     mpz_sub_ui(k, k, 1);
     mpz_fdiv_q_ui(k, k, 8);
+
     //gmp_fprintf(outfile, "k = %Zd\n", k);
     //dynamically allocate memory for block
     uint8_t *block = (uint8_t *) calloc(mpz_get_ui(k), sizeof(uint8_t));
