@@ -80,7 +80,6 @@ int main(int argc, char **argv) {
 
     rsa_encrypt_file(infile, outfile, n, e);
 
-
     mpz_clears(n, e, s, username, NULL);
     fclose(infile);
     fclose(outfile);
