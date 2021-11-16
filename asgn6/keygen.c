@@ -84,7 +84,9 @@ int main(int argc, char **argv){
     mpz_t p, q, n, e, d, username;
     mpz_inits(p, q, n, e, d, username, NULL);
     
-    rsa_make_pub(p, q, n, e, nbits, iters);
+    do{
+        rsa_make_pub(p, q, n, e, nbits, iters);
+    }while(mpz_sizeinbase(n, 2) < nbits);
     rsa_make_priv(d, e, p, q);
 
     char *user = getenv("USER");
