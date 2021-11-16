@@ -2,8 +2,8 @@
 #include "numtheory.h"
 #include "randstate.h"
 
-#include <gmp.h>
 #include <stdio.h>
+#include <gmp.h>
 #include <stdlib.h>
 #include <inttypes.h>
 #include <stdbool.h>
@@ -16,12 +16,10 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
     uint64_t p_bits = (random() % (nbits / 2)) + (nbits / 4);
     uint64_t q_bits = nbits - p_bits;
 
-    //printf("p_bit: %" PRIu64 " q_bit: %" PRIu64 "\n", p_bits, q_bits);
-
     //generate random p and q
     do {
-        make_prime(p_temp, p_bits + 1, iters);
-        make_prime(q_temp, q_bits + 1, iters);
+        make_prime(p_temp, p_bits + 2, iters);
+        make_prime(q_temp, q_bits + 2, iters);
     } while ((mpz_sizeinbase(p_temp, 2) + mpz_sizeinbase(q_temp, 2)) < nbits);
 
     mpz_mul(n_temp, p_temp, q_temp); //n = p * q
