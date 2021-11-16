@@ -117,7 +117,7 @@ static void log2n(mpz_t rop, mpz_t n) {
 
     while (mpz_cmp_ui(n_temp, 0) > 0) {
         mpz_fdiv_q_ui(n_temp, n_temp, 2);
-        mpz_add_ui(c,c,1);
+        mpz_add_ui(c, c, 1);
     }
 
     //mpz_sub_ui(c, c, 1);
@@ -218,8 +218,10 @@ bool rsa_verify(mpz_t m, mpz_t s, mpz_t e, mpz_t n) {
     pow_mod(t, s, e, n);
 
     if (mpz_cmp(t, m) == 0) {
+        mpz_clear(t);
         return true;
     }
+    mpz_clear(t);
     return false;
 }
 
