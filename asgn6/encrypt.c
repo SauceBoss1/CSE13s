@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
             break;
         }
     }
-    
+
     //If one of our files has an errror when opening, then abrt the program
     if ((infile == NULL) || (outfile == NULL) || (pbfile == NULL)) {
         fprintf(stderr, "Couldn't open one of the files!\n");
@@ -66,10 +66,10 @@ int main(int argc, char **argv) {
     mpz_t n, e, s, username;
     mpz_inits(n, e, s, username, NULL);
     char user[1024]; //buffer for username
-    
+
     //read in the input public key
     rsa_read_pub(n, e, s, user, pbfile);
-        
+
     //print out stats of public key
     if (verbose) {
         fprintf(stderr, "user = %s\n", user);
@@ -77,16 +77,16 @@ int main(int argc, char **argv) {
         gmp_fprintf(stderr, "n (%d bits) = %Zd\n", mpz_sizeinbase(n, 2), n);
         gmp_fprintf(stderr, "e (%d bits) = %Zd\n", mpz_sizeinbase(e, 2), e);
     }
-    
+
     //convert the username string to a 62 base mpz_t
     mpz_set_str(username, user, 62);
-    
+
     //make sure the signature is verified
     if (!rsa_verify(username, s, e, n)) {
         fprintf(stderr, "Signature cannot be verified!\n");
         exit(1);
     }
-    
+
     //encrypt the input file
     rsa_encrypt_file(infile, outfile, n, e);
 
