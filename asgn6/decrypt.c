@@ -13,6 +13,10 @@
 
 #define OPTIONS "i:o:n:vh"
 
+//Prints out a help message to stderr
+//Returns nothing
+//
+//Takes in nothing
 void help_msg(void) {
     fprintf(stderr, "SYNOPSIS\n"
                     "   Decrypts data using RSA decryption.\n"
@@ -28,9 +32,9 @@ void help_msg(void) {
 }
 
 int main(int argc, char **argv) {
-    FILE *infile = stdin;
-    FILE *outfile = stdout;
-    FILE *pvfile = fopen("./rsa.priv", "r");
+    FILE *infile = stdin; //default option is stdin
+    FILE *outfile = stdout; //default option is stdout
+    FILE *pvfile = fopen("./rsa.priv", "r"); //assume that rsa.priv is a local file
 
     bool verbose = false;
     int opt = 0;
@@ -53,6 +57,7 @@ int main(int argc, char **argv) {
         }
     }
 
+    //if one of the 3 files has an error opening, then abort the program
     if ((infile == NULL) || (outfile == NULL) || (pvfile == NULL)) {
         fprintf(stderr, "Couldn't open a file!\n");
         exit(1);
@@ -61,13 +66,16 @@ int main(int argc, char **argv) {
     mpz_t n, d;
     mpz_inits(n, d, NULL);
 
+    //read in the private key
     rsa_read_priv(n, d, pvfile);
 
+    //print out the stats of the private key
     if (verbose) {
         gmp_fprintf(stderr, "n (%d bits) = %Zd\n", mpz_sizeinbase(n, 2), n);
         gmp_fprintf(stderr, "d (%d bits) = %Zd\n", mpz_sizeinbase(d, 2), d);
     }
 
+    //decrypt the file to clear text
     rsa_decrypt_file(infile, outfile, n, d);
 
     mpz_clears(n, d, NULL);
