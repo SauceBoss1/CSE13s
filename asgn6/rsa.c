@@ -8,6 +8,15 @@
 #include <inttypes.h>
 #include <stdbool.h>
 
+//Create 2 large primes that's nbits long, calcuate n, and determine the public exponent
+//Returns void
+//
+//p: big prime 1
+//q: big prime 2
+//n: public modulus
+//e: public exponent
+//nbits: bit length of the primes
+//iters: number of iterations used for m-r prime testing
 void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t iters) {
 
     mpz_t p_temp, q_temp, totient, e_temp, p_minus_1, q_minus_1, coprime,
@@ -21,6 +30,8 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
         make_prime(p_temp, p_bits + 2, iters);
         make_prime(q_temp, q_bits + 2, iters);
     } while ((mpz_sizeinbase(p_temp, 2) + mpz_sizeinbase(q_temp, 2)) < nbits);
+    //This loop guarantees that p + q is nbits long
+    //Also we add p and q by two in order to compensat for bit loss
 
     mpz_mul(n_temp, p_temp, q_temp); //n = p * q
 
@@ -29,8 +40,9 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
 
     //compute totient
     mpz_mul(totient, p_minus_1, q_minus_1);
-    //Find a public exponent
 
+    //Find a public exponent
+    //The public exponent is a random number that is coprime to the totient
     mpz_set_ui(coprime, 0);
     do {
         mpz_urandomb(e_temp, state, nbits);
@@ -47,6 +59,14 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
     return;
 }
 
+//Writes the public keys to pbfile
+//Return void
+//
+//n: public modulus
+//e: public exponent
+//s: signature
+//username[]: system username
+//*pbfile: file to print public keys too
 void rsa_write_pub(mpz_t n, mpz_t e, mpz_t s, char username[], FILE *pbfile) {
     gmp_fprintf(pbfile, "%Zx\n", n);
     gmp_fprintf(pbfile, "%Zx\n", e);
@@ -55,10 +75,18 @@ void rsa_write_pub(mpz_t n, mpz_t e, mpz_t s, char username[], FILE *pbfile) {
     return;
 }
 
+//Read the public keys and assign it to the corresponding mpz_t
+//Returns void
+//
+//n: public modulus
+//e: public exponent
+//s: signature
+//username[]: system user
+//pbfile: file to read
 void rsa_read_pub(mpz_t n, mpz_t e, mpz_t s, char username[], FILE *pbfile) {
     mpz_t temp;
     mpz_init(temp);
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 3; ++i) { //the first 3 lines are mpz_t variables
         if (gmp_fscanf(pbfile, "%Zx", temp) > 0) {
             if (i % 3 == 0) {
                 mpz_set(n, temp);
@@ -69,11 +97,18 @@ void rsa_read_pub(mpz_t n, mpz_t e, mpz_t s, char username[], FILE *pbfile) {
             }
         }
     }
-    gmp_fscanf(pbfile, "%s", username);
+    gmp_fscanf(pbfile, "%s", username); //get username
     mpz_clear(temp);
     return;
 }
 
+//Generate the private keys based on the primes p and q
+//Returns void
+//
+//d: private key
+//e: public exponent
+//p: large prime 1
+//q: large prime 2
 void rsa_make_priv(mpz_t d, mpz_t e, mpz_t p, mpz_t q) {
     mpz_t p_minus_1, q_minus_1, n;
     mpz_inits(p_minus_1, q_minus_1, n, NULL);
@@ -81,26 +116,45 @@ void rsa_make_priv(mpz_t d, mpz_t e, mpz_t p, mpz_t q) {
     mpz_sub_ui(p_minus_1, p, 1);
     mpz_sub_ui(q_minus_1, q, 1);
 
-    mpz_mul(n, p_minus_1, q_minus_1);
+    mpz_mul(n, p_minus_1, q_minus_1); //Calcuate Totient
 
-    mod_inverse(d, e, n);
+    mod_inverse(d, e, n); //d = e^-1 mod n
 
     mpz_clears(p_minus_1, q_minus_1, n, NULL);
     return;
 }
 
+//Write the private keys to a file
+//Return void
+//
+//n: public modulus
+//d: private key
+//pvfile: file to write to
 void rsa_write_priv(mpz_t n, mpz_t d, FILE *pvfile) {
     gmp_fprintf(pvfile, "%Zx\n", n);
     gmp_fprintf(pvfile, "%Zx\n", d);
     return;
 }
 
+//Reads the private key from a file
+//Returns void
+//
+//n: public modulus
+//d: private key
+//pvfile: file to read from
 void rsa_read_priv(mpz_t n, mpz_t d, FILE *pvfile) {
     gmp_fscanf(pvfile, "%Zx", n);
     gmp_fscanf(pvfile, "%Zx", d);
     return;
 }
 
+//Encrypt a message using the power mod
+//Returns void
+//
+//c: encrypted message
+//m: message
+//e: public exponent
+//n: public modulus
 void rsa_encrypt(mpz_t c, mpz_t m, mpz_t e, mpz_t n) {
     pow_mod(c, m, e, n);
     return;
@@ -120,13 +174,19 @@ static void log2n(mpz_t rop, mpz_t n) {
         mpz_add_ui(c, c, 1);
     }
 
-    //mpz_sub_ui(c, c, 1);
     mpz_set(rop, c);
 
     mpz_clears(n_temp, c, NULL);
     return;
 }
 
+//Encrypt a given file
+//Returns void
+//
+//infile: file to encrypt
+//outfile: file to write encrypted data to
+//n: public modulus
+//e: public exponent
 void rsa_encrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t e) {
     mpz_t k;
     mpz_init(k);
@@ -140,25 +200,28 @@ void rsa_encrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t e) {
     //dynamically allocate memory for block
     uint8_t *block = (uint8_t *) calloc(mpz_get_ui(k), sizeof(uint8_t));
 
+    //Determine the size of infile
     fseek(infile, 0L, SEEK_END);
     uint32_t file_size = ftell(infile);
     fseek(infile, 0L, SEEK_SET);
 
+    //Pad the first byte of the buffer
     block[0] = 0xFF;
 
     mpz_t message;
     mpz_init(message);
-    uint32_t j = 0;
+    uint32_t j = 0; //how many total bytes fread has read already
 
-    //you may need to take into account if fread() > 0
+    //while there are unprocessed bytes in infile
     while (j < file_size) {
         uint32_t true_bytes
             = (uint32_t) fread(block + 1, sizeof(uint8_t), mpz_get_ui(k) - 1, infile);
         j += true_bytes;
-        //fprintf(stderr,"j: %"PRIu32" file_size: %"PRIu32"\n", j, file_size);
+
+        //convert the byts to a mpz_t variabe
         mpz_import(message, true_bytes + 1, 1, sizeof(uint8_t), 1, 0, block);
         rsa_encrypt(message, message, e, n);
-        gmp_fprintf(outfile, "%Zx\n", message);
+        gmp_fprintf(outfile, "%Zx\n", message); //print the encrypted message to the outfile
     }
 
     mpz_clears(k, message, NULL);
@@ -168,11 +231,25 @@ void rsa_encrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t e) {
     return;
 }
 
+//Decrypt a file given an ecrypted message, private key, and public modulus
+//Returns void
+//
+//m: decrypted message
+//c: encrypted message
+//d: private key
+//n: public modulus
 void rsa_decrypt(mpz_t m, mpz_t c, mpz_t d, mpz_t n) {
-    pow_mod(m, c, d, n);
+    pow_mod(m, c, d, n); //m = c^d mod n
     return;
 }
 
+//Decrypts an encrypted file given a private key and the public modulus
+//Returns void
+//
+//infile: an ecrypted file to decrypt
+//outfile: the file to write the decrypted message to
+//n: public modulus
+//d: private key
 void rsa_decrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t d) {
     mpz_t c, k;
     mpz_inits(c, k, NULL);
@@ -188,15 +265,19 @@ void rsa_decrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t d) {
     int scanned_bytes = 0;
     size_t j = 0;
 
+    //while there are unscanned bytes in file
     while ((scanned_bytes = gmp_fscanf(infile, "%Zx", c)) != EOF) {
 
-        if (scanned_bytes == 0) {
+        if (scanned_bytes == 0) { //throw an error when we find a malformed line
             fprintf(stderr, "bad read\n");
             exit(1);
         }
 
         rsa_decrypt(c, c, d, n);
+        //export the decrypted mpz_t to the block
         mpz_export(block, &j, 1, sizeof(uint8_t), 1, 0, c);
+
+        //write out j-1 bytes from the block
         fwrite(&block[1], sizeof(uint8_t), j - 1, outfile);
     }
 
@@ -206,56 +287,37 @@ void rsa_decrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t d) {
     return;
 }
 
+//Sign a user name given th private key and the public modulus
+//Returns void
+//
+//s: the final signature
+//m: the mpz_t to sign
+//d: private key
+//n: public modulus
 void rsa_sign(mpz_t s, mpz_t m, mpz_t d, mpz_t n) {
     pow_mod(s, m, d, n);
     return;
 }
 
+//Verify whether or not the signature is authentic
+//Returns true if the signature is authentic, false otherwise
+//
+//m: the username in mpz_t base 62
+//s: signature
+//e: public exponent
+//n: public modulus
 bool rsa_verify(mpz_t m, mpz_t s, mpz_t e, mpz_t n) {
     mpz_t t;
     mpz_init(t);
 
     pow_mod(t, s, e, n);
 
+    //check if t == m
     if (mpz_cmp(t, m) == 0) {
         mpz_clear(t);
         return true;
     }
+
     mpz_clear(t);
     return false;
 }
-
-/*
-int main(void) {
-    randstate_init(999999);
-    mpz_t p, q, n, e, d;
-    mpz_inits(p, q, n, e, d, NULL);
-
-    rsa_make_pub(p, q, n, e, 128, 10000);
-    rsa_make_priv(d, e, p, q);
-    gmp_printf("size of n: %d p: %d q: %d\n", mpz_sizeinbase(n, 2), mpz_sizeinbase(p, 2),
-        mpz_sizeinbase(q, 2));
-
-
-    //rsa_encrypt_file(stdin, stdout, n, e);
-    //rsa_decrypt_file(stdin, stdout, n, d);
-
-    //rsa_write_priv(n, d, stdout);
-    //rsa_read_priv(n, d, stdin);
-    //gmp_printf("n: %Zd d: %Zd\n", n, d);
-    //char username[1024];
-
-    //gmp_printf("p: %Zd\nq: %Zd\nn: %Zd\ne: %Zd\nd: %Zd\n", p, q, n, e, d);
-
-    //rsa_write_pub(n, e, p, "dtercian", stdout);
-
-    //rsa_read_pub(n, e, p, username, stdin);
-
-    //gmp_printf("n: %Zd\ne: %Zd\ns: %Zd\nuser: %s\n", n, e, p, username);
-
-    //rsa_write_pub(n, e, p, username, stdout);
-
-    mpz_clears(p, q, n, e, d, NULL);
-    randstate_clear();
-    return 0;
-}*/

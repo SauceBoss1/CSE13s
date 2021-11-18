@@ -7,10 +7,17 @@
 #include <stdbool.h>
 #include <inttypes.h>
 
+//Calculate the power modulus of a^d mod n
+//Returns a void
+//
+//Takes in mpz_t values instead of pure integers
+//NOTE: algorithm pseudocode was provided in assignment doc
 void pow_mod(mpz_t o, mpz_t a, mpz_t d, mpz_t n) {
     mpz_t v, p, temp, a_temp, d_temp, n_temp;
     mpz_inits(v, p, temp, a_temp, d_temp, n_temp, NULL);
 
+    //setting the inputs to temp vars so that
+    //we dont override the inputs
     mpz_set(a_temp, a);
     mpz_set(d_temp, d);
     mpz_set(n_temp, n);
@@ -31,11 +38,21 @@ void pow_mod(mpz_t o, mpz_t a, mpz_t d, mpz_t n) {
         mpz_fdiv_q_ui(d_temp, d_temp, 2);
     }
 
+    //"returning" the final result
     mpz_set(o, v);
     mpz_clears(v, p, temp, a_temp, d_temp, n_temp, NULL);
     return;
 }
 
+//Determine whether or not the mpz_t n is a prime number or not
+//This algorithm uses the Miller-Rabin test
+//This test is not 100% correct but it is close enough
+//
+//Returns true if n is a prime, false otherwise
+//
+//n: the number to test
+//iters: how many iterations of the algorithm we will use
+//NOTE: algorithm pseudocode was provided in assignment doc
 bool is_prime(mpz_t n, uint64_t iters) {
     //dealing with the simple edge cases first
     if ((mpz_cmp_ui(n, 1) <= 0) || (mpz_cmp_ui(n, 4) == 0)) {
@@ -65,13 +82,13 @@ bool is_prime(mpz_t n, uint64_t iters) {
     } while (!mpz_even_p(r));
     s--;
 
-    mpz_fdiv_q_2exp(r, n_minus_1, s);
+    mpz_fdiv_q_2exp(r, n_minus_1, s); //this gives us the final value of r
 
     //m-r primality testing algorithm
     for (uint64_t i = 1; i < iters; ++i) {
         //uint64_t a = (uint64_t) (rand() % ( n - 4 )) + 2;
         mpz_urandomm(a, state, n_temp);
-        mpz_sub_ui(temp, n_temp, 3); //may need to change to 4
+        mpz_sub_ui(temp, n_temp, 3);
         mpz_mod(a, a, temp);
         mpz_add_ui(a, a, 2);
 
@@ -108,10 +125,18 @@ bool is_prime(mpz_t n, uint64_t iters) {
     return true;
 }
 
+//Generate a random prime number
+//Returns void
+//
+//p: the random prime generated
+//bit: number of bits the prime number should be
+//iters: how many iterations of m-r primality testing is to be used
 void make_prime(mpz_t p, uint64_t bits, uint64_t iters) {
-    mpz_t temp;
+    mpz_t temp; //creating temp var so that I don't override input
     mpz_init(temp);
 
+    //keep generating random numbers until we find a
+    //prime number that is roughly nbits long
     do {
         mpz_urandomb(temp, state, bits);
     } while (!is_prime(temp, iters));
@@ -121,6 +146,12 @@ void make_prime(mpz_t p, uint64_t bits, uint64_t iters) {
     return;
 }
 
+//Determine the gcd of a and b
+//Returns void
+//
+//g: the common divisor found
+//a,b: the two numbers to find the gcd for
+//NOTE: algorithm psuedocode was provided to us
 void gcd(mpz_t g, mpz_t a, mpz_t b) {
     //uint64_t t = 0;
     mpz_t t, a_temp, b_temp;
@@ -129,17 +160,29 @@ void gcd(mpz_t g, mpz_t a, mpz_t b) {
 
     mpz_set(a_temp, a);
     mpz_set(b_temp, b);
+
+    //while (b !=0)
     while (mpz_cmp_ui(b_temp, 0) != 0) {
+        //t = b
+        //b = a % b
+        //a = t
         mpz_set(t, b_temp);
         mpz_mod(b_temp, a_temp, b_temp);
         mpz_set(a_temp, t);
     }
 
-    mpz_set(g, a_temp);
+    mpz_set(g, a_temp); //return a
     mpz_clears(t, a_temp, b_temp, NULL);
     return;
 }
 
+//Calculate the modular inverse of a and n (a^-n mod n)
+//Returns a void
+//
+//o: the mod-inverse result of a , n
+//a: number to inverse
+//n: modulus
+//NOTE: algorithm pseudocode was provided to us in the assignment doc
 void mod_inverse(mpz_t o, mpz_t a, mpz_t n) {
     mpz_t r, r_prime, t, t_prime, q, temp, mul_temp, a_temp, n_temp;
     mpz_inits(r, r_prime, t, t_prime, q, temp, mul_temp, a_temp, n_temp, NULL);
@@ -193,27 +236,3 @@ void mod_inverse(mpz_t o, mpz_t a, mpz_t n) {
     mpz_clears(r, r_prime, t, t_prime, q, temp, mul_temp, n_temp, a_temp, NULL);
     return;
 }
-
-/*
-int main(void) {
-    randstate_init(2021);
-    mpz_t a, b, c, o, prime_num;
-    mpz_inits(a, b, c, o, prime_num, NULL);
-    mpz_set_ui(a, 4563172241);
-    mpz_set_ui(b, 13);
-    mpz_set_ui(c, 17);
-    //pow_mod(o, a, b, c);
-    //gmp_printf("pow_mod: %Zd\n", o);
-    //mod_inverse(o, a, b);
-    //gmp_printf("mod_inverse: %Zd\n", o);
-    //gcd(o, a, b);
-    //gmp_printf("gcd: %Zd\n", o);
-       
-    for (uint i = 0; i < 1; ++i){
-        //make_prime(prime_num, 64, 10000);
-        gmp_printf("Is %d prime?\n", is_prime(a, 10000));
-    }
-    mpz_clears(a, b, c, o, prime_num, NULL);
-    randstate_clear();
-    return 0;
-}*/
