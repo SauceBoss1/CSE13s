@@ -1,7 +1,7 @@
 CC = clang
 CFLAGS = -Wall -Wextra -Werror -Wpedantic
 LFLAGS = $(shell pkg-config --libs gmp)
-OBJS = randstate.o numtheory.o rsa.o 
+OBJS = randstate.o numtheory.o rsa.o
 EXECBIN = keygen encrypt decrypt
 KEYS = rsa.pub rsa.priv
 
