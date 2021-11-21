@@ -10,7 +10,7 @@ In order for the RSA encryption algorithm to be effective, we must generate a pa
 
 In order to encrypt a file, we would use the public key in order to encrypt the file. In order to decrypt a file, we would need to use the corresponding private key in order to decipher the encrypted file. Once decipher, the result would be the original message given to the encryption algorithm.
 
-NOTE: In order for this algorithm to be secure, the private key must be kept secret at all times.
+**NOTE: In order for this algorithm to be secure, the private key must be kept secret at all times.**
 
 ## Building the program
 
