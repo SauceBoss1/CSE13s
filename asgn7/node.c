@@ -31,19 +31,19 @@ Node *node_create(char *oldspeak, char *newspeak){
 }
 
 void node_delete(Node **n){
-    if(&(n)->newspeak){
-        free(&(n)->newspeak);
-        &(n)->newspeak = NULL;
+    if((*n)->newspeak){
+        free((*n)->newspeak);
+        (*n)->newspeak = NULL;
     }
 
-    if (&(n)->oldspeak){
-        free(&(n)->oldspeak);
-        &(n)->oldspeak = NULL;
+    if ((*n)->oldspeak){
+        free((*n)->oldspeak);
+        (*n)->oldspeak = NULL;
     }
 
-    if (&n){
-        free(&n);
-        &n = NULL;
+    if ((*n)){
+        free(*n);
+        *n = NULL;
     }
     return;
 }
@@ -66,3 +66,4 @@ void node_print(Node *n){
     }
     return;
 }
+
