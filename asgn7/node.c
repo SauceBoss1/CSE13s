@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <inttypes.h>
 #include <stdlib.h>
+#include <string.h>
 
 Node *node_create(char *oldspeak, char *newspeak){
     Node *n = (Node * ) malloc(sizeof(Node));
