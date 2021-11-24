@@ -49,20 +49,12 @@ void node_delete(Node **n){
 }
 
 void node_print(Node *n){
-    if(n->left){
-        node_print(n->left);
-    }
-    
     if( (n->oldspeak != NULL) && (n->newspeak != NULL) ){
         printf("%s -> %s\n", n->oldspeak , n->newspeak);
     }
     
     if ( (n->oldspeak != NULL) && (n->newspeak == NULL) ){
         printf("%s\n", n->oldspeak);
-    }
-    
-    if (n->right){
-        node_print(n->right);
     }
     return;
 }
