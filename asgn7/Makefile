@@ -19,4 +19,4 @@ clean:
 	rm -rf $(EXECBIN) *.o
 
 format:
-	clang-format -i -style=file *.[ch]clang-format -i -style=file *.[ch]
+	clang-format -i -style=file *.[ch]
