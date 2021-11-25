@@ -44,14 +44,23 @@ uint32_t bv_length(BitVector *bv) {
 }
 
 bool bv_set_bit(BitVector *bv, uint32_t i) {
+    if (i > bv_length(bv)) {
+        return false;
+    }
     return bv ? bv->vector[i / BITS_PER_UNIT] |= (0x1 << i % BITS_PER_UNIT) : 0;
 }
 
 bool bv_clr_bit(BitVector *bv, uint32_t i) {
+    if (i > bv_length(bv)) {
+        return false;
+    }
     return bv ? bv->vector[i / BITS_PER_UNIT] &= ~(0x1 << i % BITS_PER_UNIT) : 0;
 }
 
 bool bv_get_bit(BitVector *bv, uint32_t i) {
+    if (i > bv_length(bv)) {
+        return false;
+    }
     return (bv->vector[i / BITS_PER_UNIT] >> i % BITS_PER_UNIT) & 0x1;
 }
 

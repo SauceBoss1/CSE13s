@@ -18,8 +18,7 @@ struct HashTable {
 
 //NOTE: Some of the code is based off of Eric's pseudocode
 
-HashTable *
-    ht_create(uint32_t size) {
+HashTable *ht_create(uint32_t size) {
     HashTable *ht = (HashTable *) malloc(sizeof(HashTable));
     if (ht) {
         ht->salt[0] = SALT_HASHTABLE_LO;
