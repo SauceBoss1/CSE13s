@@ -59,32 +59,6 @@ Node *bst_find(Node *root, char *oldspeak) {
 
 //code based from eric's pseudocode
 Node *bst_insert(Node *root, char *oldspeak, char *newspeak) {
-    /*
-    Node *a = root;
-    Node *b = NULL;
-    
-    if ( root != NULL && oldspeak != NULL ){
-        while (a != NULL){ //traverse through a tree that already exists
-            b = a;
-            if (strcmp(a->oldspeak, oldspeak) >= 0){
-                a = a->left;
-            } else {
-                a = a->right;
-            }
-        }
-    }   
-
-    if (b == NULL){
-        b = node_create(oldspeak, newspeak);
-    } else if (strcmp(b->oldspeak, oldspeak) > 0){
-        b->left = node_create(oldspeak, newspeak);
-    } else {
-        b->right = node_create(oldspeak, newspeak);
-    }   
-    
-    return b;
-    */
-
     if (root) {
         if (strcmp(root->oldspeak, oldspeak) > 0) {
             root->left = bst_insert(root->left, oldspeak, newspeak);
