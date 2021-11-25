@@ -54,7 +54,8 @@ bool bv_clr_bit(BitVector *bv, uint32_t i) {
     if (i > bv_length(bv)) {
         return false;
     }
-    return bv ? bv->vector[i / BITS_PER_UNIT] &= ~(0x1 << i % BITS_PER_UNIT) : 0;
+    bv->vector[i / BITS_PER_UNIT] &= ~(0x1 << i % BITS_PER_UNIT);
+    return true;
 }
 
 bool bv_get_bit(BitVector *bv, uint32_t i) {
@@ -73,6 +74,7 @@ void bv_print(BitVector *bv) {
     }
     printf("\n");
 }
+
 /*
 int main(void){
     BitVector *v = bv_create(16);
@@ -81,6 +83,9 @@ int main(void){
     bv_set_bit(v, 10);
     bv_set_bit(v, 15);
     bv_set_bit(v, 0);
+    bv_print(v);
+    bv_clr_bit(v, 15);
+    
     bv_print(v);
     bv_delete(&v);
     return 0;
