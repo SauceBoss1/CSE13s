@@ -14,7 +14,7 @@ struct HashTable {
     uint64_t salt[2];
     uint32_t size;
     Node **trees;
-}
+};
 
 //NOTE: Some of the code is based off of Eric's pseudocode
 
