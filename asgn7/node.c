@@ -5,19 +5,19 @@
 #include <stdlib.h>
 #include <string.h>
 
-Node *node_create(char *oldspeak, char *newspeak){
-    Node *n = (Node * ) malloc(sizeof(Node));
+Node *node_create(char *oldspeak, char *newspeak) {
+    Node *n = (Node *) malloc(sizeof(Node));
 
-    if (n){
+    if (n) {
         n->left = NULL;
         n->right = NULL;
-        if (oldspeak != NULL){
+        if (oldspeak != NULL) {
             n->oldspeak = strdup(oldspeak);
         } else {
             n->oldspeak = NULL;
         }
 
-        if (newspeak != NULL){
+        if (newspeak != NULL) {
             n->newspeak = strdup(newspeak);
         } else {
             n->newspeak = NULL;
@@ -30,32 +30,39 @@ Node *node_create(char *oldspeak, char *newspeak){
     return n;
 }
 
-void node_delete(Node **n){
-    if((*n)->newspeak){
+void node_delete(Node **n) {
+    if ((*n)->newspeak) {
         free((*n)->newspeak);
         (*n)->newspeak = NULL;
     }
 
-    if ((*n)->oldspeak){
+    if ((*n)->oldspeak) {
         free((*n)->oldspeak);
         (*n)->oldspeak = NULL;
     }
 
-    if ((*n)){
+    if ((*n)) {
         free(*n);
         *n = NULL;
     }
     return;
 }
 
-void node_print(Node *n){
-    if( (n->oldspeak != NULL) && (n->newspeak != NULL) ){
-        printf("%s -> %s\n", n->oldspeak , n->newspeak);
+void node_print(Node *n) {
+    if ((n->oldspeak != NULL) && (n->newspeak != NULL)) {
+        printf("%s -> %s\n", n->oldspeak, n->newspeak);
     }
-    
-    if ( (n->oldspeak != NULL) && (n->newspeak == NULL) ){
+
+    if ((n->oldspeak != NULL) && (n->newspeak == NULL)) {
         printf("%s\n", n->oldspeak);
     }
     return;
 }
 
+/*
+int main(void){
+    Node *n = node_create("Hello", "World");
+    node_print(n);
+    node_delete(&n);
+    return 0;
+}*/
