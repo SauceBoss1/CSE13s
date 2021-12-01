@@ -14,6 +14,7 @@
 #include <inttypes.h>
 #include <string.h>
 #include <unistd.h>
+#include <ctype.h>
 
 #define OPTIONS         "ht:f:s"
 #define WORD            "[a-zA-Z0-9_'-]+"
@@ -68,9 +69,18 @@ void read_newspeak(BloomFilter *bf, HashTable *ht) {
         bf_insert(bf, oldWord);
         ht_insert(ht, oldWord, newWord);
     }
-
     fclose(newspeak);
     return;
+}
+
+char *conv_to_lowercase(char *word) {
+    char *temp_string = (char *) calloc(strlen(word) + 1, sizeof(char));
+
+    for (uint32_t i = 0; i < strlen(word); ++i) {
+        temp_string[i] = tolower((char) word[i]);
+    }
+
+    return temp_string;
 }
 
 int main(int argc, char **argv) {
@@ -98,24 +108,34 @@ int main(int argc, char **argv) {
     read_badspeak(bf, ht);
     read_newspeak(bf, ht);
 
-    char *word = NULL;
+    //bf_print(bf);
+    //ht_print(ht);
+
+    char *raw_word = NULL;
 
     Node *user_badspeak = bst_create();
     Node *user_mixspeak = bst_create();
-    while ((word = next_word(stdin, &re)) != NULL) {
-        puts("here!");
+
+    //NOTE: Regex examples of how to use parser.c was provided by Eugene
+    //In assignment doc
+    while ((raw_word = next_word(stdin, &re)) != NULL) {
+        char *word = raw_word != NULL ? conv_to_lowercase(raw_word) : NULL;
+        printf("%s\n", word);
         if (bf_probe(bf, word)) {
             Node *look_up = ht_lookup(ht, word);
-
             if (look_up->oldspeak != NULL && look_up->newspeak == NULL) {
-                bst_insert(user_badspeak, look_up->oldspeak, look_up->newspeak);
+                user_badspeak = bst_insert(user_badspeak, look_up->oldspeak, look_up->newspeak);
             }
 
             if (look_up->oldspeak != NULL && look_up->newspeak != NULL) {
-                bst_insert(user_mixspeak, look_up->oldspeak, look_up->newspeak);
+                user_mixspeak = bst_insert(user_mixspeak, look_up->oldspeak, look_up->newspeak);
             }
         }
+
+        free(word);
     }
+    //bst_print(user_badspeak);
+    //bst_print(user_mixspeak);
 
     if (user_badspeak != NULL && user_mixspeak != NULL) {
         printf("%s", mixspeak_message);
@@ -133,6 +153,8 @@ int main(int argc, char **argv) {
         bst_print(user_mixspeak);
     }
 
+    bst_delete(&user_mixspeak);
+    bst_delete(&user_badspeak);
     bf_delete(&bf);
     ht_delete(&ht);
     clear_words();
