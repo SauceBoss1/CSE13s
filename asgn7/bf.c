@@ -89,11 +89,11 @@ bool bf_probe(BloomFilter *bf, char *oldspeak) {
         if (bv_get_bit(bf->filter, hash(bf->tertiary, oldspeak) % bv_len) != 0) {
             tert_hash = true;
         }
-    }
 
-    //probe
-    if (prim_hash && sec_hash && tert_hash) {
-        return true;
+        //probe
+        if (prim_hash && sec_hash && tert_hash) {
+            return true;
+        }
     }
     return false;
 }

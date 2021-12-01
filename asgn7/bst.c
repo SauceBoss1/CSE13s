@@ -44,6 +44,7 @@ uint32_t bst_size(Node *root) {
 
 //NOTE: code was based on Eric's pseudocode
 Node *bst_find(Node *root, char *oldspeak) {
+
     Node *curr = root;
 
     if (root != NULL && oldspeak != NULL) {

@@ -125,16 +125,18 @@ int main(int argc, char **argv) {
     //In assignment doc
     while ((raw_word = next_word(stdin, &re)) != NULL) {
         //The input may have capital letters, so make them all lowercase
-        char *word = raw_word != NULL ? conv_to_lowercase(raw_word) : NULL;
+        char *word = conv_to_lowercase(raw_word);
 
-        if (bf_probe(bf, word)) {
+        if (bf_probe(bf, word) && word != NULL) {
             Node *look_up = ht_lookup(ht, word);
-            if (look_up->oldspeak != NULL && look_up->newspeak == NULL) {
-                user_badspeak = bst_insert(user_badspeak, look_up->oldspeak, look_up->newspeak);
-            }
+            if (look_up) {
+                if (look_up->oldspeak != NULL && look_up->newspeak == NULL) {
+                    user_badspeak = bst_insert(user_badspeak, look_up->oldspeak, look_up->newspeak);
+                }
 
-            if (look_up->oldspeak != NULL && look_up->newspeak != NULL) {
-                user_mixspeak = bst_insert(user_mixspeak, look_up->oldspeak, look_up->newspeak);
+                if (look_up->oldspeak != NULL && look_up->newspeak != NULL) {
+                    user_mixspeak = bst_insert(user_mixspeak, look_up->oldspeak, look_up->newspeak);
+                }
             }
         }
 
