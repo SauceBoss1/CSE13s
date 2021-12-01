@@ -36,7 +36,7 @@ void read_badspeak(BloomFilter *bf, HashTable *ht) {
     }
 
     char buff[1024];
-    while ((input = fscanf(badspeak, "%s", buff)) != EOF) {
+    while ((input = fscanf(badspeak, "%s\n", buff)) != EOF) {
         if (input <= 0) {
             fprintf(stderr, "A problem has occurred while reading badspeak.txt!\n");
             exit(1);
@@ -62,7 +62,7 @@ void read_newspeak(BloomFilter *bf, HashTable *ht) {
 
     char newWord[1024]; //newspeak buffer
     char oldWord[1024]; //oldspeak buffer
-    while ((input = fscanf(newspeak, "%s %s", oldWord, newWord)) != EOF) {
+    while ((input = fscanf(newspeak, "%s %s\n", oldWord, newWord)) != EOF) {
         if (input <= 0) {
             fprintf(stderr, "An error has occurred while reading newspeak.txt!\n");
         }
@@ -87,6 +87,10 @@ int main(int argc, char **argv) {
     int opt = 0;
     uint32_t ht_def_size = TWO_EXP_SIXTEEN;
     uint32_t bf_def_size = TWO_EXP_TWENTY;
+    bool suppress = false;
+
+    //branches = 0;
+    //lookups = 0;
 
     regex_t re;
 
@@ -94,6 +98,7 @@ int main(int argc, char **argv) {
         switch (opt) {
         case 't': ht_def_size = strtol(optarg, NULL, 10); break;
         case 'f': bf_def_size = strtol(optarg, NULL, 10); break;
+        case 's': suppress = true; break;
         }
     }
 
@@ -138,20 +143,35 @@ int main(int argc, char **argv) {
     //bst_print(user_badspeak);
     //bst_print(user_mixspeak);
 
-    if (user_badspeak != NULL && user_mixspeak != NULL) {
-        printf("%s", mixspeak_message);
-        bst_print(user_badspeak);
-        bst_print(user_mixspeak);
-    }
+    if (suppress) {
+        double avg_bst_size = ht_avg_bst_size(ht);
+        double avg_bst_height = ht_avg_bst_height(ht);
+        double avg_branches = (double) branches / (double) lookups;
+        double ht_load = 100 * ((double) ht_count(ht) / (double) ht_size(ht));
+        double bf_load = 100 * ((double) bf_count(bf) / (double) bf_size(bf));
 
-    if (user_badspeak != NULL && user_mixspeak == NULL) {
-        printf("%s", badspeak_message);
-        bst_print(user_badspeak);
-    }
+        printf("Average BST size: %.6f\n", avg_bst_size);
+        printf("Average BST height: %.6f\n", avg_bst_height);
+        printf("Average branches traversed: %.6f\n", avg_branches);
+        printf("Hash table load: %.6f%%\n", ht_load);
+        printf("Bloom filter load: %.6f%%\n", bf_load);
+    } else {
 
-    if (user_badspeak == NULL && user_mixspeak != NULL) {
-        printf("%s", goodpeak_message);
-        bst_print(user_mixspeak);
+        if (user_badspeak != NULL && user_mixspeak != NULL) {
+            printf("%s", mixspeak_message);
+            bst_print(user_badspeak);
+            bst_print(user_mixspeak);
+        }
+
+        if (user_badspeak != NULL && user_mixspeak == NULL) {
+            printf("%s", badspeak_message);
+            bst_print(user_badspeak);
+        }
+
+        if (user_badspeak == NULL && user_mixspeak != NULL) {
+            printf("%s", goodpeak_message);
+            bst_print(user_mixspeak);
+        }
     }
 
     bst_delete(&user_mixspeak);

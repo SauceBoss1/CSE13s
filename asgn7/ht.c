@@ -16,6 +16,8 @@ struct HashTable {
     Node **trees;
 };
 
+uint64_t lookups = 0;
+
 //NOTE: Some of the code is based off of Eric's pseudocode
 
 HashTable *ht_create(uint32_t size) {
@@ -58,11 +60,13 @@ uint32_t ht_size(HashTable *ht) {
 }
 
 Node *ht_lookup(HashTable *ht, char *oldspeak) {
+    lookups++;
     uint32_t hash_index = hash(ht->salt, oldspeak) % ht_size(ht);
     return bst_find(ht->trees[hash_index], oldspeak);
 }
 
 void ht_insert(HashTable *ht, char *oldspeak, char *newspeak) {
+    lookups++;
     uint32_t hash_index = hash(ht->salt, oldspeak) % ht_size(ht);
     ht->trees[hash_index] = bst_insert(ht->trees[hash_index], oldspeak, newspeak);
     return;
@@ -84,7 +88,7 @@ double ht_avg_bst_size(HashTable *ht) {
         sizes += bst_size(ht->trees[i]);
     }
 
-    return sizes / ht_count(ht);
+    return (double) sizes / (double) ht_count(ht);
 }
 
 double ht_avg_bst_height(HashTable *ht) {
@@ -92,13 +96,31 @@ double ht_avg_bst_height(HashTable *ht) {
     for (uint32_t i = 0; i < ht_size(ht); ++i) {
         heights += bst_height(ht->trees[i]);
     }
-    return heights / ht_count(ht);
+    return (double) heights / (double) ht_count(ht);
 }
 
 void ht_print(HashTable *ht) {
     for (uint32_t i = 0; i < ht_size(ht); ++i) {
-        printf("INDEX: %" PRIu32 "\n", i);
-        bst_print(ht->trees[i]);
+        if (ht->trees[i] != NULL) {
+            printf("INDEX: %" PRIu32 "\n", i);
+            bst_print(ht->trees[i]);
+        }
     }
     return;
 }
+
+/*
+int main(void){
+    HashTable *ht = ht_create(100);
+    
+    FILE *newspeak = fopen("newspeak.txt", "r");
+    char buff1[1024];
+    char buff2[1024];
+    while (fscanf(newspeak,"%s %s",buff1, buff2) != EOF){
+        ht_insert(ht, buff1, buff2);
+    }
+    
+    ht_print(ht);
+    fclose(newspeak);
+    ht_delete(&ht);
+}*/

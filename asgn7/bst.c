@@ -10,8 +10,9 @@
 
 #define max(x, y) (x > y ? x : y)
 
-//NOTE: Psuedocode was provided by Eric
+uint64_t branches = 0;
 
+//NOTE: Psuedocode was provided by Eric
 Node *bst_create(void) {
     return NULL;
 }
@@ -48,8 +49,10 @@ Node *bst_find(Node *root, char *oldspeak) {
     if (root != NULL && oldspeak != NULL) {
         while (curr != NULL && strcmp(curr->oldspeak, oldspeak) != 0) {
             if (strcmp(curr->oldspeak, oldspeak) > 0) {
+                branches++;
                 curr = curr->left;
             } else {
+                branches++;
                 curr = curr->right;
             }
         }
@@ -61,8 +64,10 @@ Node *bst_find(Node *root, char *oldspeak) {
 Node *bst_insert(Node *root, char *oldspeak, char *newspeak) {
     if (root) {
         if (strcmp(root->oldspeak, oldspeak) > 0) {
+            branches++;
             root->left = bst_insert(root->left, oldspeak, newspeak);
-        } else if (strcmp(root->oldspeak, oldspeak) != 0 && strcmp(root->oldspeak, oldspeak) < 0) {
+        } else if (strcmp(root->oldspeak, oldspeak) != 0) {
+            branches++;
             root->right = bst_insert(root->right, oldspeak, newspeak);
         }
         return root;
