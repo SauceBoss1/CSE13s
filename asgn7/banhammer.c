@@ -119,8 +119,9 @@ int main(int argc, char **argv) {
     //NOTE: Regex examples of how to use parser.c was provided by Eugene
     //In assignment doc
     while ((raw_word = next_word(stdin, &re)) != NULL) {
+        //The input may have capital letters, so make them all lowercase
         char *word = raw_word != NULL ? conv_to_lowercase(raw_word) : NULL;
-        printf("%s\n", word);
+
         if (bf_probe(bf, word)) {
             Node *look_up = ht_lookup(ht, word);
             if (look_up->oldspeak != NULL && look_up->newspeak == NULL) {
