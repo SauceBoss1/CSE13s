@@ -89,8 +89,8 @@ int main(int argc, char **argv) {
     uint32_t bf_def_size = TWO_EXP_TWENTY;
     bool suppress = false;
 
-    //branches = 0;
-    //lookups = 0;
+    branches = 0;
+    lookups = 0;
 
     regex_t re;
 
@@ -140,8 +140,6 @@ int main(int argc, char **argv) {
 
         free(word);
     }
-    //bst_print(user_badspeak);
-    //bst_print(user_mixspeak);
 
     if (suppress) {
         double avg_bst_size = ht_avg_bst_size(ht);
@@ -169,7 +167,7 @@ int main(int argc, char **argv) {
         }
 
         if (user_badspeak == NULL && user_mixspeak != NULL) {
-            printf("%s", goodpeak_message);
+            printf("%s", goodspeak_message);
             bst_print(user_mixspeak);
         }
     }
