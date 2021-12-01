@@ -25,6 +25,20 @@ const char *goodpeak_message;
 const char *mixspeak_message;
 const char *badspeak_message;
 
+void help_msg(void) {
+    fprintf(stderr, "SYNOPSIS\n"
+                    "  A word filtering program for the GPRSC.\n"
+                    "  Filters out and reports bad words parsed from stdin.\n\n"
+                    "USAGE\n"
+                    "  ./banhammer [-hs] [-t size] [-f size]\n\n"
+                    "OPTIONS\n"
+                    "  -h           Program usage and help.\n"
+                    "  -s           Print program statistics.\n"
+                    "  -t size      Specify hash table size (default: 2^16).\n"
+                    "  -f size      Specify Bloom filter size (default: 2^20).\n");
+    return;
+}
+
 void read_badspeak(BloomFilter *bf, HashTable *ht) {
     FILE *badspeak = fopen("./badspeak.txt", "r");
 
@@ -99,6 +113,8 @@ int main(int argc, char **argv) {
         case 't': ht_def_size = strtol(optarg, NULL, 10); break;
         case 'f': bf_def_size = strtol(optarg, NULL, 10); break;
         case 's': suppress = true; break;
+        case 'h': help_msg(); exit(1);
+        default: help_msg(); exit(1);
         }
     }
 
