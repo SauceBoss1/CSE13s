@@ -174,14 +174,14 @@ int main(int argc, char **argv) {
         printf("Hash table load: %.6f%%\n", ht_load);
         printf("Bloom filter load: %.6f%%\n", bf_load);
 
-        if(append){
+        if (append) {
             //FILE *bst_size_dat = fopen("./bst_size.dat", "a");
             FILE *bst_height_dat = fopen("./bst_height.dat", "a");
             FILE *avg_branches_dat = fopen("./avg_branches.dat", "a");
-            
+
             //fprintf(bst_size_dat, "%" PRIu32" %lf\n", bf_def_size, avg_bst_size);
-            fprintf(bst_height_dat, "%"PRIu32" %lf\n", bf_def_size, avg_bst_height);
-            fprintf(avg_branches_dat, "%"PRIu32" %lf\n", bf_def_size, avg_branches);
+            fprintf(bst_height_dat, "%" PRIu32 " %lf\n", bf_def_size, avg_bst_height);
+            fprintf(avg_branches_dat, "%" PRIu32 " %lf\n", bf_def_size, avg_branches);
 
             //fclose(bst_size_dat);
             fclose(bst_height_dat);
