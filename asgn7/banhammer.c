@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include <ctype.h>
 
-#define OPTIONS         "ht:f:s"
+#define OPTIONS         "ht:f:sa"
 #define WORD            "[a-zA-Z0-9_'-]+"
 #define TWO_EXP_SIXTEEN 65536
 #define TWO_EXP_TWENTY  1048576
@@ -102,6 +102,7 @@ int main(int argc, char **argv) {
     uint32_t ht_def_size = TWO_EXP_SIXTEEN;
     uint32_t bf_def_size = TWO_EXP_TWENTY;
     bool suppress = false;
+    bool append = false;
 
     branches = 0;
     lookups = 0;
@@ -114,6 +115,7 @@ int main(int argc, char **argv) {
         case 'f': bf_def_size = strtol(optarg, NULL, 10); break;
         case 's': suppress = true; break;
         case 'h': help_msg(); exit(1);
+        case 'a': append = true; break;
         default: help_msg(); exit(1);
         }
     }
@@ -171,6 +173,20 @@ int main(int argc, char **argv) {
         printf("Average branches traversed: %.6f\n", avg_branches);
         printf("Hash table load: %.6f%%\n", ht_load);
         printf("Bloom filter load: %.6f%%\n", bf_load);
+
+        if(append){
+            //FILE *bst_size_dat = fopen("./bst_size.dat", "a");
+            FILE *bst_height_dat = fopen("./bst_height.dat", "a");
+            FILE *avg_branches_dat = fopen("./avg_branches.dat", "a");
+            
+            //fprintf(bst_size_dat, "%" PRIu32" %lf\n", bf_def_size, avg_bst_size);
+            fprintf(bst_height_dat, "%"PRIu32" %lf\n", bf_def_size, avg_bst_height);
+            fprintf(avg_branches_dat, "%"PRIu32" %lf\n", bf_def_size, avg_branches);
+
+            //fclose(bst_size_dat);
+            fclose(bst_height_dat);
+            fclose(avg_branches_dat);
+        }
     } else {
 
         if (user_badspeak != NULL && user_mixspeak != NULL) {
