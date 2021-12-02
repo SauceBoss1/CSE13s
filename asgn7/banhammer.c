@@ -175,16 +175,13 @@ int main(int argc, char **argv) {
         printf("Bloom filter load: %.6f%%\n", bf_load);
 
         if (append) {
-            //FILE *bst_size_dat = fopen("./bst_size.dat", "a");
-            FILE *bst_height_dat = fopen("./bst_height.dat", "a");
+            FILE *num_of_lookups = fopen("./lookups.dat", "a");
             FILE *avg_branches_dat = fopen("./avg_branches.dat", "a");
 
-            //fprintf(bst_size_dat, "%" PRIu32" %lf\n", bf_def_size, avg_bst_size);
-            fprintf(bst_height_dat, "%" PRIu32 " %lf\n", bf_def_size, avg_bst_height);
+            fprintf(num_of_lookups, "%" PRIu32 " %" PRIu64 "\n", bf_def_size, lookups);
             fprintf(avg_branches_dat, "%" PRIu32 " %lf\n", bf_def_size, avg_branches);
 
-            //fclose(bst_size_dat);
-            fclose(bst_height_dat);
+            fclose(num_of_lookups);
             fclose(avg_branches_dat);
         }
     } else {
