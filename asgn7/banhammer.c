@@ -178,8 +178,10 @@ int main(int argc, char **argv) {
             FILE *num_of_lookups = fopen("./lookups.dat", "a");
             FILE *avg_branches_dat = fopen("./avg_branches.dat", "a");
 
-            fprintf(num_of_lookups, "%" PRIu32 " %" PRIu64 "\n", bf_def_size, lookups);
-            fprintf(avg_branches_dat, "%" PRIu32 " %lf\n", bf_def_size, avg_branches);
+            fprintf(num_of_lookups, "%" PRIu32 " %" PRIu32 " %" PRIu64 "\n", bf_def_size,
+                ht_def_size, lookups);
+            fprintf(avg_branches_dat, "%" PRIu32 " %" PRIu32 " %lf\n", bf_def_size, ht_def_size,
+                avg_branches);
 
             fclose(num_of_lookups);
             fclose(avg_branches_dat);
