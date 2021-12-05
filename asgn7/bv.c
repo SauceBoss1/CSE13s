@@ -13,6 +13,12 @@ struct BitVector {
     uint8_t *vector;
 };
 
+//Constructor for the bitvector
+//Returns the pointer to the newly create bit vector
+//
+//length: the length of the desried bit vector
+//
+//NOTE: code provided by Prof. Long
 BitVector *bv_create(uint32_t length) {
     BitVector *v = (BitVector *) malloc(sizeof(BitVector));
     if (v) {
@@ -26,6 +32,11 @@ BitVector *bv_create(uint32_t length) {
     }
 }
 
+//Deletes a bivector
+//Return void
+//
+//bv: bitvector to delete
+//NOTE: code provided by Prof. Long
 void bv_delete(BitVector **bv) {
     if ((*bv) && (*bv)->vector) {
         free((*bv)->vector);
@@ -39,10 +50,21 @@ void bv_delete(BitVector **bv) {
     return;
 }
 
+//Returns the length of the bitvector as a uint32_t
+//
+//bv: bit vector
+//NOTE: code provided by Prof. Long
 uint32_t bv_length(BitVector *bv) {
     return bv ? bv->length : 0;
 }
 
+//Sets a bit to 1 at index i
+//Returns false if i is out of range
+//
+//bv: the bit vector to set
+//i: index of bit to set to 1
+//
+//NOTE: code provided by Prof. Long
 bool bv_set_bit(BitVector *bv, uint32_t i) {
     if (i > bv_length(bv)) {
         return false;
@@ -50,6 +72,12 @@ bool bv_set_bit(BitVector *bv, uint32_t i) {
     return bv ? bv->vector[i / BITS_PER_UNIT] |= (0x1 << i % BITS_PER_UNIT) : 0;
 }
 
+//Clears a bit at index i
+//Returns false if the bit is out of range
+//
+//bv: bit vector
+//i: index
+//NOTE: code provided by Prof. Long
 bool bv_clr_bit(BitVector *bv, uint32_t i) {
     if (i > bv_length(bv)) {
         return false;
@@ -58,6 +86,12 @@ bool bv_clr_bit(BitVector *bv, uint32_t i) {
     return true;
 }
 
+//Gets the bit at index i
+//Returns false if i is out of range
+//
+//bv: bit vector
+//i: index
+//NOTE: code provided by Prof. Long
 bool bv_get_bit(BitVector *bv, uint32_t i) {
     if (i > bv_length(bv)) {
         return false;
@@ -65,6 +99,10 @@ bool bv_get_bit(BitVector *bv, uint32_t i) {
     return (bv->vector[i / BITS_PER_UNIT] >> i % BITS_PER_UNIT) & 0x1;
 }
 
+//Debug function that prints out the bit vector
+//Returns void
+//
+//bv: bitvector to print
 void bv_print(BitVector *bv) {
     for (uint32_t i = 0; i < bv_length(bv); ++i) {
         if ((i) % BITS_PER_UNIT == 0 && i != 0) {
@@ -74,19 +112,3 @@ void bv_print(BitVector *bv) {
     }
     printf("\n");
 }
-
-/*
-int main(void){
-    BitVector *v = bv_create(16);
-    printf("size: %"PRIu32"\n", bv_length(v));
-    bv_set_bit(v, 3);
-    bv_set_bit(v, 10);
-    bv_set_bit(v, 15);
-    bv_set_bit(v, 0);
-    bv_print(v);
-    bv_clr_bit(v, 15);
-    
-    bv_print(v);
-    bv_delete(&v);
-    return 0;
-}*/

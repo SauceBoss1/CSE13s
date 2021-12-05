@@ -8,15 +8,22 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-#define max(x, y) (x > y ? x : y)
+#define max(x, y) (x > y ? x : y) //function provided in lecture 18
 
 uint64_t branches = 0;
 
+//Creates an empty tree
+//Returns a pointer that points to NULL
+//
 //NOTE: Psuedocode was provided by Eric
 Node *bst_create(void) {
     return NULL;
 }
 
+//Deletes a tree using post-order traversal
+//Returns void
+//
+//root: the tree to delete
 void bst_delete(Node **root) {
     //Post-order traversal
     if (*root) {
@@ -27,6 +34,8 @@ void bst_delete(Node **root) {
     return;
 }
 
+//Returns the height of the bst as a uint32_t
+//
 //NOTE: code taken from bst lecture slides. Originally written by Prof. Long
 uint32_t bst_height(Node *root) {
     if (root) {
@@ -35,6 +44,9 @@ uint32_t bst_height(Node *root) {
     return 0;
 }
 
+//Returns the # of nodes in the tree as a uint32_t
+//
+//NOTE: pseudo code was provided by Eric
 uint32_t bst_size(Node *root) {
     if (root != NULL) {
         return bst_size(root->left) + bst_size(root->right) + 1;
@@ -42,6 +54,13 @@ uint32_t bst_size(Node *root) {
     return 0;
 }
 
+//Finds the node with the corresponding oldspeak
+//Returns a null tree if nothing was found
+//else it returns the found node
+//
+//root: the tree to search
+//oldspeak: the key to base our search on
+//
 //NOTE: code was based on Eric's pseudocode
 Node *bst_find(Node *root, char *oldspeak) {
 
@@ -61,15 +80,22 @@ Node *bst_find(Node *root, char *oldspeak) {
     return curr;
 }
 
-//code based from eric's pseudocode
+//Inserts a node into the bst
+//Returns the newly the tree with the newly inserted node.
+//
+//root: tree to update
+//oldspeak: the node key
+//newspeak: the node value
+//
+//NOTE: code based from lecture 18. Originally written by either Eugene or Prof. Long
 Node *bst_insert(Node *root, char *oldspeak, char *newspeak) {
     if (root) {
         if (strcmp(root->oldspeak, oldspeak) > 0) {
             branches++;
-            root->left = bst_insert(root->left, oldspeak, newspeak);
+            root->left = bst_insert(root->left, oldspeak, newspeak); //update left child
         } else if (strcmp(root->oldspeak, oldspeak) != 0) {
             branches++;
-            root->right = bst_insert(root->right, oldspeak, newspeak);
+            root->right = bst_insert(root->right, oldspeak, newspeak); //update right child
         }
         return root;
     }
@@ -77,6 +103,7 @@ Node *bst_insert(Node *root, char *oldspeak, char *newspeak) {
     return node_create(oldspeak, newspeak);
 }
 
+//Prints the tree in a inorder traversal fashion
 void bst_print(Node *root) {
     if (root->left) {
         bst_print(root->left);
@@ -91,21 +118,3 @@ void bst_print(Node *root) {
     }
     return;
 }
-
-/*
-int main(void){
-    Node *tree = bst_create();
-    
-    tree = bst_insert(tree, "Joe", "Mama");
-    tree = bst_insert(tree, "Deez", NULL);
-    tree = bst_insert(tree, "NUTZ", "GOTEEM");
-    tree = bst_insert(tree, "Sugma", "Balls");
-    tree = bst_insert(tree, "Sugma", "Balls");
-    
-    printf("height: %"PRIu32" size: %"PRIu32"\n", bst_height(tree), bst_size(tree));
-
-    bst_print(tree);
-    
-    bst_delete(&tree);
-    return 0;
-}*/

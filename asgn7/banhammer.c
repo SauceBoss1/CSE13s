@@ -25,6 +25,7 @@ const char *goodpeak_message;
 const char *mixspeak_message;
 const char *badspeak_message;
 
+//displays the help message to stderr
 void help_msg(void) {
     fprintf(stderr, "SYNOPSIS\n"
                     "  A word filtering program for the GPRSC.\n"
@@ -39,6 +40,12 @@ void help_msg(void) {
     return;
 }
 
+//This reads the badspeak file and updates the hashtable and bloomfilter
+//with the badspeak words
+//Returns: void
+//
+//bf: takes in a bloomfilter to update
+//ht: takes in a hashtable to update
 void read_badspeak(BloomFilter *bf, HashTable *ht) {
     FILE *badspeak = fopen("./badspeak.txt", "r");
 
@@ -49,21 +56,26 @@ void read_badspeak(BloomFilter *bf, HashTable *ht) {
         exit(1);
     }
 
-    char buff[1024];
-    while ((input = fscanf(badspeak, "%s\n", buff)) != EOF) {
+    char buff[1024]; //badspeak buffer
+    while ((input = fscanf(badspeak, "%s\n", buff)) != EOF) { //read in badspeak
         if (input <= 0) {
             fprintf(stderr, "A problem has occurred while reading badspeak.txt!\n");
             exit(1);
         }
 
-        bf_insert(bf, buff);
-        ht_insert(ht, buff, NULL);
+        bf_insert(bf, buff); //insert badspeak word to bloomfilter
+        ht_insert(ht, buff, NULL); //insert badspeak word to hashtable
     }
 
     fclose(badspeak);
     return;
 }
 
+//Same as read_badspeak but reads the newspeak file instead
+//Return: void
+//
+//bf: bloomfilter to update
+//ht: hash table to update
 void read_newspeak(BloomFilter *bf, HashTable *ht) {
     FILE *newspeak = fopen("./newspeak.txt", "r");
 
@@ -87,9 +99,16 @@ void read_newspeak(BloomFilter *bf, HashTable *ht) {
     return;
 }
 
+//Converts an entire word to all lowercase
+//Returns a pointer to char
+//NOTE: remember to free and words that use this function
+//
+//word: the word to convert to all lowercase
 char *conv_to_lowercase(char *word) {
-    char *temp_string = (char *) calloc(strlen(word) + 1, sizeof(char));
+    char *temp_string
+        = (char *) calloc(strlen(word) + 1, sizeof(char)); //allocate memory for the new word
 
+    //iterate through each letter and make it lowercase
     for (uint32_t i = 0; i < strlen(word); ++i) {
         temp_string[i] = tolower((char) word[i]);
     }
@@ -97,6 +116,7 @@ char *conv_to_lowercase(char *word) {
     return temp_string;
 }
 
+//Handles stdin and file processing
 int main(int argc, char **argv) {
     int opt = 0;
     uint32_t ht_def_size = TWO_EXP_SIXTEEN;
@@ -104,6 +124,7 @@ int main(int argc, char **argv) {
     bool suppress = false;
     bool append = false;
 
+    //reset extern variables just in case
     branches = 0;
     lookups = 0;
 
@@ -115,11 +136,13 @@ int main(int argc, char **argv) {
         case 'f': bf_def_size = strtol(optarg, NULL, 10); break;
         case 's': suppress = true; break;
         case 'h': help_msg(); exit(1);
-        case 'a': append = true; break;
+        case 'a': append = true; break; //this is only used for gnuplot data
         default: help_msg(); exit(1);
         }
     }
 
+    //compile regex word
+    //NOTE: Taken from regex example in assignment doc
     if (regcomp(&re, WORD, REG_EXTENDED)) {
         fprintf(stderr, "Failed to compile regex.\n");
         exit(1);
@@ -128,11 +151,10 @@ int main(int argc, char **argv) {
     BloomFilter *bf = bf_create(bf_def_size);
     HashTable *ht = ht_create(ht_def_size);
 
+    //udate both the bloomfilter
+    //and hashtable with newspeak and badspeak
     read_badspeak(bf, ht);
     read_newspeak(bf, ht);
-
-    //bf_print(bf);
-    //ht_print(ht);
 
     char *raw_word = NULL;
 
@@ -142,17 +164,23 @@ int main(int argc, char **argv) {
     //NOTE: Regex examples of how to use parser.c was provided by Eugene
     //In assignment doc
     while ((raw_word = next_word(stdin, &re)) != NULL) {
+
         //The input may have capital letters, so make them all lowercase
         char *word = conv_to_lowercase(raw_word);
 
         if (bf_probe(bf, word) && word != NULL) {
+            //lookup the word in the hashtable
             Node *look_up = ht_lookup(ht, word);
-            if (look_up) {
+
+            if (look_up) { //make sure we are not checking an empty tree
+
                 if (look_up->oldspeak != NULL && look_up->newspeak == NULL) {
+                    //badspeak words have no translations
                     user_badspeak = bst_insert(user_badspeak, look_up->oldspeak, look_up->newspeak);
                 }
 
                 if (look_up->oldspeak != NULL && look_up->newspeak != NULL) {
+                    //mixspeak words have a translatiom
                     user_mixspeak = bst_insert(user_mixspeak, look_up->oldspeak, look_up->newspeak);
                 }
             }
@@ -174,19 +202,23 @@ int main(int argc, char **argv) {
         printf("Hash table load: %.6f%%\n", ht_load);
         printf("Bloom filter load: %.6f%%\n", bf_load);
 
-        if (append) {
-            FILE *num_of_lookups = fopen("./lookups.dat", "a");
+        if (append) { //this is used for printing out stats to the *.dat files
+            FILE *num_of_lookups
+                = fopen("./lookups.dat", "a"); //append data to files when program is executed
             FILE *avg_branches_dat = fopen("./avg_branches.dat", "a");
 
+            //prints: bf size, ht size, # of lookups
             fprintf(num_of_lookups, "%" PRIu32 " %" PRIu32 " %" PRIu64 "\n", bf_def_size,
                 ht_def_size, lookups);
+
+            //prints: bf size, ht size, # of lookups
             fprintf(avg_branches_dat, "%" PRIu32 " %" PRIu32 " %lf\n", bf_def_size, ht_def_size,
                 avg_branches);
 
             fclose(num_of_lookups);
             fclose(avg_branches_dat);
         }
-    } else {
+    } else { //all messages must be suppressed if stats is called
 
         if (user_badspeak != NULL && user_mixspeak != NULL) {
             printf("%s", mixspeak_message);
@@ -204,6 +236,9 @@ int main(int argc, char **argv) {
             bst_print(user_mixspeak);
         }
     }
+
+    ///////////////////////////
+    //EXIT PROCEDURES
 
     bst_delete(&user_mixspeak);
     bst_delete(&user_badspeak);

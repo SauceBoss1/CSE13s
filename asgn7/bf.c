@@ -15,18 +15,26 @@ struct BloomFilter {
     BitVector *filter;
 };
 
+//Initializes the bloom filter
+//Returns the created bloom filter
+//
+//size: the size of the bloom filter
 BloomFilter *bf_create(uint32_t size) {
     BloomFilter *bf = (BloomFilter *) malloc(sizeof(BloomFilter));
     if (bf) {
+        //set primary salt
         bf->primary[0] = SALT_PRIMARY_LO;
         bf->primary[1] = SALT_PRIMARY_HI;
 
+        //set secondary salt
         bf->secondary[0] = SALT_SECONDARY_LO;
         bf->secondary[1] = SALT_SECONDARY_HI;
 
+        //set tertiary salt
         bf->tertiary[0] = SALT_TERTIARY_LO;
         bf->tertiary[1] = SALT_TERTIARY_HI;
 
+        //create the bit vector
         bf->filter = bv_create(size);
 
         return bf;
@@ -37,6 +45,10 @@ BloomFilter *bf_create(uint32_t size) {
     }
 }
 
+//Deletes the inputted bloomfilter
+//Returns void
+//
+//bf: the bloom filter to delete
 void bf_delete(BloomFilter **bf) {
     if (*bf && (*bf)->filter) {
         bv_delete(&(*bf)->filter);
@@ -47,10 +59,20 @@ void bf_delete(BloomFilter **bf) {
     return;
 }
 
+//Returns the size of the bloom filter as a uint32_t
+//
+//bf: bloom filter
 uint32_t bf_size(BloomFilter *bf) {
     return bv_length(bf->filter);
 }
 
+//Inserts oldspeak into the bloom filter
+//Returns void
+//
+//bf: the bloom filter to update
+//oldspeak: the oldspeak to insert into the bloom filter
+//
+//NOTE: I used the bloom filter lecture in order to normalize hash values
 void bf_insert(BloomFilter *bf, char *oldspeak) {
     if (bf && oldspeak) {
         uint32_t bv_len = bf_size(bf);
@@ -68,6 +90,12 @@ void bf_insert(BloomFilter *bf, char *oldspeak) {
     return;
 }
 
+//Probes the bloom filter to check if the oldspeak may be in the filter
+//Returns true if the oldspeak is maybe in the filter
+//Returns false if the oldspeak is not in the filter
+//
+//bf: the bloomfilter to check
+//oldspeak: the word to check if its in the bloom filter
 bool bf_probe(BloomFilter *bf, char *oldspeak) {
     bool prim_hash, sec_hash, tert_hash;
     prim_hash = sec_hash = tert_hash = false;
@@ -98,6 +126,10 @@ bool bf_probe(BloomFilter *bf, char *oldspeak) {
     return false;
 }
 
+//Counts how many bits are set to 1 in the bloomfilter
+//Returns a uint32_t type
+//
+//bf: the bloom filter to check
 uint32_t bf_count(BloomFilter *bf) {
     uint32_t counter = 0;
     for (uint32_t i = 0; i < bf_size(bf); ++i) {
@@ -108,20 +140,7 @@ uint32_t bf_count(BloomFilter *bf) {
     return counter;
 }
 
+//Debug function that prints underlying bitvector
 void bf_print(BloomFilter *bf) {
     bv_print(bf->filter);
 }
-
-/*
-int main(void){
-    BloomFilter *bf = bf_create(16);
-    bf_insert(bf, "Hello");
-    bf_insert(bf, "World");
-    bf_print(bf);
-    
-    char *word = "bruh";
-    printf("Is %s in bf? %d\n", word, bf_probe(bf, word));
-
-    bf_delete(&bf);
-    return 0;
-}*/
