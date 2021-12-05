@@ -16,12 +16,12 @@ set xlabel "bf size"
 set output "lookups.pdf"
 set title "Statistics for the number of lookups as bf size incr."
 set ylabel "number of lookups"
-plot "lookups.dat" using 1:2 with linespoints title "num of lookups", \
+plot "lookups.dat" using 1:3 with linespoints title "num of lookups", \
 
 set output "avg_branches.pdf"
-set title "Statistics for the average branches traversed"
+set title "Statistics for the average branches traversed as bf size incr."
 set ylabel "average branches traversed"
-plot "avg_branches.dat" using 1:2 with linespoints title "avg branches traversed"
+plot "avg_branches.dat" using 1:3 with linespoints title "avg branches traversed"
 
 EOF
 
